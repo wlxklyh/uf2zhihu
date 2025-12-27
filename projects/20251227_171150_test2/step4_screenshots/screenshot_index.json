@@ -1,0 +1,4061 @@
+[
+  {
+    "subtitle_index": 4,
+    "start_time": 14.6,
+    "text": "and I'll show you ways we've reduced cost, and I'll show you what's actually involved",
+    "offset": 0.0,
+    "timestamp": 14.6,
+    "filename": "004_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\004_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 2,
+    "start_time": 6.799,
+    "text": "Thanks for coming to my talk.",
+    "offset": 0.0,
+    "timestamp": 6.799,
+    "filename": "002_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\002_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 3,
+    "start_time": 8.5,
+    "text": "Today, I'm going to be talking about Horde, specifically how it can be used by small teams,",
+    "offset": 0.0,
+    "timestamp": 8.5,
+    "filename": "003_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\003_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 1,
+    "start_time": 5.32,
+    "text": "So, hello, everyone.",
+    "offset": 0.0,
+    "timestamp": 5.32,
+    "filename": "001_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\001_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 6,
+    "start_time": 22.14,
+    "text": "So, before I get into things, just a little bit about me and the company I work for.",
+    "offset": 0.0,
+    "timestamp": 22.14,
+    "filename": "006_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\006_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 5,
+    "start_time": 18.8,
+    "text": "in deploying Horde.",
+    "offset": 0.0,
+    "timestamp": 18.8,
+    "filename": "005_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\005_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 7,
+    "start_time": 25.44,
+    "text": "So, my name's Ash.",
+    "offset": 0.0,
+    "timestamp": 25.44,
+    "filename": "007_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\007_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 8,
+    "start_time": 27.46,
+    "text": "I'm a lead real-time developer at S1T2.",
+    "offset": 0.0,
+    "timestamp": 27.46,
+    "filename": "008_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\008_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 9,
+    "start_time": 30.579,
+    "text": "While my main focus is leading development on our Unreal-based experiences, I'm also responsible",
+    "offset": 0.0,
+    "timestamp": 30.579,
+    "filename": "009_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\009_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 10,
+    "start_time": 36.579,
+    "text": "for maintaining and developing the DevOps pipelines for these projects.",
+    "offset": 0.0,
+    "timestamp": 36.579,
+    "filename": "010_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\010_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 11,
+    "start_time": 42.079,
+    "text": "So, at S1T2, we mostly create immersive and interactive experiences, typically for institutions",
+    "offset": 0.0,
+    "timestamp": 42.079,
+    "filename": "011_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\011_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 12,
+    "start_time": 48.899,
+    "text": "like our galleries and museums.",
+    "offset": 0.0,
+    "timestamp": 48.899,
+    "filename": "012_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\012_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 13,
+    "start_time": 51.859,
+    "text": "And we use a lot of different technologies, but we mainly use Unreal Engine for these",
+    "offset": 0.0,
+    "timestamp": 51.859,
+    "filename": "013_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\013_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 14,
+    "start_time": 56.34,
+    "text": "experiences.",
+    "offset": 0.0,
+    "timestamp": 56.34,
+    "filename": "014_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\014_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 15,
+    "start_time": 59.84,
+    "text": "So, at S1T2, we're a team that cares about fast iteration.",
+    "offset": 0.0,
+    "timestamp": 59.84,
+    "filename": "015_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\015_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 16,
+    "start_time": 64.379,
+    "text": "It's kind of due to the experimental nature of our work, as well as short timelines,",
+    "offset": 0.0,
+    "timestamp": 64.379,
+    "filename": "016_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\016_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 17,
+    "start_time": 68.859,
+    "text": "and the need to adapt to changing requirements.",
+    "offset": 0.0,
+    "timestamp": 68.859,
+    "filename": "017_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\017_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 18,
+    "start_time": 72.459,
+    "text": "Our core team is also small, but we may expand our team with contractors or other partners",
+    "offset": 0.0,
+    "timestamp": 72.459,
+    "filename": "018_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\018_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 19,
+    "start_time": 77.819,
+    "text": "depending on the work we take on.",
+    "offset": 0.0,
+    "timestamp": 77.819,
+    "filename": "019_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\019_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 20,
+    "start_time": 79.78,
+    "text": "And our team is also hybrid.",
+    "offset": 0.0,
+    "timestamp": 79.78,
+    "filename": "020_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\020_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 22,
+    "start_time": 88.239,
+    "text": "So having remote access to our tools and infrastructure is important.",
+    "offset": 0.0,
+    "timestamp": 88.239,
+    "filename": "022_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\022_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 21,
+    "start_time": 82.06,
+    "text": "Some people work from the office or work from home, or maybe on-site in another country.",
+    "offset": 0.0,
+    "timestamp": 82.06,
+    "filename": "021_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\021_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 23,
+    "start_time": 92.019,
+    "text": "Actually, the picture in the bottom right is from the time we did a job in Dubai, and",
+    "offset": 0.0,
+    "timestamp": 92.019,
+    "filename": "023_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\023_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 24,
+    "start_time": 95.34,
+    "text": "I got stuck there for like five months.",
+    "offset": 0.0,
+    "timestamp": 95.34,
+    "filename": "024_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\024_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 25,
+    "start_time": 99.819,
+    "text": "So this talk is targeted towards small teams who are interested in Horde, but are unsure",
+    "offset": 0.0,
+    "timestamp": 99.819,
+    "filename": "025_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\025_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 26,
+    "start_time": 104.379,
+    "text": "if it's the right thing for them.",
+    "offset": 0.0,
+    "timestamp": 104.379,
+    "filename": "026_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\026_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 27,
+    "start_time": 106.579,
+    "text": "As well as teams that don't have continuous integration set up yet.",
+    "offset": 0.0,
+    "timestamp": 106.579,
+    "filename": "027_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\027_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 28,
+    "start_time": 110.959,
+    "text": "To get the most out of this talk, it would be best to have some knowledge of Horde or",
+    "offset": 0.0,
+    "timestamp": 110.959,
+    "filename": "028_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\028_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 29,
+    "start_time": 114.54,
+    "text": "similar tools, but it's okay if you don't.",
+    "offset": 0.0,
+    "timestamp": 114.54,
+    "filename": "029_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\029_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 30,
+    "start_time": 117.54,
+    "text": "Actually, how many people went to Jack's talk earlier on Horde?",
+    "offset": 0.0,
+    "timestamp": 117.54,
+    "filename": "030_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\030_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 31,
+    "start_time": 121.04,
+    "text": "Oh, many.",
+    "offset": 0.0,
+    "timestamp": 121.04,
+    "filename": "031_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\031_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 32,
+    "start_time": 125.079,
+    "text": "So, Horde is Epic's custom continuous integration platform.",
+    "offset": 0.0,
+    "timestamp": 125.079,
+    "filename": "032_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\032_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 33,
+    "start_time": 129.659,
+    "text": "It may even be a bit reductive to call the just a continuous integration platform.",
+    "offset": 0.0,
+    "timestamp": 129.659,
+    "filename": "033_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\033_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 34,
+    "start_time": 135.019,
+    "text": "But what sets it apart is its native support for unreal tools, projects, and workflows.",
+    "offset": 0.0,
+    "timestamp": 135.019,
+    "filename": "034_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\034_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 35,
+    "start_time": 140.879,
+    "text": "It offers build graph support natively and integrates with other Epic tools like Unreal Gamesync.",
+    "offset": 0.0,
+    "timestamp": 140.879,
+    "filename": "035_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\035_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 36,
+    "start_time": 148.12,
+    "text": "And it was also designed with scale in mind.",
+    "offset": 0.0,
+    "timestamp": 148.12,
+    "filename": "036_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\036_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 37,
+    "start_time": 150.719,
+    "text": "It's got to accommodate the needs of a team, the size of Epic.",
+    "offset": 0.0,
+    "timestamp": 150.719,
+    "filename": "037_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\037_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 38,
+    "start_time": 156.199,
+    "text": "So why would you choose Horde over something else?",
+    "offset": 0.0,
+    "timestamp": 156.199,
+    "filename": "038_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\038_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 39,
+    "start_time": 159.399,
+    "text": "Horde's out of box experience is kind of unrivaled, specifically for Unreal Engine projects,",
+    "offset": 0.0,
+    "timestamp": 159.399,
+    "filename": "039_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\039_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 40,
+    "start_time": 165.06,
+    "text": "just because of the native integrations and streamlined process.",
+    "offset": 0.0,
+    "timestamp": 165.06,
+    "filename": "040_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\040_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 41,
+    "start_time": 170.159,
+    "text": "It's also kind of an all-in-one solution.",
+    "offset": 0.0,
+    "timestamp": 170.159,
+    "filename": "041_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\041_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 42,
+    "start_time": 172.84,
+    "text": "It comes with most things you need out of the box, which reduces the need to create glue",
+    "offset": 0.0,
+    "timestamp": 172.84,
+    "filename": "042_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\042_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 43,
+    "start_time": 177.719,
+    "text": "between different tools or services.",
+    "offset": 0.0,
+    "timestamp": 177.719,
+    "filename": "043_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\043_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 44,
+    "start_time": 181.139,
+    "text": "And by choosing Horde, you're kind of buying into the Unreal ecosystem of tools",
+    "offset": 0.0,
+    "timestamp": 181.139,
+    "filename": "044_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\044_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 45,
+    "start_time": 185.719,
+    "text": "and the Epic way of doing things, which kind of reduces the friction involved to introduce",
+    "offset": 0.0,
+    "timestamp": 185.719,
+    "filename": "045_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\045_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 46,
+    "start_time": 190.979,
+    "text": "more Epic tools into your workflow or pipeline.",
+    "offset": 0.0,
+    "timestamp": 190.979,
+    "filename": "046_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\046_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 47,
+    "start_time": 195.719,
+    "text": "And obviously scale.",
+    "offset": 0.0,
+    "timestamp": 195.719,
+    "filename": "047_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\047_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 48,
+    "start_time": 197.34,
+    "text": "If you're a global scale team, or it does make a lot of sense, just because of its ability",
+    "offset": 0.0,
+    "timestamp": 197.34,
+    "filename": "048_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\048_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 49,
+    "start_time": 200.879,
+    "text": "to accommodate teams of that size.",
+    "offset": 0.0,
+    "timestamp": 200.879,
+    "filename": "049_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\049_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 50,
+    "start_time": 204.44,
+    "text": "So why wouldn't you choose Horde then?",
+    "offset": 0.0,
+    "timestamp": 204.44,
+    "filename": "050_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\050_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 51,
+    "start_time": 207.259,
+    "text": "Horde is pretty opinionated in its workflows and integrations.",
+    "offset": 0.0,
+    "timestamp": 207.259,
+    "filename": "051_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\051_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 52,
+    "start_time": 210.74,
+    "text": "So if you disagree with these or they don't work for you, then it might not be the right choice.",
+    "offset": 0.0,
+    "timestamp": 210.74,
+    "filename": "052_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\052_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 53,
+    "start_time": 215.719,
+    "text": "And one of those integrations is perforce.",
+    "offset": 0.0,
+    "timestamp": 215.719,
+    "filename": "053_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\053_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 54,
+    "start_time": 218.64,
+    "text": "Well, you could find somewhere to integrate it or migrate to perforce.",
+    "offset": 0.0,
+    "timestamp": 218.64,
+    "filename": "054_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\054_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 55,
+    "start_time": 222.18,
+    "text": "You might find that that's more effort than it's worth.",
+    "offset": 0.0,
+    "timestamp": 222.18,
+    "filename": "055_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\055_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 56,
+    "start_time": 225.88,
+    "text": "Or maybe you're a studio that doesn't mix of Unreal and non-unreal projects.",
+    "offset": 0.0,
+    "timestamp": 225.88,
+    "filename": "056_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\056_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 57,
+    "start_time": 230.5,
+    "text": "Horde's going to make less sense for things that aren't unreal.",
+    "offset": 0.0,
+    "timestamp": 230.5,
+    "filename": "057_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\057_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 59,
+    "start_time": 236.759,
+    "text": "It can be hard to justify moving away from something that's already getting their job done.",
+    "offset": 0.0,
+    "timestamp": 236.759,
+    "filename": "059_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\059_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 60,
+    "start_time": 242.28,
+    "text": "So I've broken up this talk into two main sections.",
+    "offset": 0.0,
+    "timestamp": 242.28,
+    "filename": "060_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\060_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 58,
+    "start_time": 234.38,
+    "text": "Or perhaps you already have a system that works.",
+    "offset": 0.0,
+    "timestamp": 234.38,
+    "filename": "058_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\058_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 61,
+    "start_time": 245.34,
+    "text": "First, I'm going to give an overview of four requirements.",
+    "offset": 0.0,
+    "timestamp": 245.34,
+    "filename": "061_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\061_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 62,
+    "start_time": 248.52,
+    "text": "Kind of show you what the minimum is.",
+    "offset": 0.0,
+    "timestamp": 248.52,
+    "filename": "062_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\062_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 64,
+    "start_time": 253.699,
+    "text": "And then in the next section, I'm going to walk through this plan, building it up piece by piece,",
+    "offset": 0.0,
+    "timestamp": 253.699,
+    "filename": "064_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\064_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 63,
+    "start_time": 250.46,
+    "text": "And then we'll build a high level plan for our infrastructure.",
+    "offset": 0.0,
+    "timestamp": 250.46,
+    "filename": "063_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\063_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 65,
+    "start_time": 258.279,
+    "text": "going into more detail, and show you ways that we have reduced cost.",
+    "offset": 0.0,
+    "timestamp": 258.279,
+    "filename": "065_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\065_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 66,
+    "start_time": 264.0,
+    "text": "So let's start with Horde's requirements and start building that plan.",
+    "offset": 0.0,
+    "timestamp": 264.0,
+    "filename": "066_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\066_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 67,
+    "start_time": 269.039,
+    "text": "So in Horde's documentation, there's this section that gives an overview of Epic's Horde deployment.",
+    "offset": 0.0,
+    "timestamp": 269.039,
+    "filename": "067_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\067_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 68,
+    "start_time": 274.699,
+    "text": "It's called Amazon Line Balancer, through Linux containers, serving the dashboard,",
+    "offset": 0.0,
+    "timestamp": 274.699,
+    "filename": "068_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\068_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 69,
+    "start_time": 279.279,
+    "text": "12 Horde service and total, document DB, Alaskicase, several hundred EC2 instances running the Horde agent.",
+    "offset": 0.0,
+    "timestamp": 279.279,
+    "filename": "069_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\069_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 71,
+    "start_time": 289.019,
+    "text": "Here we can start to see the kind of scale that Horde is designed for.",
+    "offset": 0.0,
+    "timestamp": 289.019,
+    "filename": "071_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\071_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 72,
+    "start_time": 292.319,
+    "text": "But as a small team, we obviously don't need all of that.",
+    "offset": 0.0,
+    "timestamp": 292.319,
+    "filename": "072_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\072_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 70,
+    "start_time": 285.36,
+    "text": "And on top of that, 100 machines on premises.",
+    "offset": 0.0,
+    "timestamp": 285.36,
+    "filename": "070_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\070_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 73,
+    "start_time": 296.139,
+    "text": "So the bare minimum Horde deployment will look something like this.",
+    "offset": 0.0,
+    "timestamp": 296.139,
+    "filename": "073_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\073_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 74,
+    "start_time": 299.54,
+    "text": "We'll have one Horde server paired with Mongo and Redist databases, or something that's compatible,",
+    "offset": 0.0,
+    "timestamp": 299.54,
+    "filename": "074_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\074_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 76,
+    "start_time": 308.12,
+    "text": "We will need some way to store things like build artifacts and logs.",
+    "offset": 0.0,
+    "timestamp": 308.12,
+    "filename": "076_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\076_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 75,
+    "start_time": 305.199,
+    "text": "as well as something to serve the dashboard.",
+    "offset": 0.0,
+    "timestamp": 305.199,
+    "filename": "075_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\075_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 77,
+    "start_time": 311.42,
+    "text": "This can just be the local file system of our Horde server, but it can also be a cloud-based storage solution.",
+    "offset": 0.0,
+    "timestamp": 311.42,
+    "filename": "077_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\077_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 79,
+    "start_time": 320.579,
+    "text": "And then of course, our perforced server, which will contain our project, our engine,",
+    "offset": 0.0,
+    "timestamp": 320.579,
+    "filename": "079_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\079_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 78,
+    "start_time": 317.759,
+    "text": "And we will need at least one agent, so we can actually run jobs.",
+    "offset": 0.0,
+    "timestamp": 317.759,
+    "filename": "078_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\078_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 80,
+    "start_time": 324.399,
+    "text": "and Horde configuration.",
+    "offset": 0.0,
+    "timestamp": 324.399,
+    "filename": "080_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\080_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 81,
+    "start_time": 328.2,
+    "text": "There's also a few external services that we can run alongside Horde to kind of extend its features.",
+    "offset": 0.0,
+    "timestamp": 328.2,
+    "filename": "081_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\081_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 82,
+    "start_time": 334.079,
+    "text": "The first is an authentication provider.",
+    "offset": 0.0,
+    "timestamp": 334.079,
+    "filename": "082_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\082_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 83,
+    "start_time": 336.6,
+    "text": "This will bring things like login flow and user management.",
+    "offset": 0.0,
+    "timestamp": 336.6,
+    "filename": "083_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\083_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 84,
+    "start_time": 340.04,
+    "text": "We will also want some way to send notifications to out of the box Horde integrates with Slack for notifications.",
+    "offset": 0.0,
+    "timestamp": 340.04,
+    "filename": "084_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\084_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 85,
+    "start_time": 347.92,
+    "text": "And Horde also has an issue system which can integrate with Jira, but I won't be talking about that today.",
+    "offset": 0.0,
+    "timestamp": 347.92,
+    "filename": "085_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\085_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 87,
+    "start_time": 357.8,
+    "text": "Where should we deploy it?",
+    "offset": 0.0,
+    "timestamp": 357.8,
+    "filename": "087_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\087_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 86,
+    "start_time": 354.62,
+    "text": "So now we have an understanding of what we need to deploy.",
+    "offset": 0.0,
+    "timestamp": 354.62,
+    "filename": "086_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\086_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 88,
+    "start_time": 359.259,
+    "text": "Should we put everything in the cloud or on premises or something in between?",
+    "offset": 0.0,
+    "timestamp": 359.259,
+    "filename": "088_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\088_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 89,
+    "start_time": 364.759,
+    "text": "So going through our options.",
+    "offset": 0.0,
+    "timestamp": 364.759,
+    "filename": "089_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\089_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 90,
+    "start_time": 367.439,
+    "text": "An on-premise deployment can be cheaper in the long term.",
+    "offset": 0.0,
+    "timestamp": 367.439,
+    "filename": "090_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\090_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 91,
+    "start_time": 371.1,
+    "text": "We're able to purchase Horde wrap front rather than paying ongoing fees for card hosting.",
+    "offset": 0.0,
+    "timestamp": 371.1,
+    "filename": "091_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\091_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 92,
+    "start_time": 376.319,
+    "text": "But it can be harder to scale.",
+    "offset": 0.0,
+    "timestamp": 376.319,
+    "filename": "092_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\092_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 93,
+    "start_time": 378.22,
+    "text": "It's not like we can just spin up more servers at the click of the button.",
+    "offset": 0.0,
+    "timestamp": 378.22,
+    "filename": "093_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\093_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 94,
+    "start_time": 383.139,
+    "text": "And it may also be less stable than a cloud deployment.",
+    "offset": 0.0,
+    "timestamp": 383.139,
+    "filename": "094_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\094_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 95,
+    "start_time": 386.459,
+    "text": "You know, we're most susceptible to things like power or internet outages as well as hardware failure.",
+    "offset": 0.0,
+    "timestamp": 386.459,
+    "filename": "095_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\095_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 96,
+    "start_time": 392.939,
+    "text": "So a cloud deployment can be more expensive in the long term, but it's going to offer great affectability and the ability to scale on demand.",
+    "offset": 0.0,
+    "timestamp": 392.939,
+    "filename": "096_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\096_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 97,
+    "start_time": 400.92,
+    "text": "And it may also offer more stability.",
+    "offset": 0.0,
+    "timestamp": 400.92,
+    "filename": "097_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\097_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 98,
+    "start_time": 403.24,
+    "text": "Large adages are uncommon and when we're in the cloud, hardware failure isn't really a concern anymore.",
+    "offset": 0.0,
+    "timestamp": 403.24,
+    "filename": "098_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\098_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 99,
+    "start_time": 410.24,
+    "text": "And then hybrid can allow us to tap into some of the benefits of both as well as giving us the flexibility to pivot.",
+    "offset": 0.0,
+    "timestamp": 410.24,
+    "filename": "099_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\099_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 100,
+    "start_time": 419.959,
+    "text": "So going with hybrid, it's not really going to be the cheapest option, but can kind of give us the best of both worlds.",
+    "offset": 0.0,
+    "timestamp": 419.959,
+    "filename": "100_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\100_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 101,
+    "start_time": 425.959,
+    "text": "By putting our critical infrastructure in the cloud, we can be more confident in its stability.",
+    "offset": 0.0,
+    "timestamp": 425.959,
+    "filename": "101_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\101_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 102,
+    "start_time": 430.98,
+    "text": "And by putting our agents on premises, we can say some money by buying hardware upfront or repurposing hardware that we already own rather than paying ongoing fees for high spec cloud servers.",
+    "offset": 0.0,
+    "timestamp": 430.98,
+    "filename": "102_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\102_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 103,
+    "start_time": 444.959,
+    "text": "All right, so now we have an idea of what we need to deploy and where let's start building that plan.",
+    "offset": 0.0,
+    "timestamp": 444.959,
+    "filename": "103_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\103_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 104,
+    "start_time": 450.899,
+    "text": "So first, we're going to put that critical infrastructure in the cloud. This will be things like our storage, our databases, our servers.",
+    "offset": 0.0,
+    "timestamp": 450.899,
+    "filename": "104_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\104_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 105,
+    "start_time": 457.8,
+    "text": "Any adages is here will be the most disruptive. So we're going to put all of it in the cloud.",
+    "offset": 0.0,
+    "timestamp": 457.8,
+    "filename": "105_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\105_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 106,
+    "start_time": 463.62,
+    "text": "And then our agents will be on premises. This will help save us a little bit of money. And I'm also going to throw in a perforced proxy and under a game sync, but I'll talk a bit more about why they're here.",
+    "offset": 0.0,
+    "timestamp": 463.62,
+    "filename": "106_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\106_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 107,
+    "start_time": 477.439,
+    "text": "And then finally, we have those third party services for authentication and notifications.",
+    "offset": 0.0,
+    "timestamp": 477.439,
+    "filename": "107_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\107_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 108,
+    "start_time": 484.4,
+    "text": "So now we have a high level plan for our deployment. I'm going to go into more detail for each component as we build it up piece by piece.",
+    "offset": 0.0,
+    "timestamp": 484.4,
+    "filename": "108_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\108_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 109,
+    "start_time": 492.24,
+    "text": "So I'll be covering things like deploying our server on the cloud in AWS, configuring under a game sync and perforced, setting up an authentication provider and then sending notifications to discord.",
+    "offset": 0.0,
+    "timestamp": 492.24,
+    "filename": "109_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\109_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 110,
+    "start_time": 505.4,
+    "text": "So let's start with the whole server as it's kind of the centerpiece for this deployment.",
+    "offset": 0.0,
+    "timestamp": 505.4,
+    "filename": "110_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\110_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 112,
+    "start_time": 524.0,
+    "text": "As a starting point, we can reference FX or deployment again and we can consider these managed databases offered by AWS, which are document, TV and elastication.",
+    "offset": 0.0,
+    "timestamp": 524.0,
+    "filename": "112_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\112_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 111,
+    "start_time": 510.839,
+    "text": "Just as a reminder, these are the four things we need to deploy for our hot server. That'll be the hot server itself, MongoDB and red as databases and something to serve the dashboard.",
+    "offset": 0.0,
+    "timestamp": 510.839,
+    "filename": "111_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\111_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 113,
+    "start_time": 536.44,
+    "text": "So these managed databases are kind of intended to be drop in replacements for Mongo and red as they come with extra features, other box, like high availability and automatic backups.",
+    "offset": 0.0,
+    "timestamp": 536.44,
+    "filename": "113_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\113_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 114,
+    "start_time": 547.38,
+    "text": "And they sort of offer a more streamlined experience. But here we are trading features and convenience for an increased cost.",
+    "offset": 0.0,
+    "timestamp": 547.38,
+    "filename": "114_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\114_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 115,
+    "start_time": 558.1,
+    "text": "So instead of using document DB and the last case, we could also deploy Mongo and red as directly to self managed EC2 instances.",
+    "offset": 0.0,
+    "timestamp": 558.1,
+    "filename": "115_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\115_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 116,
+    "start_time": 567.48,
+    "text": "But you're going to have to put more work in if you want those extra things like on my scaling or backups.",
+    "offset": 0.0,
+    "timestamp": 567.48,
+    "filename": "116_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\116_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 117,
+    "start_time": 573.519,
+    "text": "But this infrastructure kind of still leaves you open for scaling in the future, even if it's something you do manually.",
+    "offset": 0.0,
+    "timestamp": 573.519,
+    "filename": "117_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\117_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 118,
+    "start_time": 581.779,
+    "text": "But we can take this a bit further actually. Here we have our cheapest option. We can provision a single EC2 instance and then run all the services we need using Docker.",
+    "offset": 0.0,
+    "timestamp": 581.779,
+    "filename": "118_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\118_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 119,
+    "start_time": 592.419,
+    "text": "While this option is cheap, we're only paying for one server now. It's going to offer the least flexibility. If you want to scale this in the future, you're going to have to migrate everything to new servers.",
+    "offset": 0.0,
+    "timestamp": 592.419,
+    "filename": "119_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\119_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 120,
+    "start_time": 601.639,
+    "text": "So we have a few options here, kind of going from most scalable and most expensive to least scalable and least expensive.",
+    "offset": 0.0,
+    "timestamp": 601.639,
+    "filename": "120_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\120_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 121,
+    "start_time": 610.98,
+    "text": "But here we're going to choose the EC2 and Docker option. We can save some money by only provisioning one server.",
+    "offset": 0.0,
+    "timestamp": 610.98,
+    "filename": "121_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\121_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 122,
+    "start_time": 617.919,
+    "text": "Although we lose out on the ability to scale horizontally, it's not something that we necessarily need to meet the needs of a small team.",
+    "offset": 0.0,
+    "timestamp": 617.919,
+    "filename": "122_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\122_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 123,
+    "start_time": 627.299,
+    "text": "So we're also going to need something to serve the dashboard. It's just a static site. So that gives us quite a few options. We could use almost any of the shelf server and AWS also offers solutions for this.",
+    "offset": 0.0,
+    "timestamp": 627.299,
+    "filename": "123_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\123_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 124,
+    "start_time": 641.779,
+    "text": "But we can also just use the whole server and while we could offload this work to something else, it's going to make very little impact and also increase the complexity of that appointment.",
+    "offset": 0.0,
+    "timestamp": 641.779,
+    "filename": "124_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\124_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 125,
+    "start_time": 652.059,
+    "text": "The only real benefit to hosting it separately would be that we can deploy new updates for dashboard without having to deploy a whole new image to our old server.",
+    "offset": 0.0,
+    "timestamp": 652.059,
+    "filename": "125_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\125_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 126,
+    "start_time": 662.22,
+    "text": "So now we have a hot server running as well as the required databases and the dashboard. We've chosen a local solution by opting for a single EC2 instance while still understanding the drawbacks of this choice, like the lack of scalability and the flexibility to add them to the future.",
+    "offset": 0.0,
+    "timestamp": 662.22,
+    "filename": "126_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\126_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 127,
+    "start_time": 679.96,
+    "text": "So now we have a hot server. We need to choose a storage backend for it.",
+    "offset": 0.0,
+    "timestamp": 679.96,
+    "filename": "127_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\127_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 128,
+    "start_time": 685.22,
+    "text": "A hot is going to generate a few different files that we will need to store. This can be things like build artifacts, like your package builds or logs from the jobs are running.",
+    "offset": 0.0,
+    "timestamp": 685.22,
+    "filename": "128_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\128_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 129,
+    "start_time": 696.039,
+    "text": "And all supports multiple storage backends for this. It can be an external cloud-based solution like Amazon's S3 or azure's blob store.",
+    "offset": 0.0,
+    "timestamp": 696.039,
+    "filename": "129_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\129_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 130,
+    "start_time": 704.539,
+    "text": "But we also have the option for using the local storage of our EC2 instance, which in this case will be an EBS volume we've allocated to it.",
+    "offset": 0.0,
+    "timestamp": 704.539,
+    "filename": "130_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\130_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 131,
+    "start_time": 713.759,
+    "text": "So should we use that EBS volume? With EBS, we kind of have to allocate a certain amount of storage. If we run out, we have to allocate more or remove data.",
+    "offset": 0.0,
+    "timestamp": 713.759,
+    "filename": "131_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\131_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 132,
+    "start_time": 723.96,
+    "text": "It can offer better IRE performance compared to S3, but that's kind of assuming there's no other bottlenecks.",
+    "offset": 0.0,
+    "timestamp": 723.96,
+    "filename": "132_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\132_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 133,
+    "start_time": 730.819,
+    "text": "And it's generally going to be more expensive per gigabyte compared to S3.",
+    "offset": 0.0,
+    "timestamp": 730.819,
+    "filename": "133_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\133_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 134,
+    "start_time": 736.779,
+    "text": "So what about S3 then? A nice benefit is that it doesn't really have a storage limit. You just pay for what you use.",
+    "offset": 0.0,
+    "timestamp": 736.779,
+    "filename": "134_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\134_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 135,
+    "start_time": 744.46,
+    "text": "But a major benefit here is actually that now hold can use pre-sign URLs, which essentially means clients can upload and download data directly to and from S3, kind of bypassing our hot server.",
+    "offset": 0.0,
+    "timestamp": 744.46,
+    "filename": "135_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\135_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 136,
+    "start_time": 756.24,
+    "text": "And that's going to allow us to have a much slimmer hot server.",
+    "offset": 0.0,
+    "timestamp": 756.24,
+    "filename": "136_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\136_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 137,
+    "start_time": 761.759,
+    "text": "So here we're going to choose S3. It's nice that it is cheaper and doesn't have a storage limit. But yeah, the pre-sign URLs is really a major benefit here.",
+    "offset": 0.0,
+    "timestamp": 761.759,
+    "filename": "137_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\137_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 139,
+    "start_time": 787.74,
+    "text": "So to actually make use of our hot server, we're going to need some agents.",
+    "offset": 0.0,
+    "timestamp": 787.74,
+    "filename": "139_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\139_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 138,
+    "start_time": 775.44,
+    "text": "So now we've chosen S3 as our storage backend. It's offered lower prices and increased convenience, as well as the ability to now use pre-sign URLs.",
+    "offset": 0.0,
+    "timestamp": 775.44,
+    "filename": "138_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\138_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 140,
+    "start_time": 793.259,
+    "text": "In this section, I'm just going to give a bit of general advice for choosing hardware. And I'll show you some configuration we can tweak to know we're getting the most out of our build agents.",
+    "offset": 0.0,
+    "timestamp": 793.259,
+    "filename": "140_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\140_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 141,
+    "start_time": 803.399,
+    "text": "So in terms of hardware, some things are kind of obvious. We want to see you with the load of cores with more cores. We can do more in parallel.",
+    "offset": 0.0,
+    "timestamp": 803.399,
+    "filename": "141_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\141_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 142,
+    "start_time": 810.74,
+    "text": "And we also want fast storage. Our agents going to be reading and writing a lot of files. So an SSD is definitely recommended to prevent that from becoming a bottleneck.",
+    "offset": 0.0,
+    "timestamp": 810.74,
+    "filename": "142_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\142_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 143,
+    "start_time": 819.139,
+    "text": "A GPU is kind of optional. It really depends on if you plan on running automated tests on these agents and the kinds of tests are running.",
+    "offset": 0.0,
+    "timestamp": 819.139,
+    "filename": "143_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\143_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 144,
+    "start_time": 826.86,
+    "text": "And then we're going to need enough RAM to feed all of our cores. But how would you know how much RAM is enough?",
+    "offset": 0.0,
+    "timestamp": 826.86,
+    "filename": "144_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\144_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 145,
+    "start_time": 834.36,
+    "text": "If you've ever compiled an Unreal Engine project before, you've probably seen a message like this.",
+    "offset": 0.0,
+    "timestamp": 834.36,
+    "filename": "145_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\145_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 146,
+    "start_time": 839.42,
+    "text": "Here it's saying it's limited to one process per logical core. In this case, it's 20.",
+    "offset": 0.0,
+    "timestamp": 839.42,
+    "filename": "146_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\146_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 147,
+    "start_time": 846.46,
+    "text": "And then it's requesting 1.5 gigabytes of memory per process. And there's only currently 25 gigabytes available.",
+    "offset": 0.0,
+    "timestamp": 846.46,
+    "filename": "147_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\147_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 148,
+    "start_time": 853.519,
+    "text": "So it's being limited to 16 processes out of the maximum of 20.",
+    "offset": 0.0,
+    "timestamp": 853.519,
+    "filename": "148_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\148_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 149,
+    "start_time": 859.519,
+    "text": "What this means is the agent doesn't have enough available RAM to saturate all of the cores. So it's not really going to be enough to just throw more cores at your agent.",
+    "offset": 0.0,
+    "timestamp": 859.519,
+    "filename": "149_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\149_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 150,
+    "start_time": 868.34,
+    "text": "I would generally recommend budgeting about two gigabytes of RAM per thread, which will give plenty of buffer.",
+    "offset": 0.0,
+    "timestamp": 868.34,
+    "filename": "150_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\150_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 151,
+    "start_time": 875.379,
+    "text": "But what you really want is that 1.5 gigabytes per thread plus a bit of buffer.",
+    "offset": 0.0,
+    "timestamp": 875.379,
+    "filename": "151_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\151_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 152,
+    "start_time": 882.72,
+    "text": "This limiter is artificial and it can be turned off. It might help in situations where the agent doesn't have enough RAM.",
+    "offset": 0.0,
+    "timestamp": 882.72,
+    "filename": "152_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\152_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 153,
+    "start_time": 889.84,
+    "text": "But it's generally better just to make sure they have enough in the first place.",
+    "offset": 0.0,
+    "timestamp": 889.84,
+    "filename": "153_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\153_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 154,
+    "start_time": 893.759,
+    "text": "We do disable this limiter on our build agents. Just in case there's like a spike in memory usage.",
+    "offset": 0.0,
+    "timestamp": 893.759,
+    "filename": "154_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\154_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 155,
+    "start_time": 899.36,
+    "text": "And we want to make sure they're always using the maximum amount of parallel actions.",
+    "offset": 0.0,
+    "timestamp": 899.36,
+    "filename": "155_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\155_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 156,
+    "start_time": 904.659,
+    "text": "There's also this all cores Boolean. It's kind of set true for some build graph tasks when they run on a horde agent, but not all of them.",
+    "offset": 0.0,
+    "timestamp": 904.659,
+    "filename": "156_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\156_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 157,
+    "start_time": 912.36,
+    "text": "So we want to set this to true.",
+    "offset": 0.0,
+    "timestamp": 912.36,
+    "filename": "157_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\157_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 159,
+    "start_time": 929.72,
+    "text": "So before we can actually run CIR jobs, we're going to need to set up our perforal server.",
+    "offset": 0.0,
+    "timestamp": 929.72,
+    "filename": "159_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\159_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 158,
+    "start_time": 916.759,
+    "text": "So now we have some horde agents. Maybe we repurpose some old workstations, but we've made sure they have enough RAM and we've tweaked their configuration. So we know we're getting the most out of them.",
+    "offset": 0.0,
+    "timestamp": 916.759,
+    "filename": "158_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\158_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 160,
+    "start_time": 937.279,
+    "text": "The first is that we must have Unreal Engine Source Code on Perforce.",
+    "offset": 0.0,
+    "timestamp": 937.279,
+    "filename": "160_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\160_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 161,
+    "start_time": 944.919,
+    "text": "So even if you don't plan on modifying it, we're going to need to put some forward into how we structure our perforal streams to ingest the Engine Source Code.",
+    "offset": 0.0,
+    "timestamp": 944.919,
+    "filename": "161_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\161_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 162,
+    "start_time": 952.639,
+    "text": "And the second is that our projects must be considered native, which is essentially a full-the-structure that we must follow.",
+    "offset": 0.0,
+    "timestamp": 952.639,
+    "filename": "162_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\162_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 163,
+    "start_time": 960.519,
+    "text": "So we're starting with streams.",
+    "offset": 0.0,
+    "timestamp": 960.519,
+    "filename": "163_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\163_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 164,
+    "start_time": 962.119,
+    "text": "We want to create at least two streams. The first being an entry point, this will just contain the stock Unreal Engine with node modifications.",
+    "offset": 0.0,
+    "timestamp": 962.119,
+    "filename": "164_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\164_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 166,
+    "start_time": 974.36,
+    "text": "But I would also recommend creating a third stream as a buffer between the two. And this will give us a place to merge incoming changes with our own modifications.",
+    "offset": 0.0,
+    "timestamp": 974.36,
+    "filename": "166_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\166_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 165,
+    "start_time": 970.24,
+    "text": "And then we'll create another stream where we can actually develop changes in.",
+    "offset": 0.0,
+    "timestamp": 970.24,
+    "filename": "165_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\165_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 167,
+    "start_time": 985.98,
+    "text": "So that might look something like this. Here we have UE Engine Entry, which is our entry point.",
+    "offset": 0.0,
+    "timestamp": 985.98,
+    "filename": "167_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\167_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 168,
+    "start_time": 991.279,
+    "text": "Then at the bottom, UE Engine Main is where we're developing changes. And then in between that, we have our buffer stream for merging.",
+    "offset": 0.0,
+    "timestamp": 991.279,
+    "filename": "168_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\168_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 170,
+    "start_time": 1012.479,
+    "text": "And then we branch off UE Dev to create a stream for each project.",
+    "offset": 0.0,
+    "timestamp": 1012.479,
+    "filename": "170_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\170_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 169,
+    "start_time": 1000.519,
+    "text": "The way we set up our streams, it kind of follows a similar structure. Here UE Main is our entry point. And then below that, UE Dev mostly acts as a buffer, but we do develop some changes there.",
+    "offset": 0.0,
+    "timestamp": 1000.519,
+    "filename": "169_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\169_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 171,
+    "start_time": 1016.98,
+    "text": "We also have these release streams. They're kind of snapshots of the engine as we've ingested them. And they're mostly there for compiling plugins against.",
+    "offset": 0.0,
+    "timestamp": 1016.98,
+    "filename": "171_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\171_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 173,
+    "start_time": 1034.079,
+    "text": "The first is that our project folder must be relative to the engine directory. And the second is if it's in a sub directory, that sub directory needs to be listed by you project does file.",
+    "offset": 0.0,
+    "timestamp": 1034.079,
+    "filename": "173_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\173_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 172,
+    "start_time": 1028.039,
+    "text": "The next thing we need is for our projects to be considered native. And we have to meet one of two criteria.",
+    "offset": 0.0,
+    "timestamp": 1028.039,
+    "filename": "172_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\172_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 174,
+    "start_time": 1044.96,
+    "text": "To achieve this, we could just push our project into the same stream as our engine. And that's definitely a valid way of doing it. But I'd like to show you an alternative.",
+    "offset": 0.0,
+    "timestamp": 1044.96,
+    "filename": "174_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\174_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 176,
+    "start_time": 1067.2,
+    "text": "So if you sync your engine stream, you'll also get your project in a sub directory.",
+    "offset": 0.0,
+    "timestamp": 1067.2,
+    "filename": "176_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\176_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 175,
+    "start_time": 1055.819,
+    "text": "And that's using stream components. What this allows us to do is essentially create a separate stream for our project. And then we can map the contents of that stream to any workspace created for our engine.",
+    "offset": 0.0,
+    "timestamp": 1055.819,
+    "filename": "175_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\175_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 177,
+    "start_time": 1074.16,
+    "text": "So why would you even bother doing it this way using stream components kind of decouples your engine and project streams, meaning they can be mixed and matched or merged and branched in isolation.",
+    "offset": 0.0,
+    "timestamp": 1074.16,
+    "filename": "177_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\177_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 178,
+    "start_time": 1087.12,
+    "text": "Another nice benefit is that it can be applied retroactively or even undone without having to push files around different streams. So it kind of offers great flexibility of cool.",
+    "offset": 0.0,
+    "timestamp": 1087.12,
+    "filename": "178_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\178_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 180,
+    "start_time": 1112.059,
+    "text": "And that's introducing a purple proxy. So a purple proxy a second essentially acts as a cage between clients at a purple server.",
+    "offset": 0.0,
+    "timestamp": 1112.059,
+    "filename": "180_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\180_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 179,
+    "start_time": 1099.139,
+    "text": "So now our purple server is ready to be used with forward. We've set up streams with the engine and we've mapped our projects to those streams using stream components. But there's actually one improvement we can make to the setup.",
+    "offset": 0.0,
+    "timestamp": 1099.139,
+    "filename": "179_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\179_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 181,
+    "start_time": 1120.259,
+    "text": "Meaning if the proxy already has a file, the client is requesting we don't need to redone download that file from the server. And this can lead to improvements in sync times as well as reducing the load on our purple server.",
+    "offset": 0.0,
+    "timestamp": 1120.259,
+    "filename": "181_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\181_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 182,
+    "start_time": 1134.579,
+    "text": "So what we want to achieve is something like this where we have our agents talking to the purple proxy. But our board server is talking directly to our purple server.",
+    "offset": 0.0,
+    "timestamp": 1134.579,
+    "filename": "182_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\182_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 183,
+    "start_time": 1146.98,
+    "text": "So to achieve this, we'll need a host name that resolves to different IPs on each machine. So on our agents this this host name will result to the IP of our purple proxy and then on our board server this host name will result to the IP of our purple server.",
+    "offset": 0.0,
+    "timestamp": 1146.98,
+    "filename": "183_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\183_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 184,
+    "start_time": 1165.939,
+    "text": "For our agents, we can achieve this by adding an entry to the host file. The name on the right here will result to the IP on the left just for this machine.",
+    "offset": 0.0,
+    "timestamp": 1165.939,
+    "filename": "184_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\184_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 185,
+    "start_time": 1176.759,
+    "text": "And then on our server we can do something similar by adding an entry to the extra host field and not the compose file.",
+    "offset": 0.0,
+    "timestamp": 1176.759,
+    "filename": "185_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\185_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 186,
+    "start_time": 1185.72,
+    "text": "And now when we configure perforce for our whole deployment, we can use that host name and that's going to be used by both our agent and now server.",
+    "offset": 0.0,
+    "timestamp": 1185.72,
+    "filename": "186_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\186_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 187,
+    "start_time": 1195.62,
+    "text": "And then finally, we'll need to actually run our perforce proxy and it's pretty straightforward. We just need to run the P4P executable with a few arguments.",
+    "offset": 0.0,
+    "timestamp": 1195.62,
+    "filename": "187_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\187_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 188,
+    "start_time": 1204.039,
+    "text": "The first is the IP import to bind to it. The second is the IP import of the perforce server. And then finally, we have a directory for the for the cache files.",
+    "offset": 0.0,
+    "timestamp": 1204.039,
+    "filename": "188_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\188_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 189,
+    "start_time": 1218.019,
+    "text": "So now we've added a perforce proxy to our deployment. It's improved the sync times on our agents and it's also reduced the load on our perforce server.",
+    "offset": 0.0,
+    "timestamp": 1218.019,
+    "filename": "189_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\189_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 190,
+    "start_time": 1228.16,
+    "text": "So now our perforce server is ready. Let's talk about Unreal Gamesync.",
+    "offset": 0.0,
+    "timestamp": 1228.16,
+    "filename": "190_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\190_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 191,
+    "start_time": 1234.92,
+    "text": "So I'm just going to quickly cover what Unreal Gamesync is and why you would want to use it. And then I'll show you a quick overview of how we can use it for it.",
+    "offset": 0.0,
+    "timestamp": 1234.92,
+    "filename": "191_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\191_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 192,
+    "start_time": 1245.539,
+    "text": "So Unreal Gamesync is a desktop tool. Its main purpose is to streamline the steps involved, the syncing the engine and projects from perforce.",
+    "offset": 0.0,
+    "timestamp": 1245.539,
+    "filename": "192_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\192_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 193,
+    "start_time": 1254.559,
+    "text": "And it comes with additional features like a sync filter and the ability to download precompiled binaries from perforce or for it.",
+    "offset": 0.0,
+    "timestamp": 1254.559,
+    "filename": "193_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\193_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 194,
+    "start_time": 1261.74,
+    "text": "And it's kind of designed and intended to be used in that native folder structure we talked about before. So if you want to use Unreal Gamesync, you have to be using the native folder structure.",
+    "offset": 0.0,
+    "timestamp": 1261.74,
+    "filename": "194_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\194_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 195,
+    "start_time": 1273.239,
+    "text": "So why would you want to use Unreal Gamesync? We can sync and build that project just fine without it, right?",
+    "offset": 0.0,
+    "timestamp": 1273.239,
+    "filename": "195_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\195_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 196,
+    "start_time": 1278.74,
+    "text": "Unreal Gamesync kind of automates all the steps involved for syncing. So in one click, we can sync, build and run our project, which kind of helps mitigate any human error in those steps.",
+    "offset": 0.0,
+    "timestamp": 1278.74,
+    "filename": "196_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\196_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 197,
+    "start_time": 1291.46,
+    "text": "You can also kind of think of Unreal Gamesync as a launcher or a dashboard. It's at a glance. You can kind of see project hell or a change list.",
+    "offset": 0.0,
+    "timestamp": 1291.46,
+    "filename": "197_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\197_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 198,
+    "start_time": 1299.839,
+    "text": "And launch other tools like Unreal Insights was in. And of course precompiled binaries. We're able to sync and run our project without even needing to install Visual Studio.",
+    "offset": 0.0,
+    "timestamp": 1299.839,
+    "filename": "198_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\198_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 199,
+    "start_time": 1313.24,
+    "text": "So now we have an understanding of what Unreal Gamesync is and why we would use it. Let's talk about the playing.",
+    "offset": 0.0,
+    "timestamp": 1313.24,
+    "filename": "199_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\199_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 200,
+    "start_time": 1319.579,
+    "text": "So beyond having a perforce server, there are three additional things we can deploy to expand the features of Unreal Gamesync.",
+    "offset": 0.0,
+    "timestamp": 1319.579,
+    "filename": "200_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\200_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 201,
+    "start_time": 1327.039,
+    "text": "The first is a metadata server. This will kind of provide Unreal Gamesync with additional information that will come from perforce, things like comments and labels generated by our build system.",
+    "offset": 0.0,
+    "timestamp": 1327.039,
+    "filename": "201_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\201_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 202,
+    "start_time": 1339.059,
+    "text": "The next is a place to download the UGS client. This will kind of give your users a place to download it, but it will also allow the self-updata to see if there's a new version available and then patch the client locally.",
+    "offset": 0.0,
+    "timestamp": 1339.059,
+    "filename": "202_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\202_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 203,
+    "start_time": 1351.88,
+    "text": "And then finally, we'll need a place to download those precompiled binaries.",
+    "offset": 0.0,
+    "timestamp": 1351.88,
+    "filename": "203_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\203_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 205,
+    "start_time": 1365.599,
+    "text": "So we'd have to create two additional streams on our perforce server, one for our Unreal Gamesync binaries and one for our precompiled editor binaries.",
+    "offset": 0.0,
+    "timestamp": 1365.599,
+    "filename": "205_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\205_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 204,
+    "start_time": 1357.62,
+    "text": "So the old way this used to be done was by using a dedicated metadata server and then storing our binaries on perforce.",
+    "offset": 0.0,
+    "timestamp": 1357.62,
+    "filename": "204_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\204_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 206,
+    "start_time": 1373.539,
+    "text": "And then finally, we have our build system which will talk to the metadata server over its HTTP API. And that's kind of glue you would have to do yourself manually.",
+    "offset": 0.0,
+    "timestamp": 1373.539,
+    "filename": "206_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\206_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 207,
+    "start_time": 1386.519,
+    "text": "But now instead, we can use Horde for all of this. Horde here is now our metadata server and it's also storing those binaries.",
+    "offset": 0.0,
+    "timestamp": 1386.519,
+    "filename": "207_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\207_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 208,
+    "start_time": 1393.94,
+    "text": "So we have on less servers to deploy and we don't have to create any additional streams on our perforce server.",
+    "offset": 0.0,
+    "timestamp": 1393.94,
+    "filename": "208_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\208_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 209,
+    "start_time": 1399.759,
+    "text": "Here we can kind of start to see that deeper Unreal integration is starting to pay off.",
+    "offset": 0.0,
+    "timestamp": 1399.759,
+    "filename": "209_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\209_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 211,
+    "start_time": 1417.779,
+    "text": "So configuring Unreal Gamesync is pretty easy. We just need to add this entry to our I&I and we're done.",
+    "offset": 0.0,
+    "timestamp": 1417.779,
+    "filename": "211_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\211_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 210,
+    "start_time": 1407.299,
+    "text": "So it's fairly straightforward to achieve this. We just need to configure Unreal Gamesync and then upload artifacts from our build graph script.",
+    "offset": 0.0,
+    "timestamp": 1407.299,
+    "filename": "210_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\210_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 212,
+    "start_time": 1426.019,
+    "text": "Uploading PCBs is pretty straightforward too. So in our build graph script, we have a node that is producing the binaries that we want to upload.",
+    "offset": 0.0,
+    "timestamp": 1426.019,
+    "filename": "212_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\212_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 213,
+    "start_time": 1434.779,
+    "text": "And then we can add this artifact element that's looking for those binaries.",
+    "offset": 0.0,
+    "timestamp": 1434.779,
+    "filename": "213_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\213_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 215,
+    "start_time": 1448.96,
+    "text": "So now we've introduced Unreal Gamesync into our workflow without the need to host any additional services or add more streams to our perforce server.",
+    "offset": 0.0,
+    "timestamp": 1448.96,
+    "filename": "215_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\215_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 214,
+    "start_time": 1440.299,
+    "text": "Then if we assign the correct type and keys, our new Gamesync will automatically be able to find these and download them.",
+    "offset": 0.0,
+    "timestamp": 1440.299,
+    "filename": "214_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\214_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 216,
+    "start_time": 1457.339,
+    "text": "And it's also allowed our developers to sync in a more convenient way.",
+    "offset": 0.0,
+    "timestamp": 1457.339,
+    "filename": "216_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\216_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 217,
+    "start_time": 1463.48,
+    "text": "So our Horde deployment is looking pretty good. We actually have everything we need to run CR jobs.",
+    "offset": 0.0,
+    "timestamp": 1463.48,
+    "filename": "217_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\217_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 218,
+    "start_time": 1468.859,
+    "text": "But there are a few more services we can run alongside Horde to kind of enhance this deployment.",
+    "offset": 0.0,
+    "timestamp": 1468.859,
+    "filename": "218_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\218_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 219,
+    "start_time": 1473.24,
+    "text": "And the first of those is authentication.",
+    "offset": 0.0,
+    "timestamp": 1473.24,
+    "filename": "219_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\219_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 220,
+    "start_time": 1478.18,
+    "text": "So in this section, I'm going to talk a little bit about what OIDC providers are.",
+    "offset": 0.0,
+    "timestamp": 1478.18,
+    "filename": "220_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\220_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 221,
+    "start_time": 1482.72,
+    "text": "Then I'll cover an example of integrating one with Horde.",
+    "offset": 0.0,
+    "timestamp": 1482.72,
+    "filename": "221_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\221_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 222,
+    "start_time": 1488.68,
+    "text": "So OIDC stands for Open ID Connect. It's kind of a standard that provides two main purposes.",
+    "offset": 0.0,
+    "timestamp": 1488.68,
+    "filename": "222_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\222_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 223,
+    "start_time": 1494.42,
+    "text": "The first is login flow. So that will allow users to log into your service, potentially with accounts they created on other platforms like Google or GitHub.",
+    "offset": 0.0,
+    "timestamp": 1494.42,
+    "filename": "223_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\223_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 224,
+    "start_time": 1503.42,
+    "text": "And then the second is user identity.",
+    "offset": 0.0,
+    "timestamp": 1503.42,
+    "filename": "224_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\224_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 225,
+    "start_time": 1506.119,
+    "text": "When once logged in, your service will receive information about the user like their name or their email address.",
+    "offset": 0.0,
+    "timestamp": 1506.119,
+    "filename": "225_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\225_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 226,
+    "start_time": 1513.819,
+    "text": "So Horde has two main login flows that we need to understand.",
+    "offset": 0.0,
+    "timestamp": 1513.819,
+    "filename": "226_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\226_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 227,
+    "start_time": 1517.819,
+    "text": "The first is signing into the dashboard.",
+    "offset": 0.0,
+    "timestamp": 1517.819,
+    "filename": "227_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\227_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 228,
+    "start_time": 1520.92,
+    "text": "So if you browse to your Horde server, it's basically going to immediately redirect you to your provider's login page.",
+    "offset": 0.0,
+    "timestamp": 1520.92,
+    "filename": "228_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\228_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 230,
+    "start_time": 1530.7,
+    "text": "And you'll be redirected back to the Horde dashboard in a signed-in state.",
+    "offset": 0.0,
+    "timestamp": 1530.7,
+    "filename": "230_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\230_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 229,
+    "start_time": 1527.92,
+    "text": "There you would fill out your details and sign in.",
+    "offset": 0.0,
+    "timestamp": 1527.92,
+    "filename": "229_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\229_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 232,
+    "start_time": 1541.72,
+    "text": "So when Unreal Gamesync wants to authenticate, it first hosts a local HTTP server with a webpage.",
+    "offset": 0.0,
+    "timestamp": 1541.72,
+    "filename": "232_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\232_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 231,
+    "start_time": 1537.279,
+    "text": "And the second login flow is with desktop tools like Unreal Gamesync.",
+    "offset": 0.0,
+    "timestamp": 1537.279,
+    "filename": "231_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\231_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 234,
+    "start_time": 1552.22,
+    "text": "There you will login as normal.",
+    "offset": 0.0,
+    "timestamp": 1552.22,
+    "filename": "234_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\234_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 233,
+    "start_time": 1548.18,
+    "text": "And then it will open your browser to your provider's login page.",
+    "offset": 0.0,
+    "timestamp": 1548.18,
+    "filename": "233_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\233_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 236,
+    "start_time": 1557.879,
+    "text": "Unreal Gamesync will see that it's been redirected to and then store the information it received in a file to be used later.",
+    "offset": 0.0,
+    "timestamp": 1557.879,
+    "filename": "236_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\236_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 235,
+    "start_time": 1554.14,
+    "text": "And this time you'll be redirected to that locally hosted webpage.",
+    "offset": 0.0,
+    "timestamp": 1554.14,
+    "filename": "235_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\235_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 238,
+    "start_time": 1571.48,
+    "text": "So when a user signs into Horde, it's going to receive a list of claims that describe a user.",
+    "offset": 0.0,
+    "timestamp": 1571.48,
+    "filename": "238_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\238_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 237,
+    "start_time": 1566.859,
+    "text": "The second thing we're going to get from our provider is user identity.",
+    "offset": 0.0,
+    "timestamp": 1566.859,
+    "filename": "237_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\237_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 239,
+    "start_time": 1576.779,
+    "text": "Claims are just key pair values. They can be things like their email address, their name, purple picture.",
+    "offset": 0.0,
+    "timestamp": 1576.779,
+    "filename": "239_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\239_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 240,
+    "start_time": 1582.74,
+    "text": "And in Horde we're also able to assign permissions to these claims.",
+    "offset": 0.0,
+    "timestamp": 1582.74,
+    "filename": "240_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\240_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 242,
+    "start_time": 1596.46,
+    "text": "So there are quite a few providers to choose from and a lot of them cost money.",
+    "offset": 0.0,
+    "timestamp": 1596.46,
+    "filename": "242_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\242_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 241,
+    "start_time": 1586.699,
+    "text": "So if a user's email claim is ashrit-sontv.com, then they can have the execute Horde commission, for example.",
+    "offset": 0.0,
+    "timestamp": 1586.699,
+    "filename": "241_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\241_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 243,
+    "start_time": 1600.9,
+    "text": "You might have to try a few to find one that meets your needs.",
+    "offset": 0.0,
+    "timestamp": 1600.9,
+    "filename": "243_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\243_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 244,
+    "start_time": 1604.2,
+    "text": "Horde does have a built-in provider. And it's definitely a great option if you're not planning on exposing your Horde server to the internet.",
+    "offset": 0.0,
+    "timestamp": 1604.2,
+    "filename": "244_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\244_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 245,
+    "start_time": 1611.259,
+    "text": "It's also a lot easier to set up and it's free.",
+    "offset": 0.0,
+    "timestamp": 1611.259,
+    "filename": "245_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\245_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 246,
+    "start_time": 1616.099,
+    "text": "But the provider I'd like to talk about today is AuthSero.",
+    "offset": 0.0,
+    "timestamp": 1616.099,
+    "filename": "246_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\246_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 247,
+    "start_time": 1619.68,
+    "text": "It's free to use is very permissive. We can have like 25,000 users before we have to start paying.",
+    "offset": 0.0,
+    "timestamp": 1619.68,
+    "filename": "247_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\247_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 248,
+    "start_time": 1624.4,
+    "text": "It's definitely plenty.",
+    "offset": 0.0,
+    "timestamp": 1624.4,
+    "filename": "248_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\248_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 249,
+    "start_time": 1626.4,
+    "text": "It has all the features we need at S122.",
+    "offset": 0.0,
+    "timestamp": 1626.4,
+    "filename": "249_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\249_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 250,
+    "start_time": 1629.539,
+    "text": "But a killer feature for us is that it integrates with Google Workspace, meaning we can sign in without existing Google S122 Workspace accounts.",
+    "offset": 0.0,
+    "timestamp": 1629.539,
+    "filename": "250_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\250_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 251,
+    "start_time": 1637.44,
+    "text": "And that's quite convenient.",
+    "offset": 0.0,
+    "timestamp": 1637.44,
+    "filename": "251_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\251_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 252,
+    "start_time": 1641.44,
+    "text": "So I want to run through a quick example of setting up AuthSero with Horde.",
+    "offset": 0.0,
+    "timestamp": 1641.44,
+    "filename": "252_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\252_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 253,
+    "start_time": 1645.64,
+    "text": "Kind of just step by step showing you the configuration on the Horde side and what you need to do in AuthSero.",
+    "offset": 0.0,
+    "timestamp": 1645.64,
+    "filename": "253_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\253_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 254,
+    "start_time": 1653.48,
+    "text": "So in our server configuration file, there's these six fields we need to fill out to set up Authentication, which are the Auth method, the OIDC authority and audience, client IDN secret, and then our server URL.",
+    "offset": 0.0,
+    "timestamp": 1653.48,
+    "filename": "254_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\254_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 255,
+    "start_time": 1667.619,
+    "text": "So starting with the Auth method, we have four options.",
+    "offset": 0.0,
+    "timestamp": 1667.619,
+    "filename": "255_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\255_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 256,
+    "start_time": 1671.059,
+    "text": "Anonymous, which means no authentication, Octo, if we're specifically using that provider, open ID connect for any other provider, and then Horde, which is the built in provider.",
+    "offset": 0.0,
+    "timestamp": 1671.059,
+    "filename": "256_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\256_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 257,
+    "start_time": 1681.96,
+    "text": "Here we're going to pick open ID connect.",
+    "offset": 0.0,
+    "timestamp": 1681.96,
+    "filename": "257_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\257_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 258,
+    "start_time": 1686.619,
+    "text": "Next, we'll need an OIDC authority.",
+    "offset": 0.0,
+    "timestamp": 1686.619,
+    "filename": "258_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\258_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 259,
+    "start_time": 1689.539,
+    "text": "When you create an account in AuthSero, the first thing an Rsu to do is create a tenant.",
+    "offset": 0.0,
+    "timestamp": 1689.539,
+    "filename": "259_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\259_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 260,
+    "start_time": 1693.9,
+    "text": "And this URL that generates will be what we use for our authority.",
+    "offset": 0.0,
+    "timestamp": 1693.9,
+    "filename": "260_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\260_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 261,
+    "start_time": 1699.04,
+    "text": "So we can just copy paste that into our config.",
+    "offset": 0.0,
+    "timestamp": 1699.04,
+    "filename": "261_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\261_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 262,
+    "start_time": 1704.32,
+    "text": "Now we need an audience and to get that, we need to create an API in AuthSero.",
+    "offset": 0.0,
+    "timestamp": 1704.32,
+    "filename": "262_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\262_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 263,
+    "start_time": 1708.859,
+    "text": "Here it's going to ask for an identifier.",
+    "offset": 0.0,
+    "timestamp": 1708.859,
+    "filename": "263_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\263_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 264,
+    "start_time": 1710.5,
+    "text": "It can actually be whatever you want, but it's common for it to be formatted like a URL.",
+    "offset": 0.0,
+    "timestamp": 1710.5,
+    "filename": "264_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\264_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 265,
+    "start_time": 1715.579,
+    "text": "It doesn't have to be a real or working domain.",
+    "offset": 0.0,
+    "timestamp": 1715.579,
+    "filename": "265_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\265_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 266,
+    "start_time": 1720.06,
+    "text": "And this identifier is what we will use for our audience.",
+    "offset": 0.0,
+    "timestamp": 1720.06,
+    "filename": "266_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\266_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 267,
+    "start_time": 1725.98,
+    "text": "Now to get our client ID in secret, we need to create an app in AuthSero.",
+    "offset": 0.0,
+    "timestamp": 1725.98,
+    "filename": "267_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\267_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 268,
+    "start_time": 1730.299,
+    "text": "Here we're going to choose single page web application.",
+    "offset": 0.0,
+    "timestamp": 1730.299,
+    "filename": "268_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\268_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 269,
+    "start_time": 1735.019,
+    "text": "And then we also want to set these allowed callback URLs.",
+    "offset": 0.0,
+    "timestamp": 1735.019,
+    "filename": "269_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\269_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 270,
+    "start_time": 1738.839,
+    "text": "These are essentially the URLs we're being redirected to in the two log-in flows and mention at the start.",
+    "offset": 0.0,
+    "timestamp": 1738.839,
+    "filename": "270_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\270_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 271,
+    "start_time": 1744.2,
+    "text": "So we'll need this to make sure there's actually work.",
+    "offset": 0.0,
+    "timestamp": 1744.2,
+    "filename": "271_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\271_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 272,
+    "start_time": 1748.98,
+    "text": "Then in our app settings, we'll find the client ID in secret that we need.",
+    "offset": 0.0,
+    "timestamp": 1748.98,
+    "filename": "272_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\272_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 273,
+    "start_time": 1753.16,
+    "text": "Which will just copy paste into our config.",
+    "offset": 0.0,
+    "timestamp": 1753.16,
+    "filename": "273_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\273_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 274,
+    "start_time": 1757.72,
+    "text": "Then finally, we just need to set this server URL.",
+    "offset": 0.0,
+    "timestamp": 1757.72,
+    "filename": "274_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\274_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 275,
+    "start_time": 1760.18,
+    "text": "If it's unset, it will kind of default to whatever the name of the machine or container it's running on.",
+    "offset": 0.0,
+    "timestamp": 1760.18,
+    "filename": "275_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\275_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 276,
+    "start_time": 1765.519,
+    "text": "So we're going to set that to the domain of our forward server.",
+    "offset": 0.0,
+    "timestamp": 1765.519,
+    "filename": "276_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\276_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 277,
+    "start_time": 1771.16,
+    "text": "So there's actually a few more things we need to change in AuthSero.",
+    "offset": 0.0,
+    "timestamp": 1771.16,
+    "filename": "277_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\277_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 279,
+    "start_time": 1779.759,
+    "text": "So for limiting access, there's two things we need to change.",
+    "offset": 0.0,
+    "timestamp": 1779.759,
+    "filename": "279_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\279_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 278,
+    "start_time": 1774.16,
+    "text": "And that's limiting access and setting a default audience.",
+    "offset": 0.0,
+    "timestamp": 1774.16,
+    "filename": "278_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\278_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 280,
+    "start_time": 1782.94,
+    "text": "The first is disabling this Google social connection.",
+    "offset": 0.0,
+    "timestamp": 1782.94,
+    "filename": "280_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\280_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 281,
+    "start_time": 1786.079,
+    "text": "It's enabled by default.",
+    "offset": 0.0,
+    "timestamp": 1786.079,
+    "filename": "281_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\281_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 282,
+    "start_time": 1787.72,
+    "text": "And when it's enabled, it means anyone with a Google account can log into our forward server.",
+    "offset": 0.0,
+    "timestamp": 1787.72,
+    "filename": "282_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\282_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 283,
+    "start_time": 1792.14,
+    "text": "Which, yeah, we definitely know what that.",
+    "offset": 0.0,
+    "timestamp": 1792.14,
+    "filename": "283_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\283_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 284,
+    "start_time": 1795.5,
+    "text": "And then we also want to disable signups on this username and password authentication.",
+    "offset": 0.0,
+    "timestamp": 1795.5,
+    "filename": "284_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\284_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 285,
+    "start_time": 1799.68,
+    "text": "And that's going to prevent anyone from creating a login for themselves.",
+    "offset": 0.0,
+    "timestamp": 1799.68,
+    "filename": "285_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\285_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 286,
+    "start_time": 1802.88,
+    "text": "Also, don't want that.",
+    "offset": 0.0,
+    "timestamp": 1802.88,
+    "filename": "286_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\286_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 287,
+    "start_time": 1805.06,
+    "text": "And then finally, there's this default audience setting, which is quite important.",
+    "offset": 0.0,
+    "timestamp": 1805.06,
+    "filename": "287_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\287_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 288,
+    "start_time": 1809.599,
+    "text": "After setting up an Auth provider, you might find that logging into the dashboard works okay.",
+    "offset": 0.0,
+    "timestamp": 1809.599,
+    "filename": "288_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\288_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 289,
+    "start_time": 1814.599,
+    "text": "But logging into desktop tools like Unreal Gamsync doesn't quite work right.",
+    "offset": 0.0,
+    "timestamp": 1814.599,
+    "filename": "289_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\289_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 292,
+    "start_time": 1826.56,
+    "text": "So we can set a default audience and AuthSero will essentially inject that parameter for us automatically.",
+    "offset": 0.0,
+    "timestamp": 1826.56,
+    "filename": "292_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\292_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 290,
+    "start_time": 1819.339,
+    "text": "That's because AuthSero is expecting an audience parameter in one of its payloads.",
+    "offset": 0.0,
+    "timestamp": 1819.339,
+    "filename": "290_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\290_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 291,
+    "start_time": 1823.619,
+    "text": "But Unreal Gamsync isn't actually providing it.",
+    "offset": 0.0,
+    "timestamp": 1823.619,
+    "filename": "291_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\291_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 293,
+    "start_time": 1833.059,
+    "text": "So we need this to make sure that we can actually log in with Unreal Gamsync.",
+    "offset": 0.0,
+    "timestamp": 1833.059,
+    "filename": "293_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\293_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 295,
+    "start_time": 1844.64,
+    "text": "It's given us enhanced security, user management and login flow.",
+    "offset": 0.0,
+    "timestamp": 1844.64,
+    "filename": "295_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\295_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 294,
+    "start_time": 1839.44,
+    "text": "So now we've added a third party indication service to our deployment.",
+    "offset": 0.0,
+    "timestamp": 1839.44,
+    "filename": "294_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\294_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 296,
+    "start_time": 1849.2,
+    "text": "And we've gained all of this with no additional cost.",
+    "offset": 0.0,
+    "timestamp": 1849.2,
+    "filename": "296_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\296_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 297,
+    "start_time": 1854.4,
+    "text": "So now we can log in.",
+    "offset": 0.0,
+    "timestamp": 1854.4,
+    "filename": "297_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\297_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 298,
+    "start_time": 1855.759,
+    "text": "We can run C R jobs.",
+    "offset": 0.0,
+    "timestamp": 1855.759,
+    "filename": "298_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\298_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 299,
+    "start_time": 1857.2,
+    "text": "But we want to have somewhere where we can receive notifications about our jobs.",
+    "offset": 0.0,
+    "timestamp": 1857.2,
+    "filename": "299_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\299_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 300,
+    "start_time": 1863.059,
+    "text": "So hold as a notification system.",
+    "offset": 0.0,
+    "timestamp": 1863.059,
+    "filename": "300_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\300_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 301,
+    "start_time": 1865.619,
+    "text": "It can report events to an external service.",
+    "offset": 0.0,
+    "timestamp": 1865.619,
+    "filename": "301_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\301_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 302,
+    "start_time": 1868.519,
+    "text": "So you don't have to go like check the dashboard manually.",
+    "offset": 0.0,
+    "timestamp": 1868.519,
+    "filename": "302_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\302_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 303,
+    "start_time": 1872.96,
+    "text": "And out of the box, hold integrates with Slack for notifications.",
+    "offset": 0.0,
+    "timestamp": 1872.96,
+    "filename": "303_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\303_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 304,
+    "start_time": 1876.94,
+    "text": "To get the most out of Slack, you kind of have to pay for it.",
+    "offset": 0.0,
+    "timestamp": 1876.94,
+    "filename": "304_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\304_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 305,
+    "start_time": 1880.18,
+    "text": "Or maybe you're using some other platform like Microsoft Teams or Discord.",
+    "offset": 0.0,
+    "timestamp": 1880.18,
+    "filename": "305_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\305_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 306,
+    "start_time": 1884.64,
+    "text": "So you wouldn't really want to migrate to Slack or use Slack on top of what you're already using just to get notifications from hold.",
+    "offset": 0.0,
+    "timestamp": 1884.64,
+    "filename": "306_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\306_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 307,
+    "start_time": 1892.679,
+    "text": "Luckily, Oord has quite a few interfaces.",
+    "offset": 0.0,
+    "timestamp": 1892.679,
+    "filename": "307_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\307_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 308,
+    "start_time": 1895.019,
+    "text": "We can enter an error from one of which is this notification sync interface.",
+    "offset": 0.0,
+    "timestamp": 1895.019,
+    "filename": "308_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\308_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 309,
+    "start_time": 1899.22,
+    "text": "This is going to provide us with all the hooks we need to send notifications to another service like Discord.",
+    "offset": 0.0,
+    "timestamp": 1899.22,
+    "filename": "309_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\309_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 310,
+    "start_time": 1905.059,
+    "text": "Oord also supports plugins, which is nice.",
+    "offset": 0.0,
+    "timestamp": 1905.059,
+    "filename": "310_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\310_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 311,
+    "start_time": 1907.22,
+    "text": "Means we can extend its functionality with that necessarily having to modify it directly.",
+    "offset": 0.0,
+    "timestamp": 1907.22,
+    "filename": "311_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\311_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 312,
+    "start_time": 1911.7,
+    "text": "We just need to create a DLL that Oord is able to load.",
+    "offset": 0.0,
+    "timestamp": 1911.7,
+    "filename": "312_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\312_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 313,
+    "start_time": 1916.92,
+    "text": "So we have a few options for sending a message to Discord.",
+    "offset": 0.0,
+    "timestamp": 1916.92,
+    "filename": "313_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\313_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 314,
+    "start_time": 1920.019,
+    "text": "The first is using a Discord pot.",
+    "offset": 0.0,
+    "timestamp": 1920.019,
+    "filename": "314_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\314_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 315,
+    "start_time": 1923.14,
+    "text": "It will give us access to more advanced features like the ability to create channels, but it will be more involved to set up.",
+    "offset": 0.0,
+    "timestamp": 1923.14,
+    "filename": "315_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\315_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 316,
+    "start_time": 1929.779,
+    "text": "We also could use a webhook.",
+    "offset": 0.0,
+    "timestamp": 1929.779,
+    "filename": "316_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\316_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 317,
+    "start_time": 1931.42,
+    "text": "This essentially exposes an endpoint for us that we can send messages to.",
+    "offset": 0.0,
+    "timestamp": 1931.42,
+    "filename": "317_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\317_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 318,
+    "start_time": 1936.64,
+    "text": "But today I'm just going to talk about webhooks.",
+    "offset": 0.0,
+    "timestamp": 1936.64,
+    "filename": "318_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\318_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 319,
+    "start_time": 1939.0,
+    "text": "It's kind of a more agnostic example.",
+    "offset": 0.0,
+    "timestamp": 1939.0,
+    "filename": "319_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\319_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 321,
+    "start_time": 1943.819,
+    "text": "It's also a lot simpler.",
+    "offset": 0.0,
+    "timestamp": 1943.819,
+    "filename": "321_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\321_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 320,
+    "start_time": 1941.279,
+    "text": "So you could do the same thing with another service.",
+    "offset": 0.0,
+    "timestamp": 1941.279,
+    "filename": "320_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\320_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 322,
+    "start_time": 1944.92,
+    "text": "We just need to send a JSON payload to a HTTP endpoint.",
+    "offset": 0.0,
+    "timestamp": 1944.92,
+    "filename": "322_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\322_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 323,
+    "start_time": 1951.039,
+    "text": "So to add support for Discord notifications, we'll need to create a hold plugin.",
+    "offset": 0.0,
+    "timestamp": 1951.039,
+    "filename": "323_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\323_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 325,
+    "start_time": 1959.4,
+    "text": "And then we can send HTTP requests throughout Webhook endpoint.",
+    "offset": 0.0,
+    "timestamp": 1959.4,
+    "filename": "325_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\325_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 324,
+    "start_time": 1956.44,
+    "text": "And then we can create and register our custom notification sync.",
+    "offset": 0.0,
+    "timestamp": 1956.44,
+    "filename": "324_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\324_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 326,
+    "start_time": 1963.68,
+    "text": "And you'll have to do all of this in an additional project in your hold solution.",
+    "offset": 0.0,
+    "timestamp": 1963.68,
+    "filename": "326_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\326_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 327,
+    "start_time": 1971.94,
+    "text": "So first we can create our plugin class.",
+    "offset": 0.0,
+    "timestamp": 1971.94,
+    "filename": "327_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\327_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 328,
+    "start_time": 1974.24,
+    "text": "This is what the HOD plugin system is looking for when it loads out the LLO.",
+    "offset": 0.0,
+    "timestamp": 1974.24,
+    "filename": "328_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\328_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 329,
+    "start_time": 1977.299,
+    "text": "You can kind of think of it as the entry point for our plugin.",
+    "offset": 0.0,
+    "timestamp": 1977.299,
+    "filename": "329_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\329_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 330,
+    "start_time": 1983.48,
+    "text": "Next we'll need a credit pass that inherits from the notification sync interface.",
+    "offset": 0.0,
+    "timestamp": 1983.48,
+    "filename": "330_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\330_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 331,
+    "start_time": 1988.299,
+    "text": "This will expose a few different functions for us.",
+    "offset": 0.0,
+    "timestamp": 1988.299,
+    "filename": "331_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\331_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 332,
+    "start_time": 1991.2,
+    "text": "But the main one we're interested in is this job, notify complete function.",
+    "offset": 0.0,
+    "timestamp": 1991.2,
+    "filename": "332_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\332_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 333,
+    "start_time": 1998.2,
+    "text": "Then the, sorry, the webhook endpoint is expecting a JSON payload that matches a particular schema.",
+    "offset": 0.0,
+    "timestamp": 1998.2,
+    "filename": "333_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\333_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 334,
+    "start_time": 2005.599,
+    "text": "So what we can do is create some classes that match the schema.",
+    "offset": 0.0,
+    "timestamp": 2005.599,
+    "filename": "334_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\334_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 335,
+    "start_time": 2009.019,
+    "text": "And then later we'll be able to serialize this classes into a JSON string.",
+    "offset": 0.0,
+    "timestamp": 2009.019,
+    "filename": "335_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\335_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 336,
+    "start_time": 2014.98,
+    "text": "So now inside our job, notify complete function.",
+    "offset": 0.0,
+    "timestamp": 2014.98,
+    "filename": "336_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\336_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 337,
+    "start_time": 2017.94,
+    "text": "We can start building the message to send.",
+    "offset": 0.0,
+    "timestamp": 2017.94,
+    "filename": "337_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\337_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 338,
+    "start_time": 2020.44,
+    "text": "First, we're going to read this notification channel from our config.",
+    "offset": 0.0,
+    "timestamp": 2020.44,
+    "filename": "338_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\338_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 339,
+    "start_time": 2025.18,
+    "text": "From our stream config.",
+    "offset": 0.0,
+    "timestamp": 2025.18,
+    "filename": "339_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\339_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 340,
+    "start_time": 2026.72,
+    "text": "We're essentially hijacking this config variable to store the URL for our webhook.",
+    "offset": 0.0,
+    "timestamp": 2026.72,
+    "filename": "340_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\340_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 342,
+    "start_time": 2036.819,
+    "text": "We can set the title, the color, and the description.",
+    "offset": 0.0,
+    "timestamp": 2036.819,
+    "filename": "342_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\342_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 341,
+    "start_time": 2034.399,
+    "text": "Then we can prepare the message we want to send.",
+    "offset": 0.0,
+    "timestamp": 2034.399,
+    "filename": "341_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\341_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 343,
+    "start_time": 2039.579,
+    "text": "We're using those classes we created earlier.",
+    "offset": 0.0,
+    "timestamp": 2039.579,
+    "filename": "343_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\343_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 344,
+    "start_time": 2043.299,
+    "text": "And then we can start building our post request to send.",
+    "offset": 0.0,
+    "timestamp": 2043.299,
+    "filename": "344_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\344_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 345,
+    "start_time": 2046.359,
+    "text": "First we're going to serialize our message to JSON.",
+    "offset": 0.0,
+    "timestamp": 2046.359,
+    "filename": "345_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\345_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 346,
+    "start_time": 2049.079,
+    "text": "And then we can create a hdv post request with that JSON payload attached.",
+    "offset": 0.0,
+    "timestamp": 2049.079,
+    "filename": "346_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\346_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 347,
+    "start_time": 2056.36,
+    "text": "And then finally we can send the hdvpressed.",
+    "offset": 0.0,
+    "timestamp": 2056.36,
+    "filename": "347_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\347_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 348,
+    "start_time": 2061.36,
+    "text": "Now back in our hd plugin, we can register a singleton of this class for identification sync.",
+    "offset": 0.0,
+    "timestamp": 2061.36,
+    "filename": "348_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\348_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 349,
+    "start_time": 2070.679,
+    "text": "So hdvp is quite a few APIs for us to pull additional information about the job.",
+    "offset": 0.0,
+    "timestamp": 2070.679,
+    "filename": "349_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\349_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 350,
+    "start_time": 2075.599,
+    "text": "So it can be things like the change list descriptions generate artifacts or whether or not the.",
+    "offset": 0.0,
+    "timestamp": 2075.599,
+    "filename": "350_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\350_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 351,
+    "start_time": 2083.0,
+    "text": "It's okay.",
+    "offset": 0.0,
+    "timestamp": 2083.0,
+    "filename": "351_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\351_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 352,
+    "start_time": 2087.119,
+    "text": "We're back.",
+    "offset": 0.0,
+    "timestamp": 2087.119,
+    "filename": "352_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\352_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 353,
+    "start_time": 2089.0,
+    "text": "And whether or not the job failed or succeeded.",
+    "offset": 0.0,
+    "timestamp": 2089.0,
+    "filename": "353_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\353_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 354,
+    "start_time": 2093.019,
+    "text": "Discord also has like a markdown style syntax for styling.",
+    "offset": 0.0,
+    "timestamp": 2093.019,
+    "filename": "354_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\354_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 355,
+    "start_time": 2097.26,
+    "text": "So that allows us to customize the message further.",
+    "offset": 0.0,
+    "timestamp": 2097.26,
+    "filename": "355_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\355_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 356,
+    "start_time": 2099.88,
+    "text": "And so you can definitely think there's a lot further than what I've shown today.",
+    "offset": 0.0,
+    "timestamp": 2099.88,
+    "filename": "356_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\356_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 357,
+    "start_time": 2104.659,
+    "text": "So now we've added a way to receive notifications without having to pay for that service.",
+    "offset": 0.0,
+    "timestamp": 2104.659,
+    "filename": "357_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\357_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 358,
+    "start_time": 2109.219,
+    "text": "And we've also learned how we can extend hordes functionality without really needing to modify directly.",
+    "offset": 0.0,
+    "timestamp": 2109.219,
+    "filename": "358_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\358_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 359,
+    "start_time": 2117.5,
+    "text": "So now our deployment is complete.",
+    "offset": 0.0,
+    "timestamp": 2117.5,
+    "filename": "359_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\359_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 360,
+    "start_time": 2119.679,
+    "text": "We've opted for free for party services like authsure and discord.",
+    "offset": 0.0,
+    "timestamp": 2119.679,
+    "filename": "360_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\360_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 361,
+    "start_time": 2123.84,
+    "text": "We've also deployed our server in the cloud while still keeping costs low.",
+    "offset": 0.0,
+    "timestamp": 2123.84,
+    "filename": "361_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\361_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 362,
+    "start_time": 2128.139,
+    "text": "And we'll also able to integrate additional tools like under game sync without really much effort at all.",
+    "offset": 0.0,
+    "timestamp": 2128.139,
+    "filename": "362_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\362_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 363,
+    "start_time": 2137.359,
+    "text": "So despite the learning curve, I feel the time and effort involved to getting a pipeline up and running with hord is much lower than generic solutions.",
+    "offset": 0.0,
+    "timestamp": 2137.359,
+    "filename": "363_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\363_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 364,
+    "start_time": 2145.079,
+    "text": "And that's because of the native integrations and the most streamlined workflow.",
+    "offset": 0.0,
+    "timestamp": 2145.079,
+    "filename": "364_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\364_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 365,
+    "start_time": 2150.76,
+    "text": "As well as the fact that it's reduced the need to create glue between different tools.",
+    "offset": 0.0,
+    "timestamp": 2150.76,
+    "filename": "365_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\365_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 366,
+    "start_time": 2156.48,
+    "text": "Hord is designed for scale, but it obviously doesn't have to.",
+    "offset": 0.0,
+    "timestamp": 2156.48,
+    "filename": "366_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\366_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 367,
+    "start_time": 2159.139,
+    "text": "We can deploy it at a low cost while still meeting the needs of a small team.",
+    "offset": 0.0,
+    "timestamp": 2159.139,
+    "filename": "367_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\367_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 368,
+    "start_time": 2164.119,
+    "text": "And for these reasons, I think hord is actually a great option for teams of basically any size.",
+    "offset": 0.0,
+    "timestamp": 2164.119,
+    "filename": "368_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\368_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 369,
+    "start_time": 2172.26,
+    "text": "And that's it. Thanks for listening.",
+    "offset": 0.0,
+    "timestamp": 2172.26,
+    "filename": "369_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\369_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 370,
+    "start_time": 2181.859,
+    "text": "I think we have time for some questions.",
+    "offset": 0.0,
+    "timestamp": 2181.859,
+    "filename": "370_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\370_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 372,
+    "start_time": 2189.139,
+    "text": "And I get it right that if you download a 5.6 version of hord that you can use that to do CRCD for earlier versions of Unreal or as opposed to you have to have a whole server per engine version.",
+    "offset": 0.0,
+    "timestamp": 2189.139,
+    "filename": "372_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\372_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 371,
+    "start_time": 2186.94,
+    "text": "Thanks for the talk.",
+    "offset": 0.0,
+    "timestamp": 2186.94,
+    "filename": "371_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\371_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 373,
+    "start_time": 2202.659,
+    "text": "It would be best to use the same version.",
+    "offset": 0.0,
+    "timestamp": 2202.659,
+    "filename": "373_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\373_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 374,
+    "start_time": 2205.94,
+    "text": "The main compatibility thing is bill graph.",
+    "offset": 0.0,
+    "timestamp": 2205.94,
+    "filename": "374_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\374_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 376,
+    "start_time": 2212.059,
+    "text": "But I found I'm using the 5.6 version at the moment and it works for 5.5 and 5.4.",
+    "offset": 0.0,
+    "timestamp": 2212.059,
+    "filename": "376_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\376_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 375,
+    "start_time": 2209.559,
+    "text": "Hord will be working for a specific version of bill graph.",
+    "offset": 0.0,
+    "timestamp": 2209.559,
+    "filename": "375_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\375_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 377,
+    "start_time": 2220.119,
+    "text": "5.3 has more issues because the artifact element doesn't exist in bill graph, but it's quite easy to backport that.",
+    "offset": 0.0,
+    "timestamp": 2220.119,
+    "filename": "377_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\377_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 378,
+    "start_time": 2228.44,
+    "text": "Thank you.",
+    "offset": 0.0,
+    "timestamp": 2228.44,
+    "filename": "378_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\378_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 379,
+    "start_time": 2230.579,
+    "text": "Questions.",
+    "offset": 0.0,
+    "timestamp": 2230.579,
+    "filename": "379_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\379_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 380,
+    "start_time": 2232.4,
+    "text": "I'm also not keeping you high on time.",
+    "offset": 0.0,
+    "timestamp": 2232.4,
+    "filename": "380_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\380_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 381,
+    "start_time": 2234.88,
+    "text": "Thanks, Ash.",
+    "offset": 0.0,
+    "timestamp": 2234.88,
+    "filename": "381_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\381_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 382,
+    "start_time": 2236.44,
+    "text": "Two quick questions.",
+    "offset": 0.0,
+    "timestamp": 2236.44,
+    "filename": "382_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\382_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 384,
+    "start_time": 2244.659,
+    "text": "Yeah, pretty much.",
+    "offset": 0.0,
+    "timestamp": 2244.659,
+    "filename": "384_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\384_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 383,
+    "start_time": 2237.219,
+    "text": "Number one, did you look at ACS instead of AC2 instances? Was that just like a cost thing to not go with like a managed container service?",
+    "offset": 0.0,
+    "timestamp": 2237.219,
+    "filename": "383_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\383_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 385,
+    "start_time": 2246.48,
+    "text": "We probably would have used ACS if we were deploying on multiple AC2 instances, but in this case we do have just have the ones that we can just run, don't hurt on that.",
+    "offset": 0.0,
+    "timestamp": 2246.48,
+    "filename": "385_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\385_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 386,
+    "start_time": 2255.5,
+    "text": "And do you have like a WAF sitting in front of those as well, or they just open for the perforced server and the AC2 instances and you purely rely on the auth to be able to like protect them.",
+    "offset": 0.0,
+    "timestamp": 2255.5,
+    "filename": "386_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\386_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 387,
+    "start_time": 2263.219,
+    "text": "Yeah, yeah.",
+    "offset": 0.0,
+    "timestamp": 2263.219,
+    "filename": "387_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\387_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 388,
+    "start_time": 2264.4,
+    "text": "We just have the port open for that.",
+    "offset": 0.0,
+    "timestamp": 2264.4,
+    "filename": "388_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\388_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 389,
+    "start_time": 2274.639,
+    "text": "Thank you.",
+    "offset": 0.0,
+    "timestamp": 2274.639,
+    "filename": "389_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\389_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 390,
+    "start_time": 2276.599,
+    "text": "What's the specification for the other AC2 instance?",
+    "offset": 0.0,
+    "timestamp": 2276.599,
+    "filename": "390_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\390_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 392,
+    "start_time": 2284.619,
+    "text": "But I probably wouldn't recommend doing that. The only reason we were able to do that is because I made a small modification to Horde.",
+    "offset": 0.0,
+    "timestamp": 2284.619,
+    "filename": "392_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\392_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 391,
+    "start_time": 2280.86,
+    "text": "It's a two core two gigabyte instance.",
+    "offset": 0.0,
+    "timestamp": 2280.86,
+    "filename": "391_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\391_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 394,
+    "start_time": 2299.34,
+    "text": "And if the last commit industry happened to be like you pushing the engine, that's like hundreds and thousands of files.",
+    "offset": 0.0,
+    "timestamp": 2299.34,
+    "filename": "394_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\394_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 393,
+    "start_time": 2292.099,
+    "text": "There's a commit object that's essentially storing all the files that changed in a commit.",
+    "offset": 0.0,
+    "timestamp": 2292.099,
+    "filename": "393_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\393_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 395,
+    "start_time": 2306.219,
+    "text": "And it was using gigabytes of memory.",
+    "offset": 0.0,
+    "timestamp": 2306.219,
+    "filename": "395_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\395_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 396,
+    "start_time": 2308.219,
+    "text": "Yeah, I would probably recommend maybe at least four gigabytes of RAM and a bit of swap.",
+    "offset": 0.0,
+    "timestamp": 2308.219,
+    "filename": "396_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\396_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 398,
+    "start_time": 2317.32,
+    "text": "According to the documentation.",
+    "offset": 0.0,
+    "timestamp": 2317.32,
+    "filename": "398_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\398_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 397,
+    "start_time": 2313.86,
+    "text": "But epic servers, I think are 16 gigabytes.",
+    "offset": 0.0,
+    "timestamp": 2313.86,
+    "filename": "397_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\397_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 399,
+    "start_time": 2323.4,
+    "text": "Yeah, so I have a question regarding extending Horde's with plugins. Like you mentioned, I'm interested in that. What would you say would be the best entry point to learning more about this and whether like Horde does Horde just have documentation for it as well.",
+    "offset": 0.0,
+    "timestamp": 2323.4,
+    "filename": "399_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\399_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 400,
+    "start_time": 2340.199,
+    "text": "I think the documentation goes as far as saying there is a plugin system, but that's about it.",
+    "offset": 0.0,
+    "timestamp": 2340.199,
+    "filename": "400_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\400_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 401,
+    "start_time": 2344.659,
+    "text": "But I would recommend like most of the features in Horde already built out as plugins. I think there's about six or seven already there. So you can reference those and see what's involved.",
+    "offset": 0.0,
+    "timestamp": 2344.659,
+    "filename": "401_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\401_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 402,
+    "start_time": 2356.34,
+    "text": "Cool. Thank you.",
+    "offset": 0.0,
+    "timestamp": 2356.34,
+    "filename": "402_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\402_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 403,
+    "start_time": 2359.34,
+    "text": "Cheers for the talk.",
+    "offset": 0.0,
+    "timestamp": 2359.34,
+    "filename": "403_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\403_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 404,
+    "start_time": 2361.679,
+    "text": "Is there any requirement for the cloud-based services to sit behind VPS?",
+    "offset": 0.0,
+    "timestamp": 2361.679,
+    "filename": "404_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\404_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 405,
+    "start_time": 2368.059,
+    "text": "Sorry, I'm not familiar with VPS.",
+    "offset": 0.0,
+    "timestamp": 2368.059,
+    "filename": "405_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\405_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 406,
+    "start_time": 2369.42,
+    "text": "The virtual private system. Do they have to sit on any kind of localization or can it just be public on the internet?",
+    "offset": 0.0,
+    "timestamp": 2369.42,
+    "filename": "406_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\406_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 408,
+    "start_time": 2383.839,
+    "text": "I was just wondering if you had found any studies into the sort of network bandwidths involved and you're going some on site, off site, and then with multiple agents and the recombination of what you're trying to build.",
+    "offset": 0.0,
+    "timestamp": 2383.839,
+    "filename": "408_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\408_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 407,
+    "start_time": 2374.9,
+    "text": "They can just be public. Yeah. Awesome. Cheers.",
+    "offset": 0.0,
+    "timestamp": 2374.9,
+    "filename": "407_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\407_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 410,
+    "start_time": 2399.019,
+    "text": "No, we didn't have any issues.",
+    "offset": 0.0,
+    "timestamp": 2399.019,
+    "filename": "410_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\410_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 409,
+    "start_time": 2395.92,
+    "text": "Did you encourage any network issues?",
+    "offset": 0.0,
+    "timestamp": 2395.92,
+    "filename": "409_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\409_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 411,
+    "start_time": 2401.76,
+    "text": "Again, using the presign URLs means that even the agents can upload and download data directly from two and from S3 rather than that being like piped through our whole server.",
+    "offset": 0.0,
+    "timestamp": 2401.76,
+    "filename": "411_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\411_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 412,
+    "start_time": 2413.579,
+    "text": "And I think that's the main limitation for like bandwidth because like artifact files can be like many gigabytes and size, right?",
+    "offset": 0.0,
+    "timestamp": 2413.579,
+    "filename": "412_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\412_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 414,
+    "start_time": 2426.239,
+    "text": "Build much faster locally than it is over the cloud.",
+    "offset": 0.0,
+    "timestamp": 2426.239,
+    "filename": "414_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\414_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 413,
+    "start_time": 2419.539,
+    "text": "Yeah, sorry, not technically working just with build speeds like so if you've got like oh, okay.",
+    "offset": 0.0,
+    "timestamp": 2419.539,
+    "filename": "413_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\413_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 416,
+    "start_time": 2433.24,
+    "text": "It works fine locally. One issue is hydrating workspaces.",
+    "offset": 0.0,
+    "timestamp": 2433.24,
+    "filename": "416_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\416_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 415,
+    "start_time": 2430.26,
+    "text": "Right.",
+    "offset": 0.0,
+    "timestamp": 2430.26,
+    "filename": "415_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\415_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 417,
+    "start_time": 2439.199,
+    "text": "If you're running a job across multiple agents and it needs to move files across to another agent, it's kind of piped those through forward.",
+    "offset": 0.0,
+    "timestamp": 2439.199,
+    "filename": "417_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\417_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 418,
+    "start_time": 2447.679,
+    "text": "So it's going to upload everything to S3 and then it's going to download it back on the other agent and that can be quite slow.",
+    "offset": 0.0,
+    "timestamp": 2447.679,
+    "filename": "418_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\418_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 420,
+    "start_time": 2464.48,
+    "text": "So thank you to quick question.",
+    "offset": 0.0,
+    "timestamp": 2464.48,
+    "filename": "420_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\420_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 419,
+    "start_time": 2454.599,
+    "text": "So for us, we don't really use that piece of that reason.",
+    "offset": 0.0,
+    "timestamp": 2454.599,
+    "filename": "419_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\419_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 421,
+    "start_time": 2467.5,
+    "text": "Can the proxy can be replaced by commit or edge suffer?",
+    "offset": 0.0,
+    "timestamp": 2467.5,
+    "filename": "421_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\421_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 422,
+    "start_time": 2473.219,
+    "text": "Yep, the main reason you're using a proxy is to run it on the local network alongside the agents that you can do that too.",
+    "offset": 0.0,
+    "timestamp": 2473.219,
+    "filename": "422_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\422_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 423,
+    "start_time": 2482.26,
+    "text": "And the second one, can we like is there any CI CD that's if we work with local Zen.",
+    "offset": 0.0,
+    "timestamp": 2482.26,
+    "filename": "423_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\423_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 424,
+    "start_time": 2490.3,
+    "text": "So when the cache has been built in other rock station, then it can be deployed or copy to another rock station using Harp.",
+    "offset": 0.0,
+    "timestamp": 2490.3,
+    "filename": "424_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\424_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 425,
+    "start_time": 2499.66,
+    "text": "Yeah, you can use some sheds and so forth for the agents. I definitely recommend doing that.",
+    "offset": 0.0,
+    "timestamp": 2499.66,
+    "filename": "425_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\425_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 426,
+    "start_time": 2505.139,
+    "text": "Yeah, it's a significant improvement to the cook times for us.",
+    "offset": 0.0,
+    "timestamp": 2505.139,
+    "filename": "426_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\426_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 427,
+    "start_time": 2508.699,
+    "text": "Thanks.",
+    "offset": 0.0,
+    "timestamp": 2508.699,
+    "filename": "427_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\427_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 428,
+    "start_time": 2515.4,
+    "text": "Yep.",
+    "offset": 0.0,
+    "timestamp": 2515.4,
+    "filename": "428_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\428_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 429,
+    "start_time": 2516.579,
+    "text": "I think where.",
+    "offset": 0.0,
+    "timestamp": 2516.579,
+    "filename": "429_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\429_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 430,
+    "start_time": 2520.4,
+    "text": "One question. Can we use AWS spot instance to save course?",
+    "offset": 0.0,
+    "timestamp": 2520.4,
+    "filename": "430_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\430_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 431,
+    "start_time": 2525.699,
+    "text": "Yes, I believe you can.",
+    "offset": 0.0,
+    "timestamp": 2525.699,
+    "filename": "431_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\431_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 432,
+    "start_time": 2530.159,
+    "text": "I think that's what Epic does maybe.",
+    "offset": 0.0,
+    "timestamp": 2530.159,
+    "filename": "432_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\432_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 433,
+    "start_time": 2532.76,
+    "text": "I think this references to that in the documentation. So I would have to look at that.",
+    "offset": 0.0,
+    "timestamp": 2532.76,
+    "filename": "433_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\433_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 434,
+    "start_time": 2538.859,
+    "text": "But I think then you would you would need to worry about hydrating those workspaces as well.",
+    "offset": 0.0,
+    "timestamp": 2538.859,
+    "filename": "434_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\434_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 435,
+    "start_time": 2544.38,
+    "text": "I think one more question and Ash I'll drag him to the dev lounge because it's very popular.",
+    "offset": 0.0,
+    "timestamp": 2544.38,
+    "filename": "435_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\435_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 436,
+    "start_time": 2555.699,
+    "text": "Thank you. My maybe it's for devlon, but we are interesting on the on premise configuration.",
+    "offset": 0.0,
+    "timestamp": 2555.699,
+    "filename": "436_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\436_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 437,
+    "start_time": 2566.699,
+    "text": "Symposium can an agent enrollment be conditional.",
+    "offset": 0.0,
+    "timestamp": 2566.699,
+    "filename": "437_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\437_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 438,
+    "start_time": 2572.5,
+    "text": "Something like the agent is down.",
+    "offset": 0.0,
+    "timestamp": 2572.5,
+    "filename": "438_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\438_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 439,
+    "start_time": 2576.36,
+    "text": "Can we replace with other or the agent is used by other purposes.",
+    "offset": 0.0,
+    "timestamp": 2576.36,
+    "filename": "439_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\439_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 440,
+    "start_time": 2584.139,
+    "text": "So we include the agent.",
+    "offset": 0.0,
+    "timestamp": 2584.139,
+    "filename": "440_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\440_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 441,
+    "start_time": 2589.659,
+    "text": "So you're asking if.",
+    "offset": 0.0,
+    "timestamp": 2589.659,
+    "filename": "441_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\441_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 442,
+    "start_time": 2592.4,
+    "text": "When agents are down.",
+    "offset": 0.0,
+    "timestamp": 2592.4,
+    "filename": "442_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\442_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 443,
+    "start_time": 2593.86,
+    "text": "Yes.",
+    "offset": 0.0,
+    "timestamp": 2593.86,
+    "filename": "443_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\443_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 444,
+    "start_time": 2594.92,
+    "text": "Yeah, so it will it will look through the pools to find available agents.",
+    "offset": 0.0,
+    "timestamp": 2594.92,
+    "filename": "444_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\444_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 445,
+    "start_time": 2599.44,
+    "text": "And if it can't find an agent, then it's just going to sit there and wait.",
+    "offset": 0.0,
+    "timestamp": 2599.44,
+    "filename": "445_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\445_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 446,
+    "start_time": 2603.32,
+    "text": "I think there might be a timeout as well.",
+    "offset": 0.0,
+    "timestamp": 2603.32,
+    "filename": "446_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\446_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 448,
+    "start_time": 2607.519,
+    "text": "Sorry, does that ask your answer question?",
+    "offset": 0.0,
+    "timestamp": 2607.519,
+    "filename": "448_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\448_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 447,
+    "start_time": 2606.239,
+    "text": "Yeah.",
+    "offset": 0.0,
+    "timestamp": 2606.239,
+    "filename": "447_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\447_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 450,
+    "start_time": 2614.819,
+    "text": "Cool. You got something.",
+    "offset": 0.0,
+    "timestamp": 2614.819,
+    "filename": "450_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\450_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 449,
+    "start_time": 2611.46,
+    "text": "Yeah.",
+    "offset": 0.0,
+    "timestamp": 2611.46,
+    "filename": "449_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\449_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 451,
+    "start_time": 2616.9,
+    "text": "Thanks for listening.",
+    "offset": 0.0,
+    "timestamp": 2616.9,
+    "filename": "451_plus0.0s.png",
+    "path": "./projects\\20251227_171150_test2\\step4_screenshots\\screenshots\\451_plus0.0s.png"
+  }
+]

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}错误 {{ error_code }} - YouTube转文章工具{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="error-icon mb-4">
+                    <i class="fas fa-exclamation-triangle fa-5x text-warning"></i>
+                </div>
+                <h1 class="display-4">{{ error_code }}</h1>
+                <h4 class="mb-3">
+                    {% if error_code == 404 %}
+                        页面不存在
+                    {% elif error_code == 500 %}
+                        服务器错误
+                    {% else %}
+                        发生错误
+                    {% endif %}
+                </h4>
+                <p class="text-muted mb-4">{{ error_message }}</p>
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <i class="fas fa-home me-2"></i>
+                    返回首页
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+# 核心处理库
+yt-dlp>=2023.12.30
+openai-whisper>=20231117
+translatepy>=2.3
+pysrt>=1.1.2
+python-ffmpeg>=2.0.12
+tqdm>=4.66.0
+colorama>=0.4.6
+configparser>=6.0.0
+Pillow>=10.0.0
+
+# Web UI库
+Flask>=2.3.0
+Flask-SocketIO>=5.3.0
+Jinja2>=3.1.0
+python-socketio>=5.8.0
+
+# 工具库
+python-dateutil>=2.8.0
+pathlib>=1.0.1
+requests>=2.31.0

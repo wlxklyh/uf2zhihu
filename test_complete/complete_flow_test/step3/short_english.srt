@@ -1,0 +1,40 @@
+1
+00:00:05,319 --> 00:00:06,299
+So, hello, everyone.
+
+2
+00:00:06,799 --> 00:00:07,639
+Thanks for coming to my talk.
+
+3
+00:00:08,500 --> 00:00:13,820
+Today, I'm going to be talking about Horde, specifically how it can be used by small teams,
+
+4
+00:00:14,599 --> 00:00:18,800
+and I'll show you ways we've reduced cost, and I'll show you what's actually involved
+
+5
+00:00:18,800 --> 00:00:19,980
+in deploying Horde.
+
+6
+00:00:22,140 --> 00:00:25,440
+So, before I get into things, just a little bit about me and the company I work for.
+
+7
+00:00:25,440 --> 00:00:26,800
+So, my name's Ash.
+
+8
+00:00:27,460 --> 00:00:29,719
+I'm a lead real-time developer at S1T2.
+
+9
+00:00:30,579 --> 00:00:36,579
+While my main focus is leading development on our Unreal-based experiences, I'm also responsible
+
+10
+00:00:36,579 --> 00:00:40,299
+for maintaining and developing the DevOps pipelines for these projects.
+

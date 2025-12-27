@@ -1,0 +1,536 @@
+# 视频转文章 - 中文优化Prompt
+
+## 任务说明
+您的任务是将下面提供的英文视频内容转换为一篇专业的、结构清晰的中文文章。文章应该是**图文并茂**的形式，包含截图来说明关键内容。
+
+## 源视频信息
+- **标题**: Horde on a Budget: Cost-Effective Infrastructure for Small Teams | Unreal Fest Bali 2025
+- **时长**: 2627 秒
+- **内容**: 英文技术演讲/教程
+
+## 要求
+1. **语言**: 生成中文文章（简体中文）
+2. **格式**: Markdown格式，包含以下结构：
+   - 文章标题
+   - 摘要/导言
+   - 多个章节（按逻辑分组）
+   - 每个关键点配有对应的截图
+   - 总结和要点
+3. **图文搭配**: 
+   - 在适当位置插入截图（使用Markdown语法）
+   - 在截图前后添加解释文字
+   - 确保图文结合，提高可读性
+4. **内容优化**:
+   - 简化复杂的英文技术术语
+   - 添加上下文和背景信息
+   - 保持原视频的核心观点
+   - 改进逻辑流程和过渡
+5. **质量标准**:
+   - 清晰的段落结构
+   - 适当的标题层级
+   - 中文表达自然流畅
+   - 技术术语准确
+6. **截图集成**:
+   - 从提供的截图库中选择最相关的截图
+   - 每张截图应该与周围文本相关联
+   - 添加截图说明（中文）
+
+## 源内容（英文Markdown）
+```markdown
+# Horde on a Budget: Cost-Effective Infrastructure for Small Teams | Unreal Fest Bali 2025
+
+**Video Duration:** 43分47秒  
+**Subtitles:** 24  
+**Generated:** 2025-12-27 16:50:32
+
+---
+
+## Overview
+
+This article is generated from a video presentation with embedded screenshots taken at key moments. Each section includes relevant visual content to illustrate the points discussed.
+
+---
+
+
+
+## Section 1 (00:00:05)
+
+**Transcript:**
+> So, hello, everyone.
+
+
+
+**Visual Reference:**
+
+![Screenshot 1](screenshots/001_plus0.0s.png)
+
+_Screenshot from 00:00:05_
+
+
+
+---
+
+
+
+## Section 2 (00:00:06)
+
+**Transcript:**
+> Thanks for coming to my talk.
+
+
+
+**Visual Reference:**
+
+![Screenshot 2](screenshots/002_plus0.0s.png)
+
+_Screenshot from 00:00:06_
+
+
+
+---
+
+
+
+## Section 3 (00:00:08)
+
+**Transcript:**
+> Today, I'm going to be talking about Horde, specifically how it can be used by small teams,
+
+
+
+**Visual Reference:**
+
+![Screenshot 3](screenshots/003_plus0.0s.png)
+
+_Screenshot from 00:00:08_
+
+
+
+---
+
+
+
+## Section 4 (00:00:14)
+
+**Transcript:**
+> and I'll show you ways we've reduced cost, and I'll show you what's actually involved
+
+
+
+**Visual Reference:**
+
+![Screenshot 4](screenshots/004_plus0.0s.png)
+
+_Screenshot from 00:00:14_
+
+
+
+---
+
+
+
+## Section 5 (00:00:18)
+
+**Transcript:**
+> in deploying Horde.
+
+
+
+**Visual Reference:**
+
+![Screenshot 5](screenshots/005_plus0.0s.png)
+
+_Screenshot from 00:00:18_
+
+
+
+---
+
+
+
+## Section 6 (00:00:22)
+
+**Transcript:**
+> So, before I get into things, just a little bit about me and the company I work for.
+
+
+
+**Visual Reference:**
+
+![Screenshot 6](screenshots/006_plus0.0s.png)
+
+_Screenshot from 00:00:22_
+
+
+
+---
+
+
+
+## Section 7 (00:00:25)
+
+**Transcript:**
+> So, my name's Ash.
+
+
+
+**Visual Reference:**
+
+![Screenshot 7](screenshots/007_plus0.0s.png)
+
+_Screenshot from 00:00:25_
+
+
+
+---
+
+
+
+## Section 8 (00:00:27)
+
+**Transcript:**
+> I'm a lead real-time developer at S1T2.
+
+
+
+**Visual Reference:**
+
+![Screenshot 8](screenshots/008_plus0.0s.png)
+
+_Screenshot from 00:00:27_
+
+
+
+---
+
+
+
+## Section 9 (00:00:30)
+
+**Transcript:**
+> While my main focus is leading development on our Unreal-based experiences, I'm also responsible
+
+
+
+**Visual Reference:**
+
+![Screenshot 9](screenshots/009_plus0.0s.png)
+
+_Screenshot from 00:00:30_
+
+
+
+---
+
+
+
+## Section 10 (00:00:36)
+
+**Transcript:**
+> for maintaining and developing the DevOps pipelines for these projects.
+
+
+
+**Visual Reference:**
+
+![Screenshot 10](screenshots/010_plus0.0s.png)
+
+_Screenshot from 00:00:36_
+
+
+
+---
+
+
+
+## Section 11 (00:00:42)
+
+**Transcript:**
+> So, at S1T2, we mostly create immersive and interactive experiences, typically for institutions
+
+
+
+**Visual Reference:**
+
+![Screenshot 11](screenshots/011_plus0.0s.png)
+
+_Screenshot from 00:00:42_
+
+
+
+---
+
+
+
+## Section 12 (00:00:48)
+
+**Transcript:**
+> like our galleries and museums.
+
+
+
+**Visual Reference:**
+
+![Screenshot 12](screenshots/012_plus0.0s.png)
+
+_Screenshot from 00:00:48_
+
+
+
+---
+
+
+
+## Section 13 (00:00:51)
+
+**Transcript:**
+> And we use a lot of different technologies, but we mainly use Unreal Engine for these experiences.
+
+
+
+**Visual Reference:**
+
+![Screenshot 13](screenshots/013_plus0.0s.png)
+
+_Screenshot from 00:00:51_
+
+
+
+---
+
+
+
+## Section 14 (00:00:59)
+
+**Transcript:**
+> So, at S1T2, we're a team that cares about fast iteration.
+
+
+
+**Visual Reference:**
+
+![Screenshot 14](screenshots/014_plus0.0s.png)
+
+_Screenshot from 00:00:59_
+
+
+
+---
+
+
+
+## Section 15 (00:01:04)
+
+**Transcript:**
+> It's kind of due to the experimental nature of our work, as well as short timelines, and the need to adapt to changing requirements.
+
+
+
+**Visual Reference:**
+
+![Screenshot 15](screenshots/015_plus0.0s.png)
+
+_Screenshot from 00:01:04_
+
+
+
+---
+
+
+
+## Section 16 (00:01:12)
+
+**Transcript:**
+> Our core team is also small, but we may expand our team with contractors or other partners depending on the work we take on.
+
+
+
+**Visual Reference:**
+
+![Screenshot 16](screenshots/016_plus0.0s.png)
+
+_Screenshot from 00:01:12_
+
+
+
+---
+
+
+
+## Section 17 (00:01:19)
+
+**Transcript:**
+> And our team is also hybrid.
+
+
+
+**Visual Reference:**
+
+![Screenshot 17](screenshots/017_plus0.0s.png)
+
+_Screenshot from 00:01:19_
+
+
+
+---
+
+
+
+## Section 18 (00:01:22)
+
+**Transcript:**
+> Some people work from the office or work from home, or maybe on-site in another country.
+
+
+
+**Visual Reference:**
+
+![Screenshot 18](screenshots/018_plus0.0s.png)
+
+_Screenshot from 00:01:22_
+
+
+
+---
+
+
+
+## Section 19 (00:01:28)
+
+**Transcript:**
+> So, having remote access to our tools and infrastructure is important.
+
+
+
+**Visual Reference:**
+
+![Screenshot 19](screenshots/019_plus0.0s.png)
+
+_Screenshot from 00:01:28_
+
+
+
+---
+
+
+
+## Section 20 (00:01:32)
+
+**Transcript:**
+> Actually, the picture in the bottom right is from the time we did a job in Dubai, and I got stuck there for like five months.
+
+
+
+**Visual Reference:**
+
+![Screenshot 20](screenshots/020_plus0.0s.png)
+
+_Screenshot from 00:01:32_
+
+
+
+---
+
+
+
+## Section 21 (00:01:39)
+
+**Transcript:**
+> So, this talk is targeted towards small teams who are interested in Horde, but are unsure if it's the right thing for them.
+
+
+
+**Visual Reference:**
+
+![Screenshot 21](screenshots/021_plus0.0s.png)
+
+_Screenshot from 00:01:39_
+
+
+
+---
+
+
+
+## Section 22 (00:01:46)
+
+**Transcript:**
+> As well as teams that don't have continuous integration set up yet.
+
+
+
+**Visual Reference:**
+
+![Screenshot 22](screenshots/022_plus0.0s.png)
+
+_Screenshot from 00:01:46_
+
+
+
+---
+
+
+
+## Section 23 (00:01:50)
+
+**Transcript:**
+> To get the most out of this talk, it would be best to have some knowledge of Horde or similar tools, but it's okay if you don't.
+
+
+
+**Visual Reference:**
+
+![Screenshot 23](screenshots/023_plus0.0s.png)
+
+_Screenshot from 00:01:50_
+
+
+
+---
+
+
+
+## Section 24 (00:01:57)
+
+**Transcript:**
+> Actually, how many people went to Jack's talk earlier on Horde?
+
+
+
+**Visual Reference:**
+
+![Screenshot 24](screenshots/024_plus0.0s.png)
+
+_Screenshot from 00:01:57_
+
+
+
+---
+
+
+
+## Summary
+
+This article contains 24 sections of content extracted from the original video, each accompanied by visual references. The combination of transcript and screenshots provides a comprehensive reference for the video content.
+
+---
+
+**Note:** This is an auto-generated article. For the full video experience, refer to the original source.
+
+```
+
+## 输出要求
+1. **标题**: 用中文重新表述视频主题
+2. **内容**: 完整的中文文章，包含章节标题、段落和截图
+3. **截图引用**: 使用Markdown图片语法引用截图文件
+4. **长度**: 根据内容确定，保证完整性
+5. **风格**: 专业、学术、易懂的表达方式
+
+## 注意事项
+- 保持原视频的专业性和准确性
+- 使用适当的中文表达方式
+- 图片应该清晰且与内容匹配
+- 避免过度翻译，确保内容自然
+- 提高可读性和用户体验
+
+请开始生成中文文章：

@@ -1,0 +1,218 @@
+[
+  {
+    "subtitle_index": 5,
+    "start_time": 18.8,
+    "text": "in deploying Horde.",
+    "offset": 0.0,
+    "timestamp": 18.8,
+    "filename": "005_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\005_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 3,
+    "start_time": 8.5,
+    "text": "Today, I'm going to be talking about Horde, specifically how it can be used by small teams,",
+    "offset": 0.0,
+    "timestamp": 8.5,
+    "filename": "003_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\003_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 1,
+    "start_time": 5.319,
+    "text": "So, hello, everyone.",
+    "offset": 0.0,
+    "timestamp": 5.319,
+    "filename": "001_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\001_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 4,
+    "start_time": 14.599,
+    "text": "and I'll show you ways we've reduced cost, and I'll show you what's actually involved",
+    "offset": 0.0,
+    "timestamp": 14.599,
+    "filename": "004_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\004_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 8,
+    "start_time": 27.46,
+    "text": "I'm a lead real-time developer at S1T2.",
+    "offset": 0.0,
+    "timestamp": 27.46,
+    "filename": "008_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\008_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 6,
+    "start_time": 22.14,
+    "text": "So, before I get into things, just a little bit about me and the company I work for.",
+    "offset": 0.0,
+    "timestamp": 22.14,
+    "filename": "006_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\006_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 2,
+    "start_time": 6.799,
+    "text": "Thanks for coming to my talk.",
+    "offset": 0.0,
+    "timestamp": 6.799,
+    "filename": "002_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\002_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 7,
+    "start_time": 25.44,
+    "text": "So, my name's Ash.",
+    "offset": 0.0,
+    "timestamp": 25.44,
+    "filename": "007_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\007_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 9,
+    "start_time": 30.579,
+    "text": "While my main focus is leading development on our Unreal-based experiences, I'm also responsible",
+    "offset": 0.0,
+    "timestamp": 30.579,
+    "filename": "009_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\009_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 10,
+    "start_time": 36.579,
+    "text": "for maintaining and developing the DevOps pipelines for these projects.",
+    "offset": 0.0,
+    "timestamp": 36.579,
+    "filename": "010_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\010_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 13,
+    "start_time": 51.859,
+    "text": "And we use a lot of different technologies, but we mainly use Unreal Engine for these experiences.",
+    "offset": 0.0,
+    "timestamp": 51.859,
+    "filename": "013_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\013_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 11,
+    "start_time": 42.079,
+    "text": "So, at S1T2, we mostly create immersive and interactive experiences, typically for institutions",
+    "offset": 0.0,
+    "timestamp": 42.079,
+    "filename": "011_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\011_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 12,
+    "start_time": 48.899,
+    "text": "like our galleries and museums.",
+    "offset": 0.0,
+    "timestamp": 48.899,
+    "filename": "012_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\012_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 14,
+    "start_time": 59.84,
+    "text": "So, at S1T2, we're a team that cares about fast iteration.",
+    "offset": 0.0,
+    "timestamp": 59.84,
+    "filename": "014_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\014_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 15,
+    "start_time": 64.379,
+    "text": "It's kind of due to the experimental nature of our work, as well as short timelines, and the need to adapt to changing requirements.",
+    "offset": 0.0,
+    "timestamp": 64.379,
+    "filename": "015_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\015_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 16,
+    "start_time": 72.459,
+    "text": "Our core team is also small, but we may expand our team with contractors or other partners depending on the work we take on.",
+    "offset": 0.0,
+    "timestamp": 72.459,
+    "filename": "016_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\016_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 17,
+    "start_time": 79.78,
+    "text": "And our team is also hybrid.",
+    "offset": 0.0,
+    "timestamp": 79.78,
+    "filename": "017_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\017_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 18,
+    "start_time": 82.06,
+    "text": "Some people work from the office or work from home, or maybe on-site in another country.",
+    "offset": 0.0,
+    "timestamp": 82.06,
+    "filename": "018_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\018_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 19,
+    "start_time": 88.239,
+    "text": "So, having remote access to our tools and infrastructure is important.",
+    "offset": 0.0,
+    "timestamp": 88.239,
+    "filename": "019_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\019_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 21,
+    "start_time": 99.819,
+    "text": "So, this talk is targeted towards small teams who are interested in Horde, but are unsure if it's the right thing for them.",
+    "offset": 0.0,
+    "timestamp": 99.819,
+    "filename": "021_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\021_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 20,
+    "start_time": 92.019,
+    "text": "Actually, the picture in the bottom right is from the time we did a job in Dubai, and I got stuck there for like five months.",
+    "offset": 0.0,
+    "timestamp": 92.019,
+    "filename": "020_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\020_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 22,
+    "start_time": 106.699,
+    "text": "As well as teams that don't have continuous integration set up yet.",
+    "offset": 0.0,
+    "timestamp": 106.699,
+    "filename": "022_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\022_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 23,
+    "start_time": 110.879,
+    "text": "To get the most out of this talk, it would be best to have some knowledge of Horde or similar tools, but it's okay if you don't.",
+    "offset": 0.0,
+    "timestamp": 110.879,
+    "filename": "023_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\023_plus0.0s.png"
+  },
+  {
+    "subtitle_index": 24,
+    "start_time": 117.519,
+    "text": "Actually, how many people went to Jack's talk earlier on Horde?",
+    "offset": 0.0,
+    "timestamp": 117.519,
+    "filename": "024_plus0.0s.png",
+    "path": "test_complete/complete_flow_test\\step4\\screenshots\\024_plus0.0s.png"
+  }
+]

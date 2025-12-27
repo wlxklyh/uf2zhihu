@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 项目特定 - 大文件和缓存
+cache/
+projects/*/step1_download/*.mp4
+projects/*/step1_download/*.webm
+projects/*/step2_transcribe/*.mp4
+projects/*/step4_screenshots/screenshots/
+projects/*/step6_prompt/screenshots/
+test_complete/*/step1/*.mp4
+test_complete/*/step2/*.mp4
+test_complete/*/step4/screenshots/
+*.mp4
+*.webm
+*.avi
+*.mov
+*.mkv
+
+# 临时文件
+temp/
+*.tmp
+*.log
+
+# 日志文件
+logs/*.log
+
+# 操作系统
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 任务文件(根据RIPER-5规则)
+.tasks/
+

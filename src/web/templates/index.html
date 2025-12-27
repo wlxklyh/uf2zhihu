@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - YouTube转文章工具{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- 主要功能区域 -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-video me-2"></i>
+                    YouTube转文章工具
+                </h3>
+                <small>将YouTube视频转换为带截图的中文文章</small>
+            </div>
+            <div class="card-body">
+                <form id="processForm">
+                    <div class="mb-4">
+                        <label for="youtubeUrl" class="form-label">
+                            <i class="fas fa-link me-1"></i>
+                            YouTube视频链接 <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fab fa-youtube text-danger"></i>
+                            </span>
+                            <input type="url" class="form-control" id="youtubeUrl" 
+                                   placeholder="https://www.youtube.com/watch?v=..." 
+                                   required>
+                        </div>
+                        <div class="form-text">
+                            支持 youtube.com 和 youtu.be 格式的链接
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="projectName" class="form-label">
+                            <i class="fas fa-folder me-1"></i>
+                            项目名称（可选）
+                        </label>
+                        <input type="text" class="form-control" id="projectName" 
+                               placeholder="自动生成或自定义名称">
+                        <div class="form-text">
+                            留空将自动生成基于时间的项目名称
+                        </div>
+                    </div>
+                    
+                    <!-- 高级配置折叠面板 -->
+                    <div class="accordion mb-4" id="configAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" 
+                                        data-bs-toggle="collapse" data-bs-target="#configPanel">
+                                    <i class="fas fa-cogs me-2"></i>
+                                    高级配置
+                                </button>
+                            </h2>
+                            <div id="configPanel" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">截图时间偏移</label>
+                                            <input type="text" class="form-control" 
+                                                   value="-0.2,0.0,0.2" id="timeOffsets">
+                                            <div class="form-text">
+                                                每个字幕时间点的截图偏移（秒）
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">翻译服务</label>
+                                            <select class="form-select" id="translationService">
+                                                <option value="translatepy">TranslatePy (免费)</option>
+                                                <option value="google">Google Translate</option>
+                                                <option value="openai">OpenAI (需API Key)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">视频质量</label>
+                                            <select class="form-select" id="videoQuality">
+                                                <option value="best">最佳质量</option>
+                                                <option value="worst">最低质量</option>
+                                                <option value="720p">720p</option>
+                                                <option value="480p">480p</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Whisper模型</label>
+                                            <select class="form-select" id="whisperModel">
+                                                <option value="base">Base (快速)</option>
+                                                <option value="small">Small (平衡)</option>
+                                                <option value="medium">Medium (准确)</option>
+                                                <option value="large">Large (最准确)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-rocket me-2"></i>
+                            开始处理
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 历史项目 -->
+{% if projects %}
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-history me-2"></i>
+                    最近项目
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for project in projects %}
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card h-100 border-light">
+                            <div class="card-body">
+                                <h6 class="card-title">
+                                    <i class="fas fa-folder-open me-1 text-primary"></i>
+                                    {{ project.get('project_name', project.name) }}
+                                </h6>
+                                <p class="card-text small text-muted">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    {{ project.modified_time[:19] | replace('T', ' ') }}
+                                </p>
+                                {% if project.get('youtube_url') %}
+                                <p class="card-text small">
+                                    <i class="fab fa-youtube me-1 text-danger"></i>
+                                    <a href="{{ project.youtube_url }}" target="_blank" class="text-decoration-none">
+                                        查看原视频
+                                    </a>
+                                </p>
+                                {% endif %}
+                                <div class="d-flex justify-content-between">
+                                    <a href="{{ url_for('results_page', project_name=project.name) }}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye me-1"></i>查看
+                                    </a>
+                                    <span class="badge bg-{{ 'success' if project.get('status') == 'completed' else 'warning' }}">
+                                        {{ project.get('status', 'unknown') }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- 功能介绍 -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title text-center mb-4">
+                    <i class="fas fa-magic me-2"></i>
+                    功能特色
+                </h5>
+                <div class="row text-center">
+                    <div class="col-md-2">
+                        <div class="feature-icon">
+                            <i class="fas fa-download fa-2x text-primary mb-2"></i>
+                            <h6>视频下载</h6>
+                            <small class="text-muted">高质量下载YouTube视频</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="feature-icon">
+                            <i class="fas fa-microphone fa-2x text-info mb-2"></i>
+                            <h6>语音转录</h6>
+                            <small class="text-muted">AI自动生成英文字幕</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="feature-icon">
+                            <i class="fas fa-language fa-2x text-success mb-2"></i>
+                            <h6>智能翻译</h6>
+                            <small class="text-muted">准确翻译为中文字幕</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="feature-icon">
+                            <i class="fas fa-camera fa-2x text-warning mb-2"></i>
+                            <h6>精准截图</h6>
+                            <small class="text-muted">按时间点提取关键截图</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-alt fa-2x text-secondary mb-2"></i>
+                            <h6>文章生成</h6>
+                            <small class="text-muted">生成图文并茂的文章</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot fa-2x text-purple mb-2"></i>
+                            <h6>AI优化</h6>
+                            <small class="text-muted">生成优化提示文件</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('processForm');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const youtubeUrl = document.getElementById('youtubeUrl').value.trim();
+        const projectName = document.getElementById('projectName').value.trim();
+        
+        // 基本验证
+        if (!youtubeUrl) {
+            showAlert('请输入YouTube视频链接', 'warning');
+            return;
+        }
+        
+        if (!youtubeUrl.includes('youtube.com') && !youtubeUrl.includes('youtu.be')) {
+            showAlert('请输入有效的YouTube链接', 'warning');
+            return;
+        }
+        
+        // 显示加载状态
+        showLoading();
+        
+        // 准备数据
+        const formData = {
+            youtube_url: youtubeUrl,
+            project_name: projectName,
+            config: {
+                time_offsets: document.getElementById('timeOffsets').value,
+                translation_service: document.getElementById('translationService').value,
+                video_quality: document.getElementById('videoQuality').value,
+                whisper_model: document.getElementById('whisperModel').value
+            }
+        };
+        
+        // 发送请求
+        fetch('/api/start_process', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            
+            if (data.success) {
+                showAlert('项目创建成功，正在跳转到处理页面...', 'success');
+                
+                // 跳转到处理页面
+                setTimeout(() => {
+                    window.location.href = `/process?project=${data.project_name}&url=${encodeURIComponent(youtubeUrl)}`;
+                }, 1500);
+            } else {
+                showAlert('创建项目失败: ' + data.error, 'danger');
+            }
+        })
+        .catch(error => {
+            hideLoading();
+            console.error('Error:', error);
+            showAlert('网络请求失败，请检查网络连接', 'danger');
+        });
+    });
+});
+</script>
+{% endblock %}

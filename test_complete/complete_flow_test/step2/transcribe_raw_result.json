@@ -1,0 +1,2154 @@
+{
+  "text": " So, hello, everyone. Thanks for coming to my talk. Today, I'm going to be talking about Horde, specifically how it can be used by small teams, and I'll show you ways we've reduced cost, and I'll show you what's actually involved in deploying Horde. So, before I get into things, just a little bit about me and the company I work for. So, my name's Ash. I'm a lead real-time developer at S1T2. While my main focus is leading development on our Unreal-based experiences, I'm also responsible for maintaining and developing the DevOps pipelines for these projects. So, at S1T2, we mostly create immersive and interactive experiences, typically for institutions like our galleries and museums. And we use a lot of different technologies, but we mainly use Unreal Engine for these experiences. So, at S1T2, we're a team that cares about fast iteration. It's kind of due to the experimental nature of our work, as well as short timelines, and the need to adapt to changing requirements. Our core team is also small, but we may expand our team with contractors or other partners depending on the work we take on. And our team is also hybrid. Some people work from the office or work from home, or maybe on-site in another country. So, having remote access to our tools and infrastructure is important. Actually, the picture in the bottom right is from the time we did a job in Dubai, and I got stuck there for like five months. So, this talk is targeted towards small teams who are interested in Horde, but are unsure if it's the right thing for them. As well as teams that don't have continuous integration set up yet. To get the most out of this talk, it would be best to have some knowledge of Horde or similar tools, but it's okay if you don't. Actually, how many people went to Jack's talk earlier on Horde?",
+  "language": "en",
+  "segments": [
+    {
+      "id": 0,
+      "start": 5.319999999999998,
+      "end": 6.3,
+      "text": " So, hello, everyone.",
+      "words": [
+        {
+          "word": " So,",
+          "start": 5.319999999999998,
+          "end": 5.72,
+          "probability": 0.6844961047172546
+        },
+        {
+          "word": " hello,",
+          "start": 6.0,
+          "end": 6.06,
+          "probability": 0.8247019648551941
+        },
+        {
+          "word": " everyone.",
+          "start": 6.2,
+          "end": 6.3,
+          "probability": 0.7479440569877625
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "start": 6.8,
+      "end": 7.64,
+      "text": " Thanks for coming to my talk.",
+      "words": [
+        {
+          "word": " Thanks",
+          "start": 6.8,
+          "end": 6.92,
+          "probability": 0.990933895111084
+        },
+        {
+          "word": " for",
+          "start": 6.92,
+          "end": 7.02,
+          "probability": 0.9903947710990906
+        },
+        {
+          "word": " coming",
+          "start": 7.02,
+          "end": 7.2,
+          "probability": 0.9973726272583008
+        },
+        {
+          "word": " to",
+          "start": 7.2,
+          "end": 7.34,
+          "probability": 0.9957829713821411
+        },
+        {
+          "word": " my",
+          "start": 7.34,
+          "end": 7.42,
+          "probability": 0.997791051864624
+        },
+        {
+          "word": " talk.",
+          "start": 7.42,
+          "end": 7.64,
+          "probability": 0.9919174313545227
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "start": 8.5,
+      "end": 13.82,
+      "text": " Today, I'm going to be talking about Horde, specifically how it can be used by small teams,",
+      "words": [
+        {
+          "word": " Today,",
+          "start": 8.5,
+          "end": 8.9,
+          "probability": 0.9930230379104614
+        },
+        {
+          "word": " I'm",
+          "start": 8.92,
+          "end": 9.18,
+          "probability": 0.9925729930400848
+        },
+        {
+          "word": " going",
+          "start": 9.18,
+          "end": 9.28,
+          "probability": 0.7399860620498657
+        },
+        {
+          "word": " to",
+          "start": 9.28,
+          "end": 9.3,
+          "probability": 0.9981673955917358
+        },
+        {
+          "word": " be",
+          "start": 9.3,
+          "end": 9.38,
+          "probability": 0.9963855743408203
+        },
+        {
+          "word": " talking",
+          "start": 9.38,
+          "end": 9.58,
+          "probability": 0.9982197880744934
+        },
+        {
+          "word": " about",
+          "start": 9.58,
+          "end": 9.82,
+          "probability": 0.9982765913009644
+        },
+        {
+          "word": " Horde,",
+          "start": 9.82,
+          "end": 10.16,
+          "probability": 0.6687685549259186
+        },
+        {
+          "word": " specifically",
+          "start": 10.76,
+          "end": 11.72,
+          "probability": 0.988394021987915
+        },
+        {
+          "word": " how",
+          "start": 11.72,
+          "end": 12.18,
+          "probability": 0.9068523049354553
+        },
+        {
+          "word": " it",
+          "start": 12.18,
+          "end": 12.28,
+          "probability": 0.9918025135993958
+        },
+        {
+          "word": " can",
+          "start": 12.28,
+          "end": 12.36,
+          "probability": 0.9949102997779846
+        },
+        {
+          "word": " be",
+          "start": 12.36,
+          "end": 12.48,
+          "probability": 0.9998114705085754
+        },
+        {
+          "word": " used",
+          "start": 12.48,
+          "end": 12.8,
+          "probability": 0.9975956082344055
+        },
+        {
+          "word": " by",
+          "start": 12.8,
+          "end": 13.04,
+          "probability": 0.9935854077339172
+        },
+        {
+          "word": " small",
+          "start": 13.04,
+          "end": 13.4,
+          "probability": 0.9262685179710388
+        },
+        {
+          "word": " teams,",
+          "start": 13.4,
+          "end": 13.82,
+          "probability": 0.9957571625709534
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "start": 14.599999999999998,
+      "end": 18.8,
+      "text": " and I'll show you ways we've reduced cost, and I'll show you what's actually involved",
+      "words": [
+        {
+          "word": " and",
+          "start": 14.599999999999998,
+          "end": 15.0,
+          "probability": 0.9908785223960876
+        },
+        {
+          "word": " I'll",
+          "start": 15.0,
+          "end": 15.18,
+          "probability": 0.9918745160102844
+        },
+        {
+          "word": " show",
+          "start": 15.18,
+          "end": 15.34,
+          "probability": 0.997529923915863
+        },
+        {
+          "word": " you",
+          "start": 15.34,
+          "end": 15.44,
+          "probability": 0.9983446598052979
+        },
+        {
+          "word": " ways",
+          "start": 15.44,
+          "end": 15.68,
+          "probability": 0.9912432432174683
+        },
+        {
+          "word": " we've",
+          "start": 15.68,
+          "end": 15.94,
+          "probability": 0.9311322569847107
+        },
+        {
+          "word": " reduced",
+          "start": 15.94,
+          "end": 16.08,
+          "probability": 0.9162238836288452
+        },
+        {
+          "word": " cost,",
+          "start": 16.08,
+          "end": 16.44,
+          "probability": 0.8204797506332397
+        },
+        {
+          "word": " and",
+          "start": 17.22,
+          "end": 17.5,
+          "probability": 0.9979276657104492
+        },
+        {
+          "word": " I'll",
+          "start": 17.5,
+          "end": 17.84,
+          "probability": 0.9973272681236267
+        },
+        {
+          "word": " show",
+          "start": 17.84,
+          "end": 18.08,
+          "probability": 0.9912145137786865
+        },
+        {
+          "word": " you",
+          "start": 18.08,
+          "end": 18.2,
+          "probability": 0.993361234664917
+        },
+        {
+          "word": " what's",
+          "start": 18.2,
+          "end": 18.34,
+          "probability": 0.9959429502487183
+        },
+        {
+          "word": " actually",
+          "start": 18.34,
+          "end": 18.54,
+          "probability": 0.9957893490791321
+        },
+        {
+          "word": " involved",
+          "start": 18.54,
+          "end": 18.8,
+          "probability": 0.992133617401123
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "start": 18.8,
+      "end": 19.98,
+      "text": " in deploying Horde.",
+      "words": [
+        {
+          "word": " in",
+          "start": 18.8,
+          "end": 19.26,
+          "probability": 0.9982909560203552
+        },
+        {
+          "word": " deploying",
+          "start": 19.26,
+          "end": 19.6,
+          "probability": 0.9958392381668091
+        },
+        {
+          "word": " Horde.",
+          "start": 19.6,
+          "end": 19.98,
+          "probability": 0.9933804571628571
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "start": 22.14,
+      "end": 25.44,
+      "text": " So, before I get into things, just a little bit about me and the company I work for.",
+      "words": [
+        {
+          "word": " So,",
+          "start": 22.14,
+          "end": 22.44,
+          "probability": 0.8521004915237427
+        },
+        {
+          "word": " before",
+          "start": 22.5,
+          "end": 22.66,
+          "probability": 0.9972631931304932
+        },
+        {
+          "word": " I",
+          "start": 22.66,
+          "end": 22.78,
+          "probability": 0.9959115982055664
+        },
+        {
+          "word": " get",
+          "start": 22.78,
+          "end": 22.86,
+          "probability": 0.9981877207756042
+        },
+        {
+          "word": " into",
+          "start": 22.86,
+          "end": 23.02,
+          "probability": 0.9979640245437622
+        },
+        {
+          "word": " things,",
+          "start": 23.02,
+          "end": 23.26,
+          "probability": 0.9963569045066833
+        },
+        {
+          "word": " just",
+          "start": 23.46,
+          "end": 23.54,
+          "probability": 0.9950985312461853
+        },
+        {
+          "word": " a",
+          "start": 23.54,
+          "end": 23.68,
+          "probability": 0.9985759258270264
+        },
+        {
+          "word": " little",
+          "start": 23.68,
+          "end": 23.8,
+          "probability": 0.9965864419937134
+        },
+        {
+          "word": " bit",
+          "start": 23.8,
+          "end": 23.96,
+          "probability": 0.9975420236587524
+        },
+        {
+          "word": " about",
+          "start": 23.96,
+          "end": 24.22,
+          "probability": 0.9984562397003174
+        },
+        {
+          "word": " me",
+          "start": 24.22,
+          "end": 24.44,
+          "probability": 0.9769744873046875
+        },
+        {
+          "word": " and",
+          "start": 24.44,
+          "end": 24.64,
+          "probability": 0.9445713758468628
+        },
+        {
+          "word": " the",
+          "start": 24.64,
+          "end": 24.72,
+          "probability": 0.9979075193405151
+        },
+        {
+          "word": " company",
+          "start": 24.72,
+          "end": 24.92,
+          "probability": 0.998588502407074
+        },
+        {
+          "word": " I",
+          "start": 24.92,
+          "end": 25.06,
+          "probability": 0.9966566562652588
+        },
+        {
+          "word": " work",
+          "start": 25.06,
+          "end": 25.2,
+          "probability": 0.7242569327354431
+        },
+        {
+          "word": " for.",
+          "start": 25.2,
+          "end": 25.44,
+          "probability": 0.9818534255027771
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "start": 25.44,
+      "end": 26.8,
+      "text": " So, my name's Ash.",
+      "words": [
+        {
+          "word": " So,",
+          "start": 25.44,
+          "end": 26.32,
+          "probability": 0.24347689747810364
+        },
+        {
+          "word": " my",
+          "start": 26.36,
+          "end": 26.46,
+          "probability": 0.9660805463790894
+        },
+        {
+          "word": " name's",
+          "start": 26.46,
+          "end": 26.68,
+          "probability": 0.6655921041965485
+        },
+        {
+          "word": " Ash.",
+          "start": 26.68,
+          "end": 26.8,
+          "probability": 0.9071727991104126
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "start": 27.46,
+      "end": 29.72,
+      "text": " I'm a lead real-time developer at S1T2.",
+      "words": [
+        {
+          "word": " I'm",
+          "start": 27.46,
+          "end": 27.6,
+          "probability": 0.9593353867530823
+        },
+        {
+          "word": " a",
+          "start": 27.6,
+          "end": 27.72,
+          "probability": 0.9769624471664429
+        },
+        {
+          "word": " lead",
+          "start": 27.72,
+          "end": 27.92,
+          "probability": 0.7622004747390747
+        },
+        {
+          "word": " real",
+          "start": 27.92,
+          "end": 28.08,
+          "probability": 0.8935805559158325
+        },
+        {
+          "word": "-time",
+          "start": 28.08,
+          "end": 28.24,
+          "probability": 0.8420017659664154
+        },
+        {
+          "word": " developer",
+          "start": 28.24,
+          "end": 28.68,
+          "probability": 0.9956127405166626
+        },
+        {
+          "word": " at",
+          "start": 28.68,
+          "end": 29.08,
+          "probability": 0.9870189428329468
+        },
+        {
+          "word": " S1T2.",
+          "start": 29.08,
+          "end": 29.72,
+          "probability": 0.7151240855455399
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "start": 30.58,
+      "end": 36.58,
+      "text": " While my main focus is leading development on our Unreal-based experiences, I'm also responsible",
+      "words": [
+        {
+          "word": " While",
+          "start": 30.58,
+          "end": 31.04,
+          "probability": 0.9371004104614258
+        },
+        {
+          "word": " my",
+          "start": 31.04,
+          "end": 31.26,
+          "probability": 0.9852450489997864
+        },
+        {
+          "word": " main",
+          "start": 31.26,
+          "end": 31.44,
+          "probability": 0.998635470867157
+        },
+        {
+          "word": " focus",
+          "start": 31.44,
+          "end": 31.66,
+          "probability": 0.9990905523300171
+        },
+        {
+          "word": " is",
+          "start": 31.66,
+          "end": 32.22,
+          "probability": 0.9972797632217407
+        },
+        {
+          "word": " leading",
+          "start": 32.22,
+          "end": 32.54,
+          "probability": 0.9638053178787231
+        },
+        {
+          "word": " development",
+          "start": 32.54,
+          "end": 33.0,
+          "probability": 0.9967189431190491
+        },
+        {
+          "word": " on",
+          "start": 33.0,
+          "end": 33.4,
+          "probability": 0.956047773361206
+        },
+        {
+          "word": " our",
+          "start": 33.4,
+          "end": 33.64,
+          "probability": 0.9732479453086853
+        },
+        {
+          "word": " Unreal",
+          "start": 33.64,
+          "end": 34.0,
+          "probability": 0.9497490525245667
+        },
+        {
+          "word": "-based",
+          "start": 34.0,
+          "end": 34.2,
+          "probability": 0.8908621370792389
+        },
+        {
+          "word": " experiences,",
+          "start": 34.2,
+          "end": 34.72,
+          "probability": 0.9894543886184692
+        },
+        {
+          "word": " I'm",
+          "start": 35.3,
+          "end": 35.66,
+          "probability": 0.9752129912376404
+        },
+        {
+          "word": " also",
+          "start": 35.66,
+          "end": 35.94,
+          "probability": 0.9986763596534729
+        },
+        {
+          "word": " responsible",
+          "start": 35.94,
+          "end": 36.58,
+          "probability": 0.9942606687545776
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "start": 36.58,
+      "end": 40.3,
+      "text": " for maintaining and developing the DevOps pipelines for these projects.",
+      "words": [
+        {
+          "word": " for",
+          "start": 36.58,
+          "end": 36.88,
+          "probability": 0.9991495609283447
+        },
+        {
+          "word": " maintaining",
+          "start": 36.88,
+          "end": 37.3,
+          "probability": 0.9967774748802185
+        },
+        {
+          "word": " and",
+          "start": 37.3,
+          "end": 37.5,
+          "probability": 0.9957515001296997
+        },
+        {
+          "word": " developing",
+          "start": 37.5,
+          "end": 37.88,
+          "probability": 0.9986728429794312
+        },
+        {
+          "word": " the",
+          "start": 37.88,
+          "end": 38.68,
+          "probability": 0.990263819694519
+        },
+        {
+          "word": " DevOps",
+          "start": 38.68,
+          "end": 39.02,
+          "probability": 0.9624459743499756
+        },
+        {
+          "word": " pipelines",
+          "start": 39.02,
+          "end": 39.46,
+          "probability": 0.9468899369239807
+        },
+        {
+          "word": " for",
+          "start": 39.46,
+          "end": 39.82,
+          "probability": 0.9968773126602173
+        },
+        {
+          "word": " these",
+          "start": 39.82,
+          "end": 39.96,
+          "probability": 0.9950295090675354
+        },
+        {
+          "word": " projects.",
+          "start": 39.96,
+          "end": 40.3,
+          "probability": 0.9980377554893494
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "start": 42.08,
+      "end": 48.9,
+      "text": " So, at S1T2, we mostly create immersive and interactive experiences, typically for institutions",
+      "words": [
+        {
+          "word": " So,",
+          "start": 42.08,
+          "end": 42.8,
+          "probability": 0.8758823275566101
+        },
+        {
+          "word": " at",
+          "start": 43.02,
+          "end": 43.1,
+          "probability": 0.978626012802124
+        },
+        {
+          "word": " S1T2,",
+          "start": 43.1,
+          "end": 43.78,
+          "probability": 0.9903156608343124
+        },
+        {
+          "word": " we",
+          "start": 43.96,
+          "end": 44.04,
+          "probability": 0.9982137680053711
+        },
+        {
+          "word": " mostly",
+          "start": 44.04,
+          "end": 44.34,
+          "probability": 0.999276340007782
+        },
+        {
+          "word": " create",
+          "start": 44.34,
+          "end": 44.76,
+          "probability": 0.9979138970375061
+        },
+        {
+          "word": " immersive",
+          "start": 44.76,
+          "end": 45.62,
+          "probability": 0.9945647716522217
+        },
+        {
+          "word": " and",
+          "start": 45.62,
+          "end": 46.02,
+          "probability": 0.9948156476020813
+        },
+        {
+          "word": " interactive",
+          "start": 46.02,
+          "end": 46.36,
+          "probability": 0.9977364540100098
+        },
+        {
+          "word": " experiences,",
+          "start": 46.36,
+          "end": 47.08,
+          "probability": 0.996981680393219
+        },
+        {
+          "word": " typically",
+          "start": 47.58,
+          "end": 47.9,
+          "probability": 0.9958315491676331
+        },
+        {
+          "word": " for",
+          "start": 47.9,
+          "end": 48.3,
+          "probability": 0.9648622870445251
+        },
+        {
+          "word": " institutions",
+          "start": 48.3,
+          "end": 48.9,
+          "probability": 0.9898501634597778
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "start": 48.9,
+      "end": 50.78,
+      "text": " like our galleries and museums.",
+      "words": [
+        {
+          "word": " like",
+          "start": 48.9,
+          "end": 49.36,
+          "probability": 0.9873186945915222
+        },
+        {
+          "word": " our",
+          "start": 49.36,
+          "end": 49.84,
+          "probability": 0.15304920077323914
+        },
+        {
+          "word": " galleries",
+          "start": 49.84,
+          "end": 50.16,
+          "probability": 0.5404583811759949
+        },
+        {
+          "word": " and",
+          "start": 50.16,
+          "end": 50.42,
+          "probability": 0.9911035299301147
+        },
+        {
+          "word": " museums.",
+          "start": 50.42,
+          "end": 50.78,
+          "probability": 0.9980641007423401
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "start": 51.86,
+      "end": 56.86,
+      "text": " And we use a lot of different technologies, but we mainly use Unreal Engine for these experiences.",
+      "words": [
+        {
+          "word": " And",
+          "start": 51.86,
+          "end": 52.3,
+          "probability": 0.13079915940761566
+        },
+        {
+          "word": " we",
+          "start": 52.3,
+          "end": 52.5,
+          "probability": 0.906775176525116
+        },
+        {
+          "word": " use",
+          "start": 52.5,
+          "end": 52.62,
+          "probability": 0.954411506652832
+        },
+        {
+          "word": " a",
+          "start": 52.62,
+          "end": 52.72,
+          "probability": 0.9936327338218689
+        },
+        {
+          "word": " lot",
+          "start": 52.72,
+          "end": 52.82,
+          "probability": 0.9986991882324219
+        },
+        {
+          "word": " of",
+          "start": 52.82,
+          "end": 52.94,
+          "probability": 0.9957030415534973
+        },
+        {
+          "word": " different",
+          "start": 52.94,
+          "end": 53.12,
+          "probability": 0.9791266918182373
+        },
+        {
+          "word": " technologies,",
+          "start": 53.12,
+          "end": 53.6,
+          "probability": 0.9909747242927551
+        },
+        {
+          "word": " but",
+          "start": 53.8,
+          "end": 54.04,
+          "probability": 0.9963100552558899
+        },
+        {
+          "word": " we",
+          "start": 54.04,
+          "end": 54.66,
+          "probability": 0.9897933006286621
+        },
+        {
+          "word": " mainly",
+          "start": 54.66,
+          "end": 54.92,
+          "probability": 0.9876073002815247
+        },
+        {
+          "word": " use",
+          "start": 54.92,
+          "end": 55.3,
+          "probability": 0.9945964217185974
+        },
+        {
+          "word": " Unreal",
+          "start": 55.3,
+          "end": 55.5,
+          "probability": 0.8370602130889893
+        },
+        {
+          "word": " Engine",
+          "start": 55.5,
+          "end": 55.8,
+          "probability": 0.9846739768981934
+        },
+        {
+          "word": " for",
+          "start": 55.8,
+          "end": 56.1,
+          "probability": 0.9855310916900635
+        },
+        {
+          "word": " these",
+          "start": 56.1,
+          "end": 56.34,
+          "probability": 0.9861297011375427
+        },
+        {
+          "word": " experiences.",
+          "start": 56.34,
+          "end": 56.86,
+          "probability": 0.9870657920837402
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "start": 59.84,
+      "end": 63.74,
+      "text": " So, at S1T2, we're a team that cares about fast iteration.",
+      "words": [
+        {
+          "word": " So,",
+          "start": 59.84,
+          "end": 60.12,
+          "probability": 0.9679808020591736
+        },
+        {
+          "word": " at",
+          "start": 60.36,
+          "end": 60.4,
+          "probability": 0.5689952373504639
+        },
+        {
+          "word": " S1T2,",
+          "start": 60.4,
+          "end": 61.08,
+          "probability": 0.6281478106975555
+        },
+        {
+          "word": " we're",
+          "start": 62.1,
+          "end": 62.34,
+          "probability": 0.9856646955013275
+        },
+        {
+          "word": " a",
+          "start": 62.34,
+          "end": 62.42,
+          "probability": 0.9960488677024841
+        },
+        {
+          "word": " team",
+          "start": 62.42,
+          "end": 62.56,
+          "probability": 0.9978026747703552
+        },
+        {
+          "word": " that",
+          "start": 62.56,
+          "end": 62.74,
+          "probability": 0.9972108006477356
+        },
+        {
+          "word": " cares",
+          "start": 62.74,
+          "end": 62.9,
+          "probability": 0.7993406653404236
+        },
+        {
+          "word": " about",
+          "start": 62.9,
+          "end": 63.1,
+          "probability": 0.998835027217865
+        },
+        {
+          "word": " fast",
+          "start": 63.1,
+          "end": 63.42,
+          "probability": 0.9389835596084595
+        },
+        {
+          "word": " iteration.",
+          "start": 63.42,
+          "end": 63.74,
+          "probability": 0.9784218072891235
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "start": 64.38,
+      "end": 71.1,
+      "text": " It's kind of due to the experimental nature of our work, as well as short timelines, and the need to adapt to changing requirements.",
+      "words": [
+        {
+          "word": " It's",
+          "start": 64.38,
+          "end": 64.76,
+          "probability": 0.8081473410129547
+        },
+        {
+          "word": " kind",
+          "start": 64.76,
+          "end": 64.86,
+          "probability": 0.9193000197410583
+        },
+        {
+          "word": " of",
+          "start": 64.86,
+          "end": 64.96,
+          "probability": 0.9979694485664368
+        },
+        {
+          "word": " due",
+          "start": 64.96,
+          "end": 65.14,
+          "probability": 0.9989029169082642
+        },
+        {
+          "word": " to",
+          "start": 65.14,
+          "end": 65.3,
+          "probability": 0.9993864297866821
+        },
+        {
+          "word": " the",
+          "start": 65.3,
+          "end": 65.48,
+          "probability": 0.9764342308044434
+        },
+        {
+          "word": " experimental",
+          "start": 65.48,
+          "end": 66.0,
+          "probability": 0.9934459328651428
+        },
+        {
+          "word": " nature",
+          "start": 66.0,
+          "end": 66.38,
+          "probability": 0.9965369701385498
+        },
+        {
+          "word": " of",
+          "start": 66.38,
+          "end": 66.52,
+          "probability": 0.9959877133369446
+        },
+        {
+          "word": " our",
+          "start": 66.52,
+          "end": 66.6,
+          "probability": 0.998301088809967
+        },
+        {
+          "word": " work,",
+          "start": 66.6,
+          "end": 66.98,
+          "probability": 0.9987720847129822
+        },
+        {
+          "word": " as",
+          "start": 67.38,
+          "end": 67.56,
+          "probability": 0.9963486194610596
+        },
+        {
+          "word": " well",
+          "start": 67.56,
+          "end": 67.66,
+          "probability": 0.9988975524902344
+        },
+        {
+          "word": " as",
+          "start": 67.66,
+          "end": 67.78,
+          "probability": 0.9987949132919312
+        },
+        {
+          "word": " short",
+          "start": 67.78,
+          "end": 67.92,
+          "probability": 0.9649727940559387
+        },
+        {
+          "word": " timelines,",
+          "start": 67.92,
+          "end": 68.32,
+          "probability": 0.9814311265945435
+        },
+        {
+          "word": " and",
+          "start": 68.86,
+          "end": 69.28,
+          "probability": 0.9988981485366821
+        },
+        {
+          "word": " the",
+          "start": 69.28,
+          "end": 69.42,
+          "probability": 0.9974865913391113
+        },
+        {
+          "word": " need",
+          "start": 69.42,
+          "end": 69.58,
+          "probability": 0.9946913123130798
+        },
+        {
+          "word": " to",
+          "start": 69.58,
+          "end": 69.74,
+          "probability": 0.9985567927360535
+        },
+        {
+          "word": " adapt",
+          "start": 69.74,
+          "end": 69.96,
+          "probability": 0.9954813718795776
+        },
+        {
+          "word": " to",
+          "start": 69.96,
+          "end": 70.26,
+          "probability": 0.9994608759880066
+        },
+        {
+          "word": " changing",
+          "start": 70.26,
+          "end": 70.62,
+          "probability": 0.9951854348182678
+        },
+        {
+          "word": " requirements.",
+          "start": 70.62,
+          "end": 71.1,
+          "probability": 0.8330826163291931
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "start": 72.46,
+      "end": 79.12,
+      "text": " Our core team is also small, but we may expand our team with contractors or other partners depending on the work we take on.",
+      "words": [
+        {
+          "word": " Our",
+          "start": 72.46,
+          "end": 72.68,
+          "probability": 0.865943968296051
+        },
+        {
+          "word": " core",
+          "start": 72.68,
+          "end": 73.18,
+          "probability": 0.9544713497161865
+        },
+        {
+          "word": " team",
+          "start": 73.18,
+          "end": 73.38,
+          "probability": 0.9968288540840149
+        },
+        {
+          "word": " is",
+          "start": 73.38,
+          "end": 73.5,
+          "probability": 0.997719943523407
+        },
+        {
+          "word": " also",
+          "start": 73.5,
+          "end": 73.68,
+          "probability": 0.9973844885826111
+        },
+        {
+          "word": " small,",
+          "start": 73.68,
+          "end": 73.98,
+          "probability": 0.9989112615585327
+        },
+        {
+          "word": " but",
+          "start": 74.36,
+          "end": 74.9,
+          "probability": 0.9955835938453674
+        },
+        {
+          "word": " we",
+          "start": 74.9,
+          "end": 75.06,
+          "probability": 0.9985637068748474
+        },
+        {
+          "word": " may",
+          "start": 75.06,
+          "end": 75.22,
+          "probability": 0.9961742758750916
+        },
+        {
+          "word": " expand",
+          "start": 75.22,
+          "end": 75.6,
+          "probability": 0.9980340600013733
+        },
+        {
+          "word": " our",
+          "start": 75.6,
+          "end": 75.74,
+          "probability": 0.997364342212677
+        },
+        {
+          "word": " team",
+          "start": 75.74,
+          "end": 75.94,
+          "probability": 0.9967730641365051
+        },
+        {
+          "word": " with",
+          "start": 75.94,
+          "end": 76.26,
+          "probability": 0.9954309463500977
+        },
+        {
+          "word": " contractors",
+          "start": 76.26,
+          "end": 77.08,
+          "probability": 0.9957608580589294
+        },
+        {
+          "word": " or",
+          "start": 77.08,
+          "end": 77.34,
+          "probability": 0.8895469307899475
+        },
+        {
+          "word": " other",
+          "start": 77.34,
+          "end": 77.5,
+          "probability": 0.9879361987113953
+        },
+        {
+          "word": " partners",
+          "start": 77.5,
+          "end": 77.82,
+          "probability": 0.9982430934906006
+        },
+        {
+          "word": " depending",
+          "start": 77.82,
+          "end": 78.24,
+          "probability": 0.5463374257087708
+        },
+        {
+          "word": " on",
+          "start": 78.24,
+          "end": 78.42,
+          "probability": 0.9971143007278442
+        },
+        {
+          "word": " the",
+          "start": 78.42,
+          "end": 78.52,
+          "probability": 0.9778069853782654
+        },
+        {
+          "word": " work",
+          "start": 78.52,
+          "end": 78.62,
+          "probability": 0.9907118678092957
+        },
+        {
+          "word": " we",
+          "start": 78.62,
+          "end": 78.76,
+          "probability": 0.9979002475738525
+        },
+        {
+          "word": " take",
+          "start": 78.76,
+          "end": 78.98,
+          "probability": 0.9967091083526611
+        },
+        {
+          "word": " on.",
+          "start": 78.98,
+          "end": 79.12,
+          "probability": 0.9961155652999878
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "start": 79.78,
+      "end": 81.7,
+      "text": " And our team is also hybrid.",
+      "words": [
+        {
+          "word": " And",
+          "start": 79.78,
+          "end": 80.18,
+          "probability": 0.1764160394668579
+        },
+        {
+          "word": " our",
+          "start": 80.18,
+          "end": 80.44,
+          "probability": 0.8197904825210571
+        },
+        {
+          "word": " team",
+          "start": 80.44,
+          "end": 80.64,
+          "probability": 0.9806835055351257
+        },
+        {
+          "word": " is",
+          "start": 80.64,
+          "end": 80.96,
+          "probability": 0.9904168844223022
+        },
+        {
+          "word": " also",
+          "start": 80.96,
+          "end": 81.36,
+          "probability": 0.9883233308792114
+        },
+        {
+          "word": " hybrid.",
+          "start": 81.36,
+          "end": 81.7,
+          "probability": 0.9676030874252319
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "start": 82.06,
+      "end": 86.94,
+      "text": " Some people work from the office or work from home, or maybe on-site in another country.",
+      "words": [
+        {
+          "word": " Some",
+          "start": 82.06,
+          "end": 82.32,
+          "probability": 0.5397406816482544
+        },
+        {
+          "word": " people",
+          "start": 82.32,
+          "end": 82.52,
+          "probability": 0.9957370758056641
+        },
+        {
+          "word": " work",
+          "start": 82.52,
+          "end": 82.62,
+          "probability": 0.30476006865501404
+        },
+        {
+          "word": " from",
+          "start": 82.62,
+          "end": 82.74,
+          "probability": 0.9492849707603455
+        },
+        {
+          "word": " the",
+          "start": 82.74,
+          "end": 82.82,
+          "probability": 0.9933699369430542
+        },
+        {
+          "word": " office",
+          "start": 82.82,
+          "end": 83.08,
+          "probability": 0.985072672367096
+        },
+        {
+          "word": " or",
+          "start": 83.08,
+          "end": 83.36,
+          "probability": 0.6913118362426758
+        },
+        {
+          "word": " work",
+          "start": 83.36,
+          "end": 83.54,
+          "probability": 0.8805397152900696
+        },
+        {
+          "word": " from",
+          "start": 83.54,
+          "end": 83.62,
+          "probability": 0.9919746518135071
+        },
+        {
+          "word": " home,",
+          "start": 83.62,
+          "end": 84.14,
+          "probability": 0.9977276921272278
+        },
+        {
+          "word": " or",
+          "start": 84.22,
+          "end": 84.66,
+          "probability": 0.9875515103340149
+        },
+        {
+          "word": " maybe",
+          "start": 84.66,
+          "end": 84.92,
+          "probability": 0.9812596440315247
+        },
+        {
+          "word": " on",
+          "start": 84.92,
+          "end": 85.12,
+          "probability": 0.7756901979446411
+        },
+        {
+          "word": "-site",
+          "start": 85.12,
+          "end": 85.44,
+          "probability": 0.6827130913734436
+        },
+        {
+          "word": " in",
+          "start": 85.44,
+          "end": 86.38,
+          "probability": 0.9157810211181641
+        },
+        {
+          "word": " another",
+          "start": 86.38,
+          "end": 86.54,
+          "probability": 0.9937924742698669
+        },
+        {
+          "word": " country.",
+          "start": 86.54,
+          "end": 86.94,
+          "probability": 0.9987030029296875
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "start": 88.24,
+      "end": 90.8,
+      "text": " So, having remote access to our tools and infrastructure is important.",
+      "words": [
+        {
+          "word": " So,",
+          "start": 88.24,
+          "end": 88.44,
+          "probability": 0.9278578758239746
+        },
+        {
+          "word": " having",
+          "start": 88.46,
+          "end": 88.6,
+          "probability": 0.9954981803894043
+        },
+        {
+          "word": " remote",
+          "start": 88.6,
+          "end": 88.8,
+          "probability": 0.5124961137771606
+        },
+        {
+          "word": " access",
+          "start": 88.8,
+          "end": 89.12,
+          "probability": 0.9986724853515625
+        },
+        {
+          "word": " to",
+          "start": 89.12,
+          "end": 89.34,
+          "probability": 0.997585654258728
+        },
+        {
+          "word": " our",
+          "start": 89.34,
+          "end": 89.44,
+          "probability": 0.9844911694526672
+        },
+        {
+          "word": " tools",
+          "start": 89.44,
+          "end": 89.66,
+          "probability": 0.9972078204154968
+        },
+        {
+          "word": " and",
+          "start": 89.66,
+          "end": 89.84,
+          "probability": 0.7666861414909363
+        },
+        {
+          "word": " infrastructure",
+          "start": 89.84,
+          "end": 90.18,
+          "probability": 0.9884450435638428
+        },
+        {
+          "word": " is",
+          "start": 90.18,
+          "end": 90.52,
+          "probability": 0.7206817269325256
+        },
+        {
+          "word": " important.",
+          "start": 90.52,
+          "end": 90.8,
+          "probability": 0.998245358467102
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "start": 92.02,
+      "end": 96.56,
+      "text": " Actually, the picture in the bottom right is from the time we did a job in Dubai, and I got stuck there for like five months.",
+      "words": [
+        {
+          "word": " Actually,",
+          "start": 92.02,
+          "end": 92.2,
+          "probability": 0.9610869288444519
+        },
+        {
+          "word": " the",
+          "start": 92.32,
+          "end": 92.32,
+          "probability": 0.996492326259613
+        },
+        {
+          "word": " picture",
+          "start": 92.32,
+          "end": 92.52,
+          "probability": 0.9985206723213196
+        },
+        {
+          "word": " in",
+          "start": 92.52,
+          "end": 92.66,
+          "probability": 0.9672244191169739
+        },
+        {
+          "word": " the",
+          "start": 92.66,
+          "end": 92.76,
+          "probability": 0.9971837401390076
+        },
+        {
+          "word": " bottom",
+          "start": 92.76,
+          "end": 92.96,
+          "probability": 0.9977279305458069
+        },
+        {
+          "word": " right",
+          "start": 92.96,
+          "end": 93.2,
+          "probability": 0.959771990776062
+        },
+        {
+          "word": " is",
+          "start": 93.2,
+          "end": 93.46,
+          "probability": 0.9687979221343994
+        },
+        {
+          "word": " from",
+          "start": 93.46,
+          "end": 93.56,
+          "probability": 0.9250383973121643
+        },
+        {
+          "word": " the",
+          "start": 93.56,
+          "end": 93.66,
+          "probability": 0.9906320571899414
+        },
+        {
+          "word": " time",
+          "start": 93.66,
+          "end": 93.8,
+          "probability": 0.9986839890480042
+        },
+        {
+          "word": " we",
+          "start": 93.8,
+          "end": 93.94,
+          "probability": 0.9882416129112244
+        },
+        {
+          "word": " did",
+          "start": 93.94,
+          "end": 94.04,
+          "probability": 0.9937953948974609
+        },
+        {
+          "word": " a",
+          "start": 94.04,
+          "end": 94.12,
+          "probability": 0.9210679531097412
+        },
+        {
+          "word": " job",
+          "start": 94.12,
+          "end": 94.28,
+          "probability": 0.9944626688957214
+        },
+        {
+          "word": " in",
+          "start": 94.28,
+          "end": 94.58,
+          "probability": 0.9911795258522034
+        },
+        {
+          "word": " Dubai,",
+          "start": 94.58,
+          "end": 94.88,
+          "probability": 0.9974884986877441
+        },
+        {
+          "word": " and",
+          "start": 95.26,
+          "end": 95.34,
+          "probability": 0.9932082295417786
+        },
+        {
+          "word": " I",
+          "start": 95.34,
+          "end": 95.4,
+          "probability": 0.9905300736427307
+        },
+        {
+          "word": " got",
+          "start": 95.4,
+          "end": 95.48,
+          "probability": 0.9903094172477722
+        },
+        {
+          "word": " stuck",
+          "start": 95.48,
+          "end": 95.7,
+          "probability": 0.9878517389297485
+        },
+        {
+          "word": " there",
+          "start": 95.7,
+          "end": 95.9,
+          "probability": 0.9952700734138489
+        },
+        {
+          "word": " for",
+          "start": 95.9,
+          "end": 96.06,
+          "probability": 0.9927091598510742
+        },
+        {
+          "word": " like",
+          "start": 96.06,
+          "end": 96.14,
+          "probability": 0.645004391670227
+        },
+        {
+          "word": " five",
+          "start": 96.14,
+          "end": 96.38,
+          "probability": 0.8959321975708008
+        },
+        {
+          "word": " months.",
+          "start": 96.38,
+          "end": 96.56,
+          "probability": 0.9979175925254822
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "start": 99.82,
+      "end": 106.02,
+      "text": " So, this talk is targeted towards small teams who are interested in Horde, but are unsure if it's the right thing for them.",
+      "words": [
+        {
+          "word": " So,",
+          "start": 99.82,
+          "end": 100.22,
+          "probability": 0.5801410675048828
+        },
+        {
+          "word": " this",
+          "start": 100.32,
+          "end": 100.46,
+          "probability": 0.9967472553253174
+        },
+        {
+          "word": " talk",
+          "start": 100.46,
+          "end": 100.66,
+          "probability": 0.9985232949256897
+        },
+        {
+          "word": " is",
+          "start": 100.66,
+          "end": 100.94,
+          "probability": 0.996880292892456
+        },
+        {
+          "word": " targeted",
+          "start": 100.94,
+          "end": 101.26,
+          "probability": 0.9982555508613586
+        },
+        {
+          "word": " towards",
+          "start": 101.26,
+          "end": 101.64,
+          "probability": 0.9521493315696716
+        },
+        {
+          "word": " small",
+          "start": 101.64,
+          "end": 102.02,
+          "probability": 0.9912291765213013
+        },
+        {
+          "word": " teams",
+          "start": 102.02,
+          "end": 102.34,
+          "probability": 0.9973467588424683
+        },
+        {
+          "word": " who",
+          "start": 102.34,
+          "end": 102.5,
+          "probability": 0.9872941374778748
+        },
+        {
+          "word": " are",
+          "start": 102.5,
+          "end": 102.62,
+          "probability": 0.9967377781867981
+        },
+        {
+          "word": " interested",
+          "start": 102.62,
+          "end": 102.98,
+          "probability": 0.9986153841018677
+        },
+        {
+          "word": " in",
+          "start": 102.98,
+          "end": 103.2,
+          "probability": 0.8481776714324951
+        },
+        {
+          "word": " Horde,",
+          "start": 103.2,
+          "end": 103.38,
+          "probability": 0.46700744330883026
+        },
+        {
+          "word": " but",
+          "start": 103.5,
+          "end": 103.66,
+          "probability": 0.9967275857925415
+        },
+        {
+          "word": " are",
+          "start": 103.66,
+          "end": 104.1,
+          "probability": 0.9532400965690613
+        },
+        {
+          "word": " unsure",
+          "start": 104.1,
+          "end": 104.38,
+          "probability": 0.9969636797904968
+        },
+        {
+          "word": " if",
+          "start": 104.38,
+          "end": 104.64,
+          "probability": 0.9539209008216858
+        },
+        {
+          "word": " it's",
+          "start": 104.64,
+          "end": 104.98,
+          "probability": 0.9910202622413635
+        },
+        {
+          "word": " the",
+          "start": 104.98,
+          "end": 105.32,
+          "probability": 0.9948133230209351
+        },
+        {
+          "word": " right",
+          "start": 105.32,
+          "end": 105.48,
+          "probability": 0.9993435740470886
+        },
+        {
+          "word": " thing",
+          "start": 105.48,
+          "end": 105.66,
+          "probability": 0.9977707862854004
+        },
+        {
+          "word": " for",
+          "start": 105.66,
+          "end": 105.82,
+          "probability": 0.998230516910553
+        },
+        {
+          "word": " them.",
+          "start": 105.82,
+          "end": 106.02,
+          "probability": 0.9996776580810547
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "start": 106.69999999999999,
+      "end": 109.84,
+      "text": " As well as teams that don't have continuous integration set up yet.",
+      "words": [
+        {
+          "word": " As",
+          "start": 106.69999999999999,
+          "end": 107.02,
+          "probability": 0.04935610294342041
+        },
+        {
+          "word": " well",
+          "start": 107.02,
+          "end": 107.12,
+          "probability": 0.9789320826530457
+        },
+        {
+          "word": " as",
+          "start": 107.12,
+          "end": 107.26,
+          "probability": 0.9916511178016663
+        },
+        {
+          "word": " teams",
+          "start": 107.26,
+          "end": 107.4,
+          "probability": 0.9310964345932007
+        },
+        {
+          "word": " that",
+          "start": 107.4,
+          "end": 107.6,
+          "probability": 0.9942518472671509
+        },
+        {
+          "word": " don't",
+          "start": 107.6,
+          "end": 107.86,
+          "probability": 0.9900387525558472
+        },
+        {
+          "word": " have",
+          "start": 107.86,
+          "end": 108.12,
+          "probability": 0.9941061735153198
+        },
+        {
+          "word": " continuous",
+          "start": 108.12,
+          "end": 108.82,
+          "probability": 0.9920002222061157
+        },
+        {
+          "word": " integration",
+          "start": 108.82,
+          "end": 109.24,
+          "probability": 0.5610918998718262
+        },
+        {
+          "word": " set",
+          "start": 109.24,
+          "end": 109.54,
+          "probability": 0.6135014295578003
+        },
+        {
+          "word": " up",
+          "start": 109.54,
+          "end": 109.68,
+          "probability": 0.9831952452659607
+        },
+        {
+          "word": " yet.",
+          "start": 109.68,
+          "end": 109.84,
+          "probability": 0.9841464161872864
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "start": 110.88,
+      "end": 116.78,
+      "text": " To get the most out of this talk, it would be best to have some knowledge of Horde or similar tools, but it's okay if you don't.",
+      "words": [
+        {
+          "word": " To",
+          "start": 110.88,
+          "end": 111.16,
+          "probability": 0.9902864694595337
+        },
+        {
+          "word": " get",
+          "start": 111.16,
+          "end": 111.26,
+          "probability": 0.9990203380584717
+        },
+        {
+          "word": " the",
+          "start": 111.26,
+          "end": 111.36,
+          "probability": 0.9884234070777893
+        },
+        {
+          "word": " most",
+          "start": 111.36,
+          "end": 111.5,
+          "probability": 0.9922164678573608
+        },
+        {
+          "word": " out",
+          "start": 111.5,
+          "end": 111.64,
+          "probability": 0.9986400008201599
+        },
+        {
+          "word": " of",
+          "start": 111.64,
+          "end": 111.7,
+          "probability": 0.9979490637779236
+        },
+        {
+          "word": " this",
+          "start": 111.7,
+          "end": 111.86,
+          "probability": 0.9939921498298645
+        },
+        {
+          "word": " talk,",
+          "start": 111.86,
+          "end": 112.08,
+          "probability": 0.9779902696609497
+        },
+        {
+          "word": " it",
+          "start": 112.24,
+          "end": 112.4,
+          "probability": 0.9861341118812561
+        },
+        {
+          "word": " would",
+          "start": 112.4,
+          "end": 112.5,
+          "probability": 0.969745934009552
+        },
+        {
+          "word": " be",
+          "start": 112.5,
+          "end": 112.6,
+          "probability": 0.9802162051200867
+        },
+        {
+          "word": " best",
+          "start": 112.6,
+          "end": 112.76,
+          "probability": 0.9812867045402527
+        },
+        {
+          "word": " to",
+          "start": 112.76,
+          "end": 112.92,
+          "probability": 0.9862878322601318
+        },
+        {
+          "word": " have",
+          "start": 112.92,
+          "end": 113.02,
+          "probability": 0.9982944130897522
+        },
+        {
+          "word": " some",
+          "start": 113.02,
+          "end": 113.56,
+          "probability": 0.9946684241294861
+        },
+        {
+          "word": " knowledge",
+          "start": 113.56,
+          "end": 113.88,
+          "probability": 0.9902467727661133
+        },
+        {
+          "word": " of",
+          "start": 113.88,
+          "end": 114.04,
+          "probability": 0.1070200651884079
+        },
+        {
+          "word": " Horde",
+          "start": 114.04,
+          "end": 114.28,
+          "probability": 0.492413766682148
+        },
+        {
+          "word": " or",
+          "start": 114.28,
+          "end": 114.54,
+          "probability": 0.9283021688461304
+        },
+        {
+          "word": " similar",
+          "start": 114.54,
+          "end": 114.84,
+          "probability": 0.9850028157234192
+        },
+        {
+          "word": " tools,",
+          "start": 114.84,
+          "end": 115.2,
+          "probability": 0.9939090013504028
+        },
+        {
+          "word": " but",
+          "start": 115.68,
+          "end": 115.98,
+          "probability": 0.9934946894645691
+        },
+        {
+          "word": " it's",
+          "start": 115.98,
+          "end": 116.14,
+          "probability": 0.9859394431114197
+        },
+        {
+          "word": " okay",
+          "start": 116.14,
+          "end": 116.32,
+          "probability": 0.7830668687820435
+        },
+        {
+          "word": " if",
+          "start": 116.32,
+          "end": 116.48,
+          "probability": 0.9786495566368103
+        },
+        {
+          "word": " you",
+          "start": 116.48,
+          "end": 116.52,
+          "probability": 0.9982213377952576
+        },
+        {
+          "word": " don't.",
+          "start": 116.52,
+          "end": 116.78,
+          "probability": 0.9988007843494415
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "start": 117.52,
+      "end": 119.62,
+      "text": " Actually, how many people went to Jack's talk earlier on Horde?",
+      "words": [
+        {
+          "word": " Actually,",
+          "start": 117.52,
+          "end": 117.8,
+          "probability": 0.9918467998504639
+        },
+        {
+          "word": " how",
+          "start": 117.88,
+          "end": 117.96,
+          "probability": 0.8836988210678101
+        },
+        {
+          "word": " many",
+          "start": 117.96,
+          "end": 118.02,
+          "probability": 0.9951643943786621
+        },
+        {
+          "word": " people",
+          "start": 118.02,
+          "end": 118.32,
+          "probability": 0.996248185634613
+        },
+        {
+          "word": " went",
+          "start": 118.32,
+          "end": 118.42,
+          "probability": 0.9645852446556091
+        },
+        {
+          "word": " to",
+          "start": 118.42,
+          "end": 118.56,
+          "probability": 0.9961069226264954
+        },
+        {
+          "word": " Jack's",
+          "start": 118.56,
+          "end": 118.92,
+          "probability": 0.511587992310524
+        },
+        {
+          "word": " talk",
+          "start": 118.92,
+          "end": 119.0,
+          "probability": 0.7424256205558777
+        },
+        {
+          "word": " earlier",
+          "start": 119.0,
+          "end": 119.3,
+          "probability": 0.9863142967224121
+        },
+        {
+          "word": " on",
+          "start": 119.3,
+          "end": 119.46,
+          "probability": 0.6100017428398132
+        },
+        {
+          "word": " Horde?",
+          "start": 119.46,
+          "end": 119.62,
+          "probability": 0.9770551025867462
+        }
+      ]
+    }
+  ]
+}
