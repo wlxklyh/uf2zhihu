@@ -50,7 +50,8 @@ class AudioTranscriber:
             return {
                 'progress': 0,
                 'elapsed_time': 0,
-                'estimated_remaining': 0
+                'estimated_remaining': 0,
+                'estimated_total': 0
             }
         
         elapsed_time = time.time() - self.start_time
@@ -77,6 +78,58 @@ class AudioTranscriber:
             'estimated_total': estimated_total_time
         }
     
+    def _build_detailed_progress(self, progress_info: Dict) -> Dict:
+        """
+        构建详细的进度数据（类似下载进度的格式）
+        
+        Args:
+            progress_info: 进度信息字典
+            
+        Returns:
+            Dict: 详细进度数据，包含百分比、速度、时间等信息
+        """
+        # 计算转录速度（相对于实时播放）
+        if progress_info['elapsed_time'] > 0 and self.video_duration > 0:
+            # 计算已处理的视频时长（基于进度百分比）
+            processed_duration = (progress_info['progress'] / 100.0) * self.video_duration
+            # 转录速度 = 已处理时长 / 已用时间
+            transcribe_speed = processed_duration / progress_info['elapsed_time']
+        else:
+            transcribe_speed = 0
+        
+        # 格式化时间
+        def format_time(seconds):
+            if seconds < 60:
+                return f"{int(seconds)}秒"
+            elif seconds < 3600:
+                minutes = int(seconds // 60)
+                secs = int(seconds % 60)
+                return f"{minutes}分{secs}秒"
+            else:
+                hours = int(seconds // 3600)
+                minutes = int((seconds % 3600) // 60)
+                return f"{hours}小时{minutes}分"
+        
+        # 格式化视频时长
+        def format_duration(seconds):
+            minutes = int(seconds // 60)
+            secs = int(seconds % 60)
+            return f"{minutes}:{secs:02d}"
+        
+        # 计算已处理和总时长
+        processed_duration = (progress_info['progress'] / 100.0) * self.video_duration
+        
+        return {
+            'percent': round(progress_info['progress'], 1),
+            'speed': f"{transcribe_speed:.2f}x" if transcribe_speed > 0 else "--",
+            'elapsed': format_time(progress_info['elapsed_time']),
+            'eta': format_time(progress_info['estimated_remaining']),
+            'processed': format_duration(processed_duration),
+            'total': format_duration(self.video_duration),
+            'model': self.config.get('step2_transcribe', 'model', 'base'),
+            'language': self.config.get('step2_transcribe', 'language', 'en')
+        }
+    
     def _progress_monitor_loop(self) -> None:
         """
         进度监控线程的主循环
@@ -86,30 +139,40 @@ class AudioTranscriber:
         timeout_factor = float(self.config.get('step2_transcribe', 'transcribe_timeout_factor', '10'))
         timeout_seconds = self.video_duration * timeout_factor if self.video_duration else 3600
         
+        # 进度更新间隔（秒）- 用于详细进度回调
+        progress_update_interval = 5  # 每5秒更新一次详细进度
+        last_detailed_update = time.time()
+        
         while not self.stop_monitor.is_set():
             try:
+                current_time = time.time()
+                
                 # 计算当前进度
                 progress_info = self._calculate_estimated_progress()
                 
                 elapsed_minutes = progress_info['elapsed_time'] / 60
                 remaining_minutes = progress_info['estimated_remaining'] / 60
                 
-                # 输出心跳日志
-                self.logger.info(
-                    f"转录进行中: {progress_info['progress']}% | "
-                    f"已用时: {elapsed_minutes:.1f}分钟 | "
-                    f"预计还需: {remaining_minutes:.1f}分钟"
-                )
+                # 每隔心跳间隔输出日志
+                should_log = (current_time - last_detailed_update) >= heartbeat_interval
                 
-                # 通过回调更新进度到Web界面
-                if self.progress_callback:
-                    # 将内部进度（0-95）映射到步骤2的进度范围（30-90）
-                    web_progress = 30 + int(progress_info['progress'] * 0.6)
-                    self.progress_callback(
-                        2, 
-                        web_progress, 
-                        f"转录中: {progress_info['progress']}%, 已用时{elapsed_minutes:.1f}分钟"
+                if should_log:
+                    # 输出心跳日志
+                    self.logger.info(
+                        f"转录进行中: {progress_info['progress']}% | "
+                        f"已用时: {elapsed_minutes:.1f}分钟 | "
+                        f"预计还需: {remaining_minutes:.1f}分钟"
                     )
+                
+                # 定期发送详细进度更新到Web界面
+                if (current_time - last_detailed_update) >= progress_update_interval:
+                    if self.progress_callback:
+                        # 构建详细进度数据（类似下载进度的格式）
+                        detailed_progress = self._build_detailed_progress(progress_info)
+                        # 发送详细进度
+                        self.progress_callback(detailed_progress)
+                    
+                    last_detailed_update = current_time
                 
                 # 检查是否超时
                 if progress_info['elapsed_time'] > timeout_seconds:
@@ -125,8 +188,8 @@ class AudioTranscriber:
             except Exception as e:
                 self.logger.error(f"监控线程异常: {str(e)}")
             
-            # 等待心跳间隔时间，或收到停止信号
-            self.stop_monitor.wait(heartbeat_interval)
+            # 等待更短的间隔时间以便更频繁地更新进度
+            self.stop_monitor.wait(min(progress_update_interval, heartbeat_interval))
     
     def _start_progress_monitor(self, video_duration: float, progress_callback: Optional[Callable] = None) -> None:
         """
@@ -172,12 +235,15 @@ class AudioTranscriber:
         """加载Whisper模型"""
         try:
             model_name = self.config.get('step2_transcribe', 'model', 'base')
-            self.logger.info(f"正在加载Whisper模型: {model_name}")
+            use_fp16 = self.config.get_boolean('step2_transcribe', 'use_fp16', False)
+            precision_mode = 'FP16' if use_fp16 else 'FP32'
+            
+            self.logger.info(f"正在加载Whisper模型: {model_name} (精度: {precision_mode})")
             self.logger.info("正在初始化模型，请稍候...")
             
-            self.model = whisper.load_model(model_name)
+            self.model = whisper.load_model(model_name, fp16=use_fp16)
             
-            self.logger.success(f"Whisper模型加载成功: {model_name}")
+            self.logger.success(f"Whisper模型加载成功: {model_name} (精度: {precision_mode})")
             self.logger.info(f"模型已就绪，准备开始转录")
             return True
             
@@ -289,15 +355,18 @@ class AudioTranscriber:
             try:
                 # 获取配置
                 language = self.config.get('step2_transcribe', 'language', 'en')
+                use_fp16 = self.config.get_boolean('step2_transcribe', 'use_fp16', False)
+                precision_mode = 'FP16' if use_fp16 else 'FP32'
                 
                 # 执行转录
-                self.logger.info(f"开始执行 Whisper 转录，语言: {language}")
+                self.logger.info(f"开始执行 Whisper 转录，语言: {language}, 精度: {precision_mode}")
                 try:
                     result = self.model.transcribe(
                         video_path,
                         language=language,
                         verbose=False,  # 避免输出阻塞
-                        word_timestamps=True  # 包含单词级时间戳
+                        word_timestamps=True,  # 包含单词级时间戳
+                        fp16=use_fp16
                     )
                     self.logger.info("Whisper 转录完成")
                 except Exception as transcribe_error:

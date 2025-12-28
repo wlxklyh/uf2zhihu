@@ -44,7 +44,8 @@ def create_app() -> Flask:
     processor.set_callbacks(
         progress_callback=send_progress_update,
         step_complete_callback=send_step_complete,
-        download_progress_callback=send_download_progress
+        download_progress_callback=send_download_progress,
+        transcribe_progress_callback=send_transcribe_progress
     )
     
     # 注册路由
@@ -435,6 +436,26 @@ def send_download_progress(project_name: str, step: int, progress_data: Dict):
         })
     else:
         logger.warning("[警告] SocketIO未初始化，无法发送下载进度")
+
+def send_transcribe_progress(project_name: str, step: int, progress_data: Dict):
+    """
+    发送详细的转录进度（供处理模块调用）
+    
+    Args:
+        project_name: 项目名称
+        step: 步骤号
+        progress_data: 详细进度数据
+    """
+    if socketio:
+        logger.info(f"[转录] 发送转录进度: 项目={project_name}, 步骤={step}, 进度={progress_data.get('percent', 0)}%")
+        socketio.emit('transcribe_progress', {
+            'project_name': project_name,
+            'step': step,
+            'progress_data': progress_data,
+            'timestamp': datetime.now().isoformat()
+        })
+    else:
+        logger.warning("[警告] SocketIO未初始化，无法发送转录进度")
 
 def send_step_complete(project_name: str, step: int, success: bool, message: str):
     """发送步骤完成通知（供处理模块调用）"""

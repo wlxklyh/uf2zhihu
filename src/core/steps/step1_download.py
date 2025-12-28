@@ -13,6 +13,7 @@ import traceback
 import re
 import time
 import threading
+from urllib.parse import urlparse, parse_qs
 
 # 尝试导入 yt_dlp Python API
 try:
@@ -40,6 +41,55 @@ class YouTubeDownloader:
         self.progress_callback = progress_callback
         self.last_progress_time = None
         self.download_start_time = None
+    
+    def _clean_youtube_url(self, url: str) -> str:
+        """
+        清理 YouTube URL，移除播放列表参数，只保留视频ID
+        
+        Args:
+            url: 原始 YouTube URL
+            
+        Returns:
+            str: 清理后的标准 YouTube URL
+            
+        Raises:
+            ValueError: 如果无法从 URL 提取视频ID
+        """
+        try:
+            parsed = urlparse(url)
+            video_id = None
+            
+            # 处理 youtube.com 格式
+            if 'youtube.com' in parsed.netloc:
+                query_params = parse_qs(parsed.query)
+                if 'v' in query_params:
+                    video_id = query_params['v'][0]
+            
+            # 处理 youtu.be 格式
+            elif 'youtu.be' in parsed.netloc:
+                # 去除开头的 /
+                video_id = parsed.path.lstrip('/')
+                # 如果有查询参数，只取路径部分
+                if '?' in video_id:
+                    video_id = video_id.split('?')[0]
+            
+            if not video_id:
+                raise ValueError(f"无效的 YouTube URL，无法提取视频ID: {url}")
+            
+            # 构建标准URL
+            cleaned_url = f"https://www.youtube.com/watch?v={video_id}"
+            
+            # 如果URL被清理，记录日志
+            if cleaned_url != url:
+                self.logger.info(f"[清理] 原始URL: {url}")
+                self.logger.info(f"[清理] 清理后URL: {cleaned_url}")
+                self.logger.info("[信息] URL 已清理，移除播放列表参数")
+            
+            return cleaned_url
+            
+        except Exception as e:
+            self.logger.error(f"[错误] URL 清理失败: {str(e)}")
+            raise ValueError(f"无效的 YouTube URL，无法提取视频ID: {url}")
         
     def check_dependencies(self):
         """检查yt-dlp是否可用"""
@@ -94,6 +144,9 @@ class YouTubeDownloader:
         download_start_time = time.time()
         
         try:
+            # 清理 URL，移除播放列表参数
+            url = self._clean_youtube_url(url)
+            
             # 检查缓存
             self.logger.info("[检查] 检查视频缓存...")
             if self.enable_cache:
@@ -255,6 +308,9 @@ class YouTubeDownloader:
     def _get_video_info(self, url: str, yt_dlp_command: list) -> Optional[Dict]:
         """获取视频信息"""
         try:
+            # 清理 URL
+            url = self._clean_youtube_url(url)
+            
             self.logger.info("正在获取视频信息...")
             
             # 构建命令获取视频信息
@@ -313,6 +369,9 @@ class YouTubeDownloader:
             str: 下载的视频文件路径，失败返回 None
         """
         try:
+            # 清理 URL
+            url = self._clean_youtube_url(url)
+            
             self.logger.info("开始下载视频文件...")
             
             # 检查是否可以使用 Python API
@@ -337,6 +396,7 @@ class YouTubeDownloader:
                 'progress_hooks': [self._progress_hook],
                 'quiet': False,
                 'no_color': True,
+                'noplaylist': True,
             }
             
             # 初始化下载状态
@@ -390,6 +450,9 @@ class YouTubeDownloader:
     def _download_video_file_legacy(self, url: str, output_dir: str, yt_dlp_command: list) -> Optional[str]:
         """下载视频文件（命令行方式，作为回退方案）"""
         try:
+            # 清理 URL
+            url = self._clean_youtube_url(url)
+            
             # 获取配置
             quality = self.config.get('step1_download', 'quality', 'best')
             format_pref = self.config.get('step1_download', 'format', 'mp4')

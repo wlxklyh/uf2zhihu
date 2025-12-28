@@ -4,8 +4,6 @@ YouTube转文章工具 - Web UI启动脚本
 """
 import os
 import sys
-import webbrowser
-import time
 from src.web.app import create_app
 from src.utils.config import Config
 from src.utils.logger import Logger
@@ -45,15 +43,6 @@ def main():
         logger.info("- 按 Ctrl+C 停止服务")
         logger.info("- 所有项目文件将保存在 projects/ 目录中")
         print()
-        
-        # 延迟一秒后自动打开浏览器
-        if not debug:
-            logger.info("3秒后自动打开浏览器...")
-            time.sleep(3)
-            try:
-                webbrowser.open(f'http://localhost:{port}')
-            except Exception as e:
-                logger.warning(f"无法自动打开浏览器: {str(e)}")
         
         # 启动Flask应用
         logger.success("Web服务启动成功！")

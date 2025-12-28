@@ -34,12 +34,14 @@ class YouTubeToArticleProcessor:
         self.progress_callback = None
         self.step_complete_callback = None
         self.download_progress_callback = None
+        self.transcribe_progress_callback = None
         
-    def set_callbacks(self, progress_callback: Callable = None, step_complete_callback: Callable = None, download_progress_callback: Callable = None):
+    def set_callbacks(self, progress_callback: Callable = None, step_complete_callback: Callable = None, download_progress_callback: Callable = None, transcribe_progress_callback: Callable = None):
         """设置回调函数用于Web界面更新"""
         self.progress_callback = progress_callback
         self.step_complete_callback = step_complete_callback
         self.download_progress_callback = download_progress_callback
+        self.transcribe_progress_callback = transcribe_progress_callback
     
     def start_async_process(self, youtube_url: str, project_name: str) -> Dict:
         """异步开始处理流程"""
@@ -232,6 +234,17 @@ class YouTubeToArticleProcessor:
         if self.download_progress_callback:
             self.download_progress_callback(self.current_project, step, progress_data)
     
+    def _send_transcribe_progress(self, step: int, progress_data: Dict):
+        """
+        发送详细的转录进度更新
+        
+        Args:
+            step: 步骤号
+            progress_data: 进度数据字典
+        """
+        if self.transcribe_progress_callback:
+            self.transcribe_progress_callback(self.current_project, step, progress_data)
+    
     def _send_step_complete(self, step: int, success: bool, message: str):
         """发送步骤完成通知"""
         if self.step_complete_callback:
@@ -317,9 +330,14 @@ class YouTubeToArticleProcessor:
             self.logger.info("创建AudioTranscriber实例...")
             transcriber = AudioTranscriber(self.config, self.logger)
             
+            # 定义转录进度回调函数
+            def transcribe_progress_callback(progress_data: Dict):
+                """转录进度回调"""
+                self._send_transcribe_progress(2, progress_data)
+            
             # 设置进度回调，使转录进度能实时更新到Web界面
-            transcriber.progress_callback = self._send_progress_update
-            self.logger.info("进度回调已设置")
+            transcriber.progress_callback = transcribe_progress_callback
+            self.logger.info("转录进度回调已设置")
             
             # 获取步骤2输出目录
             step2_dir = self.file_manager.get_step_directory(project_path, 'step2_transcribe')
@@ -329,7 +347,7 @@ class YouTubeToArticleProcessor:
             
             # 执行转录
             self.logger.info("调用transcriber.transcribe_video()...")
-            result = transcriber.transcribe_video(video_file, step2_dir)
+            result = transcriber.transcribe_video(video_file, step2_dir, youtube_url)
             
             self.logger.info(f"转录结果: success={result.get('success', False)}")
             

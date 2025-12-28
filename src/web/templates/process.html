@@ -210,6 +210,61 @@
                         </div>
                     </div>
                     
+                    <!-- 转录进度详情（仅步骤2显示） -->
+                    <div id="transcribeProgressContainer" style="display: none;" class="mb-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title mb-3">
+                                    <i class="fas fa-microphone me-2"></i>
+                                    转录进度
+                                </h6>
+                                
+                                <!-- 进度条 -->
+                                <div class="progress mb-3" style="height: 25px;">
+                                    <div id="transcribeProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-info" 
+                                         role="progressbar" style="width: 0%;" 
+                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                        <span id="transcribePercent">0%</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 详细信息 -->
+                                <div class="row text-center">
+                                    <div class="col-md-3">
+                                        <small class="text-muted">转录速度</small>
+                                        <div id="transcribeSpeed" class="fw-bold">--</div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">已用时间</small>
+                                        <div id="transcribeElapsed" class="fw-bold">--</div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">预计剩余</small>
+                                        <div id="transcribeETA" class="fw-bold">--</div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">进度</small>
+                                        <div id="transcribeProgress" class="fw-bold">--</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 模型信息 -->
+                                <div class="mt-3 p-2 bg-white rounded">
+                                    <div class="row text-center">
+                                        <div class="col-md-6">
+                                            <small class="text-muted">使用模型</small>
+                                            <div id="transcribeModel" class="fw-bold text-primary">--</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <small class="text-muted">目标语言</small>
+                                            <div id="transcribeLanguage" class="fw-bold text-primary">--</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- 日志控制工具栏 -->
                     <div class="log-controls mb-2 d-flex gap-2 align-items-center">
                         <!-- 左侧：筛选和搜索 -->
@@ -452,6 +507,21 @@ socket.on('download_progress', function(data) {
     }
 });
 
+// 处理转录进度更新
+socket.on('transcribe_progress', function(data) {
+    console.log('📊 收到转录进度事件:', data);
+    if (data.project_name === projectName && data.step === 2) {
+        console.log('✅ 项目匹配，更新转录进度:', data.progress_data);
+        updateTranscribeProgress(data.progress_data);
+    } else {
+        console.log('⚠️ 项目不匹配或步骤不是2:', {
+            receivedProject: data.project_name,
+            currentProject: projectName,
+            step: data.step
+        });
+    }
+});
+
 // 更新下载进度显示
 function updateDownloadProgress(progressData) {
     console.log('🔄 更新下载进度显示:', progressData);
@@ -497,6 +567,47 @@ function showTimeoutWarning(message) {
     warning.style.display = 'block';
 }
 
+// 更新转录进度显示
+function updateTranscribeProgress(progressData) {
+    console.log('🔄 更新转录进度显示:', progressData);
+    
+    const container = document.getElementById('transcribeProgressContainer');
+    const progressBar = document.getElementById('transcribeProgressBar');
+    const percent = document.getElementById('transcribePercent');
+    const speed = document.getElementById('transcribeSpeed');
+    const elapsed = document.getElementById('transcribeElapsed');
+    const eta = document.getElementById('transcribeETA');
+    const progress = document.getElementById('transcribeProgress');
+    const model = document.getElementById('transcribeModel');
+    const language = document.getElementById('transcribeLanguage');
+    
+    // 显示容器
+    if (container.style.display === 'none') {
+        console.log('👁️ 显示转录进度容器');
+        container.style.display = 'block';
+    }
+    
+    // 更新进度条
+    const percentValue = progressData.percent || 0;
+    progressBar.style.width = percentValue + '%';
+    progressBar.setAttribute('aria-valuenow', percentValue);
+    percent.textContent = percentValue.toFixed(1) + '%';
+    
+    // 更新详细信息
+    speed.textContent = progressData.speed || '--';
+    elapsed.textContent = progressData.elapsed || '--';
+    eta.textContent = progressData.eta || '--';
+    progress.textContent = `${progressData.processed || '--'} / ${progressData.total || '--'}`;
+    
+    // 更新模型信息
+    if (progressData.model) {
+        model.textContent = progressData.model.toUpperCase();
+    }
+    if (progressData.language) {
+        language.textContent = progressData.language.toUpperCase();
+    }
+}
+
 // 添加日志条目
 function addLogEntry(message, type = 'info') {
     const logOutput = document.getElementById('logOutput');
@@ -533,6 +644,12 @@ function setActiveStep(step) {
         const downloadContainer = document.getElementById('downloadProgressContainer');
         if (downloadContainer) {
             downloadContainer.style.display = (step === 1) ? 'block' : 'none';
+        }
+        
+        // 控制转录进度显示
+        const transcribeContainer = document.getElementById('transcribeProgressContainer');
+        if (transcribeContainer) {
+            transcribeContainer.style.display = (step === 2) ? 'block' : 'none';
         }
     }
 }
