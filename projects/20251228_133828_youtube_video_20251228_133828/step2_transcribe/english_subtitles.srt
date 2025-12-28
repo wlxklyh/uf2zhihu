@@ -1,0 +1,1804 @@
+1
+00:00:05,320 --> 00:00:06,299
+So, hello, everyone.
+
+2
+00:00:06,799 --> 00:00:07,620
+Thanks for coming to my talk.
+
+3
+00:00:08,500 --> 00:00:13,820
+Today, I'm going to be talking about Horde, specifically how it can be used by small teams,
+
+4
+00:00:14,600 --> 00:00:18,800
+and I'll show you ways we've reduced cost, and I'll show you what's actually involved
+
+5
+00:00:18,800 --> 00:00:19,980
+in deploying Horde.
+
+6
+00:00:22,140 --> 00:00:25,440
+So, before I get into things, just a little bit about me and the company I work for.
+
+7
+00:00:25,440 --> 00:00:26,800
+So, my name's Ash.
+
+8
+00:00:27,460 --> 00:00:29,719
+I'm a lead real-time developer at S1T2.
+
+9
+00:00:30,579 --> 00:00:36,579
+While my main focus is leading development on our Unreal-based experiences, I'm also responsible
+
+10
+00:00:36,579 --> 00:00:40,299
+for maintaining and developing the DevOps pipelines for these projects.
+
+11
+00:00:42,079 --> 00:00:48,899
+So, at S1T2, we mostly create immersive and interactive experiences, typically for institutions
+
+12
+00:00:48,899 --> 00:00:50,780
+like our galleries and museums.
+
+13
+00:00:51,859 --> 00:00:56,340
+And we use a lot of different technologies, but we mainly use Unreal Engine for these
+
+14
+00:00:56,340 --> 00:00:56,859
+experiences.
+
+15
+00:00:59,840 --> 00:01:03,740
+So, at S1T2, we're a team that cares about fast iteration.
+
+16
+00:01:04,379 --> 00:01:08,319
+It's kind of due to the experimental nature of our work, as well as short timelines,
+
+17
+00:01:08,859 --> 00:01:11,099
+and the need to adapt to changing requirements.
+
+18
+00:01:12,459 --> 00:01:17,819
+Our core team is also small, but we may expand our team with contractors or other partners
+
+19
+00:01:17,819 --> 00:01:19,120
+depending on the work we take on.
+
+20
+00:01:19,780 --> 00:01:21,700
+And our team is also hybrid.
+
+21
+00:01:22,060 --> 00:01:26,939
+Some people work from the office or work from home, or maybe on-site in another country.
+
+22
+00:01:28,239 --> 00:01:30,799
+So having remote access to our tools and infrastructure is important.
+
+23
+00:01:32,019 --> 00:01:35,340
+Actually, the picture in the bottom right is from the time we did a job in Dubai, and
+
+24
+00:01:35,340 --> 00:01:36,560
+I got stuck there for like five months.
+
+25
+00:01:39,819 --> 00:01:44,379
+So this talk is targeted towards small teams who are interested in Horde, but are unsure
+
+26
+00:01:44,379 --> 00:01:46,019
+if it's the right thing for them.
+
+27
+00:01:46,579 --> 00:01:49,819
+As well as teams that don't have continuous integration set up yet.
+
+28
+00:01:50,959 --> 00:01:54,540
+To get the most out of this talk, it would be best to have some knowledge of Horde or
+
+29
+00:01:54,540 --> 00:01:56,760
+similar tools, but it's okay if you don't.
+
+30
+00:01:57,540 --> 00:01:59,620
+Actually, how many people went to Jack's talk earlier on Horde?
+
+31
+00:02:01,040 --> 00:02:01,620
+Oh, many.
+
+32
+00:02:05,079 --> 00:02:08,919
+So, Horde is Epic's custom continuous integration platform.
+
+33
+00:02:09,659 --> 00:02:13,539
+It may even be a bit reductive to call the just a continuous integration platform.
+
+34
+00:02:15,019 --> 00:02:20,139
+But what sets it apart is its native support for unreal tools, projects, and workflows.
+
+35
+00:02:20,879 --> 00:02:26,759
+It offers build graph support natively and integrates with other Epic tools like Unreal Gamesync.
+
+36
+00:02:28,120 --> 00:02:30,099
+And it was also designed with scale in mind.
+
+37
+00:02:30,719 --> 00:02:33,300
+It's got to accommodate the needs of a team, the size of Epic.
+
+38
+00:02:36,199 --> 00:02:38,719
+So why would you choose Horde over something else?
+
+39
+00:02:39,399 --> 00:02:44,400
+Horde's out of box experience is kind of unrivaled, specifically for Unreal Engine projects,
+
+40
+00:02:45,060 --> 00:02:48,800
+just because of the native integrations and streamlined process.
+
+41
+00:02:50,159 --> 00:02:52,159
+It's also kind of an all-in-one solution.
+
+42
+00:02:52,840 --> 00:02:57,159
+It comes with most things you need out of the box, which reduces the need to create glue
+
+43
+00:02:57,719 --> 00:02:59,259
+between different tools or services.
+
+44
+00:03:01,139 --> 00:03:05,719
+And by choosing Horde, you're kind of buying into the Unreal ecosystem of tools
+
+45
+00:03:05,719 --> 00:03:10,979
+and the Epic way of doing things, which kind of reduces the friction involved to introduce
+
+46
+00:03:10,979 --> 00:03:13,620
+more Epic tools into your workflow or pipeline.
+
+47
+00:03:15,719 --> 00:03:16,900
+And obviously scale.
+
+48
+00:03:17,340 --> 00:03:20,879
+If you're a global scale team, or it does make a lot of sense, just because of its ability
+
+49
+00:03:20,879 --> 00:03:22,340
+to accommodate teams of that size.
+
+50
+00:03:24,440 --> 00:03:26,280
+So why wouldn't you choose Horde then?
+
+51
+00:03:27,259 --> 00:03:30,240
+Horde is pretty opinionated in its workflows and integrations.
+
+52
+00:03:30,740 --> 00:03:34,840
+So if you disagree with these or they don't work for you, then it might not be the right choice.
+
+53
+00:03:35,719 --> 00:03:37,780
+And one of those integrations is perforce.
+
+54
+00:03:38,640 --> 00:03:42,000
+Well, you could find somewhere to integrate it or migrate to perforce.
+
+55
+00:03:42,180 --> 00:03:44,620
+You might find that that's more effort than it's worth.
+
+56
+00:03:45,880 --> 00:03:49,960
+Or maybe you're a studio that doesn't mix of Unreal and non-unreal projects.
+
+57
+00:03:50,500 --> 00:03:53,020
+Horde's going to make less sense for things that aren't unreal.
+
+58
+00:03:54,380 --> 00:03:56,520
+Or perhaps you already have a system that works.
+
+59
+00:03:56,759 --> 00:03:59,780
+It can be hard to justify moving away from something that's already getting their job done.
+
+60
+00:04:02,280 --> 00:04:04,759
+So I've broken up this talk into two main sections.
+
+61
+00:04:05,340 --> 00:04:08,039
+First, I'm going to give an overview of four requirements.
+
+62
+00:04:08,520 --> 00:04:10,039
+Kind of show you what the minimum is.
+
+63
+00:04:10,460 --> 00:04:12,780
+And then we'll build a high level plan for our infrastructure.
+
+64
+00:04:13,699 --> 00:04:17,819
+And then in the next section, I'm going to walk through this plan, building it up piece by piece,
+
+65
+00:04:18,279 --> 00:04:21,339
+going into more detail, and show you ways that we have reduced cost.
+
+66
+00:04:24,000 --> 00:04:27,019
+So let's start with Horde's requirements and start building that plan.
+
+67
+00:04:29,039 --> 00:04:33,819
+So in Horde's documentation, there's this section that gives an overview of Epic's Horde deployment.
+
+68
+00:04:34,699 --> 00:04:39,060
+It's called Amazon Line Balancer, through Linux containers, serving the dashboard,
+
+69
+00:04:39,279 --> 00:04:44,779
+12 Horde service and total, document DB, Alaskicase, several hundred EC2 instances running the Horde agent.
+
+70
+00:04:45,360 --> 00:04:47,860
+And on top of that, 100 machines on premises.
+
+71
+00:04:49,019 --> 00:04:51,980
+Here we can start to see the kind of scale that Horde is designed for.
+
+72
+00:04:52,319 --> 00:04:54,420
+But as a small team, we obviously don't need all of that.
+
+73
+00:04:56,139 --> 00:04:58,899
+So the bare minimum Horde deployment will look something like this.
+
+74
+00:04:59,540 --> 00:05:04,579
+We'll have one Horde server paired with Mongo and Redist databases, or something that's compatible,
+
+75
+00:05:05,199 --> 00:05:06,819
+as well as something to serve the dashboard.
+
+76
+00:05:08,120 --> 00:05:10,800
+We will need some way to store things like build artifacts and logs.
+
+77
+00:05:11,420 --> 00:05:16,800
+This can just be the local file system of our Horde server, but it can also be a cloud-based storage solution.
+
+78
+00:05:17,759 --> 00:05:20,220
+And we will need at least one agent, so we can actually run jobs.
+
+79
+00:05:20,579 --> 00:05:24,399
+And then of course, our perforced server, which will contain our project, our engine,
+
+80
+00:05:24,399 --> 00:05:25,980
+and Horde configuration.
+
+81
+00:05:28,200 --> 00:05:33,160
+There's also a few external services that we can run alongside Horde to kind of extend its features.
+
+82
+00:05:34,079 --> 00:05:35,939
+The first is an authentication provider.
+
+83
+00:05:36,600 --> 00:05:39,199
+This will bring things like login flow and user management.
+
+84
+00:05:40,040 --> 00:05:46,399
+We will also want some way to send notifications to out of the box Horde integrates with Slack for notifications.
+
+85
+00:05:47,920 --> 00:05:52,379
+And Horde also has an issue system which can integrate with Jira, but I won't be talking about that today.
+
+86
+00:05:54,620 --> 00:05:57,199
+So now we have an understanding of what we need to deploy.
+
+87
+00:05:57,800 --> 00:05:58,899
+Where should we deploy it?
+
+88
+00:05:59,259 --> 00:06:02,759
+Should we put everything in the cloud or on premises or something in between?
+
+89
+00:06:04,759 --> 00:06:06,139
+So going through our options.
+
+90
+00:06:07,439 --> 00:06:10,459
+An on-premise deployment can be cheaper in the long term.
+
+91
+00:06:11,100 --> 00:06:15,000
+We're able to purchase Horde wrap front rather than paying ongoing fees for card hosting.
+
+92
+00:06:16,319 --> 00:06:17,939
+But it can be harder to scale.
+
+93
+00:06:18,220 --> 00:06:21,180
+It's not like we can just spin up more servers at the click of the button.
+
+94
+00:06:23,139 --> 00:06:25,899
+And it may also be less stable than a cloud deployment.
+
+95
+00:06:26,459 --> 00:06:30,519
+You know, we're most susceptible to things like power or internet outages as well as hardware failure.
+
+96
+00:06:32,939 --> 00:06:39,319
+So a cloud deployment can be more expensive in the long term, but it's going to offer great affectability and the ability to scale on demand.
+
+97
+00:06:40,920 --> 00:06:42,819
+And it may also offer more stability.
+
+98
+00:06:43,240 --> 00:06:48,319
+Large adages are uncommon and when we're in the cloud, hardware failure isn't really a concern anymore.
+
+99
+00:06:50,240 --> 00:06:57,540
+And then hybrid can allow us to tap into some of the benefits of both as well as giving us the flexibility to pivot.
+
+100
+00:06:59,959 --> 00:07:05,560
+So going with hybrid, it's not really going to be the cheapest option, but can kind of give us the best of both worlds.
+
+101
+00:07:05,959 --> 00:07:10,360
+By putting our critical infrastructure in the cloud, we can be more confident in its stability.
+
+102
+00:07:10,980 --> 00:07:22,899
+And by putting our agents on premises, we can say some money by buying hardware upfront or repurposing hardware that we already own rather than paying ongoing fees for high spec cloud servers.
+
+103
+00:07:24,959 --> 00:07:29,459
+All right, so now we have an idea of what we need to deploy and where let's start building that plan.
+
+104
+00:07:30,899 --> 00:07:36,980
+So first, we're going to put that critical infrastructure in the cloud. This will be things like our storage, our databases, our servers.
+
+105
+00:07:37,800 --> 00:07:41,899
+Any adages is here will be the most disruptive. So we're going to put all of it in the cloud.
+
+106
+00:07:43,620 --> 00:07:54,819
+And then our agents will be on premises. This will help save us a little bit of money. And I'm also going to throw in a perforced proxy and under a game sync, but I'll talk a bit more about why they're here.
+
+107
+00:07:57,439 --> 00:08:01,480
+And then finally, we have those third party services for authentication and notifications.
+
+108
+00:08:04,400 --> 00:08:10,779
+So now we have a high level plan for our deployment. I'm going to go into more detail for each component as we build it up piece by piece.
+
+109
+00:08:12,240 --> 00:08:23,120
+So I'll be covering things like deploying our server on the cloud in AWS, configuring under a game sync and perforced, setting up an authentication provider and then sending notifications to discord.
+
+110
+00:08:25,400 --> 00:08:29,399
+So let's start with the whole server as it's kind of the centerpiece for this deployment.
+
+111
+00:08:30,839 --> 00:08:41,559
+Just as a reminder, these are the four things we need to deploy for our hot server. That'll be the hot server itself, MongoDB and red as databases and something to serve the dashboard.
+
+112
+00:08:44,000 --> 00:08:54,399
+As a starting point, we can reference FX or deployment again and we can consider these managed databases offered by AWS, which are document, TV and elastication.
+
+113
+00:08:56,440 --> 00:09:06,259
+So these managed databases are kind of intended to be drop in replacements for Mongo and red as they come with extra features, other box, like high availability and automatic backups.
+
+114
+00:09:07,380 --> 00:09:15,539
+And they sort of offer a more streamlined experience. But here we are trading features and convenience for an increased cost.
+
+115
+00:09:18,100 --> 00:09:26,120
+So instead of using document DB and the last case, we could also deploy Mongo and red as directly to self managed EC2 instances.
+
+116
+00:09:27,480 --> 00:09:32,460
+But you're going to have to put more work in if you want those extra things like on my scaling or backups.
+
+117
+00:09:33,519 --> 00:09:38,639
+But this infrastructure kind of still leaves you open for scaling in the future, even if it's something you do manually.
+
+118
+00:09:41,779 --> 00:09:51,220
+But we can take this a bit further actually. Here we have our cheapest option. We can provision a single EC2 instance and then run all the services we need using Docker.
+
+119
+00:09:52,419 --> 00:10:01,639
+While this option is cheap, we're only paying for one server now. It's going to offer the least flexibility. If you want to scale this in the future, you're going to have to migrate everything to new servers.
+
+120
+00:10:01,639 --> 00:10:09,340
+So we have a few options here, kind of going from most scalable and most expensive to least scalable and least expensive.
+
+121
+00:10:10,980 --> 00:10:17,080
+But here we're going to choose the EC2 and Docker option. We can save some money by only provisioning one server.
+
+122
+00:10:17,919 --> 00:10:24,720
+Although we lose out on the ability to scale horizontally, it's not something that we necessarily need to meet the needs of a small team.
+
+123
+00:10:27,299 --> 00:10:39,879
+So we're also going to need something to serve the dashboard. It's just a static site. So that gives us quite a few options. We could use almost any of the shelf server and AWS also offers solutions for this.
+
+124
+00:10:41,779 --> 00:10:51,460
+But we can also just use the whole server and while we could offload this work to something else, it's going to make very little impact and also increase the complexity of that appointment.
+
+125
+00:10:52,059 --> 00:10:59,360
+The only real benefit to hosting it separately would be that we can deploy new updates for dashboard without having to deploy a whole new image to our old server.
+
+126
+00:11:02,220 --> 00:11:17,580
+So now we have a hot server running as well as the required databases and the dashboard. We've chosen a local solution by opting for a single EC2 instance while still understanding the drawbacks of this choice, like the lack of scalability and the flexibility to add them to the future.
+
+127
+00:11:19,960 --> 00:11:25,139
+So now we have a hot server. We need to choose a storage backend for it.
+
+128
+00:11:25,220 --> 00:11:34,159
+A hot is going to generate a few different files that we will need to store. This can be things like build artifacts, like your package builds or logs from the jobs are running.
+
+129
+00:11:36,039 --> 00:11:44,539
+And all supports multiple storage backends for this. It can be an external cloud-based solution like Amazon's S3 or azure's blob store.
+
+130
+00:11:44,539 --> 00:11:51,980
+But we also have the option for using the local storage of our EC2 instance, which in this case will be an EBS volume we've allocated to it.
+
+131
+00:11:53,759 --> 00:12:02,919
+So should we use that EBS volume? With EBS, we kind of have to allocate a certain amount of storage. If we run out, we have to allocate more or remove data.
+
+132
+00:12:03,960 --> 00:12:10,120
+It can offer better IRE performance compared to S3, but that's kind of assuming there's no other bottlenecks.
+
+133
+00:12:10,819 --> 00:12:14,860
+And it's generally going to be more expensive per gigabyte compared to S3.
+
+134
+00:12:16,779 --> 00:12:23,639
+So what about S3 then? A nice benefit is that it doesn't really have a storage limit. You just pay for what you use.
+
+135
+00:12:24,460 --> 00:12:36,240
+But a major benefit here is actually that now hold can use pre-sign URLs, which essentially means clients can upload and download data directly to and from S3, kind of bypassing our hot server.
+
+136
+00:12:36,240 --> 00:12:39,100
+And that's going to allow us to have a much slimmer hot server.
+
+137
+00:12:41,759 --> 00:12:52,100
+So here we're going to choose S3. It's nice that it is cheaper and doesn't have a storage limit. But yeah, the pre-sign URLs is really a major benefit here.
+
+138
+00:12:55,440 --> 00:13:05,039
+So now we've chosen S3 as our storage backend. It's offered lower prices and increased convenience, as well as the ability to now use pre-sign URLs.
+
+139
+00:13:07,740 --> 00:13:10,539
+So to actually make use of our hot server, we're going to need some agents.
+
+140
+00:13:13,259 --> 00:13:21,139
+In this section, I'm just going to give a bit of general advice for choosing hardware. And I'll show you some configuration we can tweak to know we're getting the most out of our build agents.
+
+141
+00:13:23,399 --> 00:13:29,919
+So in terms of hardware, some things are kind of obvious. We want to see you with the load of cores with more cores. We can do more in parallel.
+
+142
+00:13:30,740 --> 00:13:38,039
+And we also want fast storage. Our agents going to be reading and writing a lot of files. So an SSD is definitely recommended to prevent that from becoming a bottleneck.
+
+143
+00:13:39,139 --> 00:13:45,940
+A GPU is kind of optional. It really depends on if you plan on running automated tests on these agents and the kinds of tests are running.
+
+144
+00:13:46,860 --> 00:13:52,600
+And then we're going to need enough RAM to feed all of our cores. But how would you know how much RAM is enough?
+
+145
+00:13:54,360 --> 00:13:58,139
+If you've ever compiled an Unreal Engine project before, you've probably seen a message like this.
+
+146
+00:13:59,420 --> 00:14:05,000
+Here it's saying it's limited to one process per logical core. In this case, it's 20.
+
+147
+00:14:06,460 --> 00:14:12,360
+And then it's requesting 1.5 gigabytes of memory per process. And there's only currently 25 gigabytes available.
+
+148
+00:14:13,519 --> 00:14:17,419
+So it's being limited to 16 processes out of the maximum of 20.
+
+149
+00:14:19,519 --> 00:14:27,500
+What this means is the agent doesn't have enough available RAM to saturate all of the cores. So it's not really going to be enough to just throw more cores at your agent.
+
+150
+00:14:28,340 --> 00:14:34,639
+I would generally recommend budgeting about two gigabytes of RAM per thread, which will give plenty of buffer.
+
+151
+00:14:35,379 --> 00:14:39,620
+But what you really want is that 1.5 gigabytes per thread plus a bit of buffer.
+
+152
+00:14:42,720 --> 00:14:49,039
+This limiter is artificial and it can be turned off. It might help in situations where the agent doesn't have enough RAM.
+
+153
+00:14:49,840 --> 00:14:52,679
+But it's generally better just to make sure they have enough in the first place.
+
+154
+00:14:53,759 --> 00:14:59,080
+We do disable this limiter on our build agents. Just in case there's like a spike in memory usage.
+
+155
+00:14:59,360 --> 00:15:02,320
+And we want to make sure they're always using the maximum amount of parallel actions.
+
+156
+00:15:04,659 --> 00:15:11,899
+There's also this all cores Boolean. It's kind of set true for some build graph tasks when they run on a horde agent, but not all of them.
+
+157
+00:15:12,360 --> 00:15:13,639
+So we want to set this to true.
+
+158
+00:15:16,759 --> 00:15:26,340
+So now we have some horde agents. Maybe we repurpose some old workstations, but we've made sure they have enough RAM and we've tweaked their configuration. So we know we're getting the most out of them.
+
+159
+00:15:29,720 --> 00:15:33,960
+So before we can actually run CIR jobs, we're going to need to set up our perforal server.
+
+160
+00:15:37,279 --> 00:15:44,059
+The first is that we must have Unreal Engine Source Code on Perforce.
+
+161
+00:15:44,919 --> 00:15:52,059
+So even if you don't plan on modifying it, we're going to need to put some forward into how we structure our perforal streams to ingest the Engine Source Code.
+
+162
+00:15:52,639 --> 00:15:58,340
+And the second is that our projects must be considered native, which is essentially a full-the-structure that we must follow.
+
+163
+00:16:00,519 --> 00:16:01,659
+So we're starting with streams.
+
+164
+00:16:02,119 --> 00:16:09,100
+We want to create at least two streams. The first being an entry point, this will just contain the stock Unreal Engine with node modifications.
+
+165
+00:16:10,240 --> 00:16:13,159
+And then we'll create another stream where we can actually develop changes in.
+
+166
+00:16:14,360 --> 00:16:23,220
+But I would also recommend creating a third stream as a buffer between the two. And this will give us a place to merge incoming changes with our own modifications.
+
+167
+00:16:25,980 --> 00:16:30,659
+So that might look something like this. Here we have UE Engine Entry, which is our entry point.
+
+168
+00:16:31,279 --> 00:16:37,779
+Then at the bottom, UE Engine Main is where we're developing changes. And then in between that, we have our buffer stream for merging.
+
+169
+00:16:40,519 --> 00:16:51,820
+The way we set up our streams, it kind of follows a similar structure. Here UE Main is our entry point. And then below that, UE Dev mostly acts as a buffer, but we do develop some changes there.
+
+170
+00:16:52,479 --> 00:16:55,740
+And then we branch off UE Dev to create a stream for each project.
+
+171
+00:16:56,980 --> 00:17:04,960
+We also have these release streams. They're kind of snapshots of the engine as we've ingested them. And they're mostly there for compiling plugins against.
+
+172
+00:17:08,039 --> 00:17:13,420
+The next thing we need is for our projects to be considered native. And we have to meet one of two criteria.
+
+173
+00:17:14,079 --> 00:17:23,980
+The first is that our project folder must be relative to the engine directory. And the second is if it's in a sub directory, that sub directory needs to be listed by you project does file.
+
+174
+00:17:24,960 --> 00:17:33,200
+To achieve this, we could just push our project into the same stream as our engine. And that's definitely a valid way of doing it. But I'd like to show you an alternative.
+
+175
+00:17:35,819 --> 00:17:46,319
+And that's using stream components. What this allows us to do is essentially create a separate stream for our project. And then we can map the contents of that stream to any workspace created for our engine.
+
+176
+00:17:47,200 --> 00:17:50,839
+So if you sync your engine stream, you'll also get your project in a sub directory.
+
+177
+00:17:54,160 --> 00:18:05,759
+So why would you even bother doing it this way using stream components kind of decouples your engine and project streams, meaning they can be mixed and matched or merged and branched in isolation.
+
+178
+00:18:07,120 --> 00:18:16,519
+Another nice benefit is that it can be applied retroactively or even undone without having to push files around different streams. So it kind of offers great flexibility of cool.
+
+179
+00:18:19,139 --> 00:18:30,220
+So now our purple server is ready to be used with forward. We've set up streams with the engine and we've mapped our projects to those streams using stream components. But there's actually one improvement we can make to the setup.
+
+180
+00:18:32,059 --> 00:18:39,559
+And that's introducing a purple proxy. So a purple proxy a second essentially acts as a cage between clients at a purple server.
+
+181
+00:18:40,259 --> 00:18:51,759
+Meaning if the proxy already has a file, the client is requesting we don't need to redone download that file from the server. And this can lead to improvements in sync times as well as reducing the load on our purple server.
+
+182
+00:18:54,579 --> 00:19:04,519
+So what we want to achieve is something like this where we have our agents talking to the purple proxy. But our board server is talking directly to our purple server.
+
+183
+00:19:06,980 --> 00:19:23,259
+So to achieve this, we'll need a host name that resolves to different IPs on each machine. So on our agents this this host name will result to the IP of our purple proxy and then on our board server this host name will result to the IP of our purple server.
+
+184
+00:19:25,939 --> 00:19:33,440
+For our agents, we can achieve this by adding an entry to the host file. The name on the right here will result to the IP on the left just for this machine.
+
+185
+00:19:36,759 --> 00:19:43,039
+And then on our server we can do something similar by adding an entry to the extra host field and not the compose file.
+
+186
+00:19:45,720 --> 00:19:52,579
+And now when we configure perforce for our whole deployment, we can use that host name and that's going to be used by both our agent and now server.
+
+187
+00:19:55,620 --> 00:20:02,420
+And then finally, we'll need to actually run our perforce proxy and it's pretty straightforward. We just need to run the P4P executable with a few arguments.
+
+188
+00:20:04,039 --> 00:20:15,539
+The first is the IP import to bind to it. The second is the IP import of the perforce server. And then finally, we have a directory for the for the cache files.
+
+189
+00:20:18,019 --> 00:20:25,519
+So now we've added a perforce proxy to our deployment. It's improved the sync times on our agents and it's also reduced the load on our perforce server.
+
+190
+00:20:28,160 --> 00:20:32,160
+So now our perforce server is ready. Let's talk about Unreal Gamesync.
+
+191
+00:20:34,920 --> 00:20:43,180
+So I'm just going to quickly cover what Unreal Gamesync is and why you would want to use it. And then I'll show you a quick overview of how we can use it for it.
+
+192
+00:20:45,539 --> 00:20:53,599
+So Unreal Gamesync is a desktop tool. Its main purpose is to streamline the steps involved, the syncing the engine and projects from perforce.
+
+193
+00:20:54,559 --> 00:21:00,720
+And it comes with additional features like a sync filter and the ability to download precompiled binaries from perforce or for it.
+
+194
+00:21:01,740 --> 00:21:10,319
+And it's kind of designed and intended to be used in that native folder structure we talked about before. So if you want to use Unreal Gamesync, you have to be using the native folder structure.
+
+195
+00:21:13,239 --> 00:21:17,900
+So why would you want to use Unreal Gamesync? We can sync and build that project just fine without it, right?
+
+196
+00:21:18,740 --> 00:21:29,759
+Unreal Gamesync kind of automates all the steps involved for syncing. So in one click, we can sync, build and run our project, which kind of helps mitigate any human error in those steps.
+
+197
+00:21:31,460 --> 00:21:39,279
+You can also kind of think of Unreal Gamesync as a launcher or a dashboard. It's at a glance. You can kind of see project hell or a change list.
+
+198
+00:21:39,839 --> 00:21:49,960
+And launch other tools like Unreal Insights was in. And of course precompiled binaries. We're able to sync and run our project without even needing to install Visual Studio.
+
+199
+00:21:53,240 --> 00:21:58,920
+So now we have an understanding of what Unreal Gamesync is and why we would use it. Let's talk about the playing.
+
+200
+00:21:59,579 --> 00:22:06,519
+So beyond having a perforce server, there are three additional things we can deploy to expand the features of Unreal Gamesync.
+
+201
+00:22:07,039 --> 00:22:17,720
+The first is a metadata server. This will kind of provide Unreal Gamesync with additional information that will come from perforce, things like comments and labels generated by our build system.
+
+202
+00:22:19,059 --> 00:22:30,700
+The next is a place to download the UGS client. This will kind of give your users a place to download it, but it will also allow the self-updata to see if there's a new version available and then patch the client locally.
+
+203
+00:22:31,880 --> 00:22:34,579
+And then finally, we'll need a place to download those precompiled binaries.
+
+204
+00:22:37,620 --> 00:22:44,180
+So the old way this used to be done was by using a dedicated metadata server and then storing our binaries on perforce.
+
+205
+00:22:45,599 --> 00:22:52,740
+So we'd have to create two additional streams on our perforce server, one for our Unreal Gamesync binaries and one for our precompiled editor binaries.
+
+206
+00:22:53,539 --> 00:23:03,700
+And then finally, we have our build system which will talk to the metadata server over its HTTP API. And that's kind of glue you would have to do yourself manually.
+
+207
+00:23:06,519 --> 00:23:13,059
+But now instead, we can use Horde for all of this. Horde here is now our metadata server and it's also storing those binaries.
+
+208
+00:23:13,940 --> 00:23:18,259
+So we have on less servers to deploy and we don't have to create any additional streams on our perforce server.
+
+209
+00:23:19,759 --> 00:23:24,059
+Here we can kind of start to see that deeper Unreal integration is starting to pay off.
+
+210
+00:23:27,299 --> 00:23:34,819
+So it's fairly straightforward to achieve this. We just need to configure Unreal Gamesync and then upload artifacts from our build graph script.
+
+211
+00:23:37,779 --> 00:23:42,460
+So configuring Unreal Gamesync is pretty easy. We just need to add this entry to our I&I and we're done.
+
+212
+00:23:46,019 --> 00:23:53,519
+Uploading PCBs is pretty straightforward too. So in our build graph script, we have a node that is producing the binaries that we want to upload.
+
+213
+00:23:54,779 --> 00:23:58,299
+And then we can add this artifact element that's looking for those binaries.
+
+214
+00:24:00,299 --> 00:24:05,359
+Then if we assign the correct type and keys, our new Gamesync will automatically be able to find these and download them.
+
+215
+00:24:08,960 --> 00:24:16,700
+So now we've introduced Unreal Gamesync into our workflow without the need to host any additional services or add more streams to our perforce server.
+
+216
+00:24:17,339 --> 00:24:20,240
+And it's also allowed our developers to sync in a more convenient way.
+
+217
+00:24:23,480 --> 00:24:28,200
+So our Horde deployment is looking pretty good. We actually have everything we need to run CR jobs.
+
+218
+00:24:28,859 --> 00:24:33,240
+But there are a few more services we can run alongside Horde to kind of enhance this deployment.
+
+219
+00:24:33,240 --> 00:24:35,460
+And the first of those is authentication.
+
+220
+00:24:38,180 --> 00:24:42,279
+So in this section, I'm going to talk a little bit about what OIDC providers are.
+
+221
+00:24:42,720 --> 00:24:45,460
+Then I'll cover an example of integrating one with Horde.
+
+222
+00:24:48,680 --> 00:24:53,619
+So OIDC stands for Open ID Connect. It's kind of a standard that provides two main purposes.
+
+223
+00:24:54,420 --> 00:25:02,640
+The first is login flow. So that will allow users to log into your service, potentially with accounts they created on other platforms like Google or GitHub.
+
+224
+00:25:03,420 --> 00:25:05,299
+And then the second is user identity.
+
+225
+00:25:06,119 --> 00:25:11,200
+When once logged in, your service will receive information about the user like their name or their email address.
+
+226
+00:25:13,819 --> 00:25:17,380
+So Horde has two main login flows that we need to understand.
+
+227
+00:25:17,819 --> 00:25:20,019
+The first is signing into the dashboard.
+
+228
+00:25:20,920 --> 00:25:27,119
+So if you browse to your Horde server, it's basically going to immediately redirect you to your provider's login page.
+
+229
+00:25:27,920 --> 00:25:30,079
+There you would fill out your details and sign in.
+
+230
+00:25:30,700 --> 00:25:34,259
+And you'll be redirected back to the Horde dashboard in a signed-in state.
+
+231
+00:25:37,279 --> 00:25:41,059
+And the second login flow is with desktop tools like Unreal Gamesync.
+
+232
+00:25:41,720 --> 00:25:47,480
+So when Unreal Gamesync wants to authenticate, it first hosts a local HTTP server with a webpage.
+
+233
+00:25:48,180 --> 00:25:51,940
+And then it will open your browser to your provider's login page.
+
+234
+00:25:52,220 --> 00:25:53,400
+There you will login as normal.
+
+235
+00:25:54,140 --> 00:25:57,240
+And this time you'll be redirected to that locally hosted webpage.
+
+236
+00:25:57,879 --> 00:26:03,740
+Unreal Gamesync will see that it's been redirected to and then store the information it received in a file to be used later.
+
+237
+00:26:06,859 --> 00:26:10,099
+The second thing we're going to get from our provider is user identity.
+
+238
+00:26:11,480 --> 00:26:15,799
+So when a user signs into Horde, it's going to receive a list of claims that describe a user.
+
+239
+00:26:16,779 --> 00:26:21,559
+Claims are just key pair values. They can be things like their email address, their name, purple picture.
+
+240
+00:26:22,740 --> 00:26:25,960
+And in Horde we're also able to assign permissions to these claims.
+
+241
+00:26:26,699 --> 00:26:33,759
+So if a user's email claim is ashrit-sontv.com, then they can have the execute Horde commission, for example.
+
+242
+00:26:36,460 --> 00:26:40,299
+So there are quite a few providers to choose from and a lot of them cost money.
+
+243
+00:26:40,900 --> 00:26:43,160
+You might have to try a few to find one that meets your needs.
+
+244
+00:26:44,200 --> 00:26:50,539
+Horde does have a built-in provider. And it's definitely a great option if you're not planning on exposing your Horde server to the internet.
+
+245
+00:26:51,259 --> 00:26:53,359
+It's also a lot easier to set up and it's free.
+
+246
+00:26:56,099 --> 00:26:58,819
+But the provider I'd like to talk about today is AuthSero.
+
+247
+00:26:59,680 --> 00:27:04,079
+It's free to use is very permissive. We can have like 25,000 users before we have to start paying.
+
+248
+00:27:04,400 --> 00:27:05,039
+It's definitely plenty.
+
+249
+00:27:06,400 --> 00:27:09,019
+It has all the features we need at S122.
+
+250
+00:27:09,539 --> 00:27:16,759
+But a killer feature for us is that it integrates with Google Workspace, meaning we can sign in without existing Google S122 Workspace accounts.
+
+251
+00:27:17,440 --> 00:27:18,559
+And that's quite convenient.
+
+252
+00:27:21,440 --> 00:27:25,279
+So I want to run through a quick example of setting up AuthSero with Horde.
+
+253
+00:27:25,640 --> 00:27:30,279
+Kind of just step by step showing you the configuration on the Horde side and what you need to do in AuthSero.
+
+254
+00:27:33,480 --> 00:27:44,839
+So in our server configuration file, there's these six fields we need to fill out to set up Authentication, which are the Auth method, the OIDC authority and audience, client IDN secret, and then our server URL.
+
+255
+00:27:47,619 --> 00:27:49,900
+So starting with the Auth method, we have four options.
+
+256
+00:27:51,059 --> 00:28:01,480
+Anonymous, which means no authentication, Octo, if we're specifically using that provider, open ID connect for any other provider, and then Horde, which is the built in provider.
+
+257
+00:28:01,960 --> 00:28:03,299
+Here we're going to pick open ID connect.
+
+258
+00:28:06,619 --> 00:28:08,700
+Next, we'll need an OIDC authority.
+
+259
+00:28:09,539 --> 00:28:13,160
+When you create an account in AuthSero, the first thing an Rsu to do is create a tenant.
+
+260
+00:28:13,900 --> 00:28:17,319
+And this URL that generates will be what we use for our authority.
+
+261
+00:28:19,040 --> 00:28:20,859
+So we can just copy paste that into our config.
+
+262
+00:28:24,320 --> 00:28:27,539
+Now we need an audience and to get that, we need to create an API in AuthSero.
+
+263
+00:28:28,859 --> 00:28:30,059
+Here it's going to ask for an identifier.
+
+264
+00:28:30,500 --> 00:28:34,180
+It can actually be whatever you want, but it's common for it to be formatted like a URL.
+
+265
+00:28:35,579 --> 00:28:37,119
+It doesn't have to be a real or working domain.
+
+266
+00:28:40,060 --> 00:28:42,400
+And this identifier is what we will use for our audience.
+
+267
+00:28:45,980 --> 00:28:49,240
+Now to get our client ID in secret, we need to create an app in AuthSero.
+
+268
+00:28:50,299 --> 00:28:52,500
+Here we're going to choose single page web application.
+
+269
+00:28:55,019 --> 00:28:57,640
+And then we also want to set these allowed callback URLs.
+
+270
+00:28:58,839 --> 00:29:03,259
+These are essentially the URLs we're being redirected to in the two log-in flows and mention at the start.
+
+271
+00:29:04,200 --> 00:29:06,319
+So we'll need this to make sure there's actually work.
+
+272
+00:29:08,980 --> 00:29:11,980
+Then in our app settings, we'll find the client ID in secret that we need.
+
+273
+00:29:13,160 --> 00:29:15,019
+Which will just copy paste into our config.
+
+274
+00:29:17,720 --> 00:29:19,779
+Then finally, we just need to set this server URL.
+
+275
+00:29:20,180 --> 00:29:24,759
+If it's unset, it will kind of default to whatever the name of the machine or container it's running on.
+
+276
+00:29:25,519 --> 00:29:28,319
+So we're going to set that to the domain of our forward server.
+
+277
+00:29:31,160 --> 00:29:33,599
+So there's actually a few more things we need to change in AuthSero.
+
+278
+00:29:34,160 --> 00:29:37,339
+And that's limiting access and setting a default audience.
+
+279
+00:29:39,759 --> 00:29:42,480
+So for limiting access, there's two things we need to change.
+
+280
+00:29:42,940 --> 00:29:45,259
+The first is disabling this Google social connection.
+
+281
+00:29:46,079 --> 00:29:47,240
+It's enabled by default.
+
+282
+00:29:47,720 --> 00:29:51,500
+And when it's enabled, it means anyone with a Google account can log into our forward server.
+
+283
+00:29:52,140 --> 00:29:53,279
+Which, yeah, we definitely know what that.
+
+284
+00:29:55,500 --> 00:29:58,980
+And then we also want to disable signups on this username and password authentication.
+
+285
+00:29:59,680 --> 00:30:02,119
+And that's going to prevent anyone from creating a login for themselves.
+
+286
+00:30:02,880 --> 00:30:03,660
+Also, don't want that.
+
+287
+00:30:05,060 --> 00:30:08,500
+And then finally, there's this default audience setting, which is quite important.
+
+288
+00:30:09,599 --> 00:30:13,980
+After setting up an Auth provider, you might find that logging into the dashboard works okay.
+
+289
+00:30:14,599 --> 00:30:18,400
+But logging into desktop tools like Unreal Gamsync doesn't quite work right.
+
+290
+00:30:19,339 --> 00:30:23,140
+That's because AuthSero is expecting an audience parameter in one of its payloads.
+
+291
+00:30:23,619 --> 00:30:25,619
+But Unreal Gamsync isn't actually providing it.
+
+292
+00:30:26,560 --> 00:30:31,920
+So we can set a default audience and AuthSero will essentially inject that parameter for us automatically.
+
+293
+00:30:33,059 --> 00:30:36,420
+So we need this to make sure that we can actually log in with Unreal Gamsync.
+
+294
+00:30:39,440 --> 00:30:43,839
+So now we've added a third party indication service to our deployment.
+
+295
+00:30:44,640 --> 00:30:48,019
+It's given us enhanced security, user management and login flow.
+
+296
+00:30:49,200 --> 00:30:51,359
+And we've gained all of this with no additional cost.
+
+297
+00:30:54,400 --> 00:30:55,599
+So now we can log in.
+
+298
+00:30:55,759 --> 00:30:56,700
+We can run C R jobs.
+
+299
+00:30:57,200 --> 00:31:01,019
+But we want to have somewhere where we can receive notifications about our jobs.
+
+300
+00:31:03,059 --> 00:31:04,880
+So hold as a notification system.
+
+301
+00:31:05,619 --> 00:31:07,640
+It can report events to an external service.
+
+302
+00:31:08,519 --> 00:31:10,480
+So you don't have to go like check the dashboard manually.
+
+303
+00:31:12,960 --> 00:31:16,119
+And out of the box, hold integrates with Slack for notifications.
+
+304
+00:31:16,940 --> 00:31:19,660
+To get the most out of Slack, you kind of have to pay for it.
+
+305
+00:31:20,180 --> 00:31:23,640
+Or maybe you're using some other platform like Microsoft Teams or Discord.
+
+306
+00:31:24,640 --> 00:31:30,160
+So you wouldn't really want to migrate to Slack or use Slack on top of what you're already using just to get notifications from hold.
+
+307
+00:31:32,679 --> 00:31:34,759
+Luckily, Oord has quite a few interfaces.
+
+308
+00:31:35,019 --> 00:31:38,559
+We can enter an error from one of which is this notification sync interface.
+
+309
+00:31:39,220 --> 00:31:43,619
+This is going to provide us with all the hooks we need to send notifications to another service like Discord.
+
+310
+00:31:45,059 --> 00:31:46,940
+Oord also supports plugins, which is nice.
+
+311
+00:31:47,220 --> 00:31:51,079
+Means we can extend its functionality with that necessarily having to modify it directly.
+
+312
+00:31:51,700 --> 00:31:53,880
+We just need to create a DLL that Oord is able to load.
+
+313
+00:31:56,920 --> 00:31:59,460
+So we have a few options for sending a message to Discord.
+
+314
+00:32:00,019 --> 00:32:01,859
+The first is using a Discord pot.
+
+315
+00:32:03,140 --> 00:32:08,579
+It will give us access to more advanced features like the ability to create channels, but it will be more involved to set up.
+
+316
+00:32:09,779 --> 00:32:11,000
+We also could use a webhook.
+
+317
+00:32:11,420 --> 00:32:14,480
+This essentially exposes an endpoint for us that we can send messages to.
+
+318
+00:32:16,640 --> 00:32:18,740
+But today I'm just going to talk about webhooks.
+
+319
+00:32:19,000 --> 00:32:20,740
+It's kind of a more agnostic example.
+
+320
+00:32:21,279 --> 00:32:23,160
+So you could do the same thing with another service.
+
+321
+00:32:23,819 --> 00:32:24,720
+It's also a lot simpler.
+
+322
+00:32:24,920 --> 00:32:28,380
+We just need to send a JSON payload to a HTTP endpoint.
+
+323
+00:32:31,039 --> 00:32:35,900
+So to add support for Discord notifications, we'll need to create a hold plugin.
+
+324
+00:32:36,440 --> 00:32:38,799
+And then we can create and register our custom notification sync.
+
+325
+00:32:39,400 --> 00:32:42,680
+And then we can send HTTP requests throughout Webhook endpoint.
+
+326
+00:32:43,680 --> 00:32:49,019
+And you'll have to do all of this in an additional project in your hold solution.
+
+327
+00:32:51,940 --> 00:32:53,579
+So first we can create our plugin class.
+
+328
+00:32:54,240 --> 00:32:57,299
+This is what the HOD plugin system is looking for when it loads out the LLO.
+
+329
+00:32:57,299 --> 00:33:00,259
+You can kind of think of it as the entry point for our plugin.
+
+330
+00:33:03,480 --> 00:33:07,200
+Next we'll need a credit pass that inherits from the notification sync interface.
+
+331
+00:33:08,299 --> 00:33:10,720
+This will expose a few different functions for us.
+
+332
+00:33:11,200 --> 00:33:14,660
+But the main one we're interested in is this job, notify complete function.
+
+333
+00:33:18,200 --> 00:33:25,019
+Then the, sorry, the webhook endpoint is expecting a JSON payload that matches a particular schema.
+
+334
+00:33:25,599 --> 00:33:28,460
+So what we can do is create some classes that match the schema.
+
+335
+00:33:29,019 --> 00:33:32,359
+And then later we'll be able to serialize this classes into a JSON string.
+
+336
+00:33:34,980 --> 00:33:37,460
+So now inside our job, notify complete function.
+
+337
+00:33:37,940 --> 00:33:39,339
+We can start building the message to send.
+
+338
+00:33:40,440 --> 00:33:43,660
+First, we're going to read this notification channel from our config.
+
+339
+00:33:45,180 --> 00:33:46,299
+From our stream config.
+
+340
+00:33:46,720 --> 00:33:51,359
+We're essentially hijacking this config variable to store the URL for our webhook.
+
+341
+00:33:54,399 --> 00:33:56,619
+Then we can prepare the message we want to send.
+
+342
+00:33:56,819 --> 00:33:58,440
+We can set the title, the color, and the description.
+
+343
+00:33:59,579 --> 00:34:01,339
+We're using those classes we created earlier.
+
+344
+00:34:03,299 --> 00:34:05,539
+And then we can start building our post request to send.
+
+345
+00:34:06,359 --> 00:34:08,340
+First we're going to serialize our message to JSON.
+
+346
+00:34:09,079 --> 00:34:13,000
+And then we can create a hdv post request with that JSON payload attached.
+
+347
+00:34:16,360 --> 00:34:18,679
+And then finally we can send the hdvpressed.
+
+348
+00:34:21,360 --> 00:34:27,699
+Now back in our hd plugin, we can register a singleton of this class for identification sync.
+
+349
+00:34:30,679 --> 00:34:34,960
+So hdvp is quite a few APIs for us to pull additional information about the job.
+
+350
+00:34:35,599 --> 00:34:40,320
+So it can be things like the change list descriptions generate artifacts or whether or not the.
+
+351
+00:34:43,000 --> 00:34:43,659
+It's okay.
+
+352
+00:34:47,119 --> 00:34:47,739
+We're back.
+
+353
+00:34:49,000 --> 00:34:51,659
+And whether or not the job failed or succeeded.
+
+354
+00:34:53,019 --> 00:34:56,699
+Discord also has like a markdown style syntax for styling.
+
+355
+00:34:57,260 --> 00:34:59,079
+So that allows us to customize the message further.
+
+356
+00:34:59,880 --> 00:35:02,219
+And so you can definitely think there's a lot further than what I've shown today.
+
+357
+00:35:04,659 --> 00:35:09,219
+So now we've added a way to receive notifications without having to pay for that service.
+
+358
+00:35:09,219 --> 00:35:14,440
+And we've also learned how we can extend hordes functionality without really needing to modify directly.
+
+359
+00:35:17,500 --> 00:35:19,059
+So now our deployment is complete.
+
+360
+00:35:19,679 --> 00:35:23,159
+We've opted for free for party services like authsure and discord.
+
+361
+00:35:23,840 --> 00:35:27,239
+We've also deployed our server in the cloud while still keeping costs low.
+
+362
+00:35:28,139 --> 00:35:33,659
+And we'll also able to integrate additional tools like under game sync without really much effort at all.
+
+363
+00:35:37,359 --> 00:35:44,039
+So despite the learning curve, I feel the time and effort involved to getting a pipeline up and running with hord is much lower than generic solutions.
+
+364
+00:35:45,079 --> 00:35:49,780
+And that's because of the native integrations and the most streamlined workflow.
+
+365
+00:35:50,760 --> 00:35:54,559
+As well as the fact that it's reduced the need to create glue between different tools.
+
+366
+00:35:56,480 --> 00:35:59,139
+Hord is designed for scale, but it obviously doesn't have to.
+
+367
+00:35:59,139 --> 00:36:02,800
+We can deploy it at a low cost while still meeting the needs of a small team.
+
+368
+00:36:04,119 --> 00:36:08,780
+And for these reasons, I think hord is actually a great option for teams of basically any size.
+
+369
+00:36:12,260 --> 00:36:13,800
+And that's it. Thanks for listening.
+
+370
+00:36:21,859 --> 00:36:23,420
+I think we have time for some questions.
+
+371
+00:36:26,940 --> 00:36:27,719
+Thanks for the talk.
+
+372
+00:36:29,139 --> 00:36:41,800
+And I get it right that if you download a 5.6 version of hord that you can use that to do CRCD for earlier versions of Unreal or as opposed to you have to have a whole server per engine version.
+
+373
+00:36:42,659 --> 00:36:44,840
+It would be best to use the same version.
+
+374
+00:36:45,940 --> 00:36:48,460
+The main compatibility thing is bill graph.
+
+375
+00:36:49,559 --> 00:36:52,059
+Hord will be working for a specific version of bill graph.
+
+376
+00:36:52,059 --> 00:36:58,780
+But I found I'm using the 5.6 version at the moment and it works for 5.5 and 5.4.
+
+377
+00:37:00,119 --> 00:37:07,500
+5.3 has more issues because the artifact element doesn't exist in bill graph, but it's quite easy to backport that.
+
+378
+00:37:08,440 --> 00:37:08,800
+Thank you.
+
+379
+00:37:10,579 --> 00:37:11,099
+Questions.
+
+380
+00:37:12,400 --> 00:37:14,400
+I'm also not keeping you high on time.
+
+381
+00:37:14,880 --> 00:37:15,900
+Thanks, Ash.
+
+382
+00:37:16,440 --> 00:37:17,219
+Two quick questions.
+
+383
+00:37:17,219 --> 00:37:23,980
+Number one, did you look at ACS instead of AC2 instances? Was that just like a cost thing to not go with like a managed container service?
+
+384
+00:37:24,659 --> 00:37:25,380
+Yeah, pretty much.
+
+385
+00:37:26,480 --> 00:37:35,019
+We probably would have used ACS if we were deploying on multiple AC2 instances, but in this case we do have just have the ones that we can just run, don't hurt on that.
+
+386
+00:37:35,500 --> 00:37:43,219
+And do you have like a WAF sitting in front of those as well, or they just open for the perforced server and the AC2 instances and you purely rely on the auth to be able to like protect them.
+
+387
+00:37:43,219 --> 00:37:44,079
+Yeah, yeah.
+
+388
+00:37:44,400 --> 00:37:46,920
+We just have the port open for that.
+
+389
+00:37:54,639 --> 00:37:55,679
+Thank you.
+
+390
+00:37:56,599 --> 00:37:59,320
+What's the specification for the other AC2 instance?
+
+391
+00:38:00,860 --> 00:38:03,719
+It's a two core two gigabyte instance.
+
+392
+00:38:04,619 --> 00:38:11,420
+But I probably wouldn't recommend doing that. The only reason we were able to do that is because I made a small modification to Horde.
+
+393
+00:38:12,099 --> 00:38:18,079
+There's a commit object that's essentially storing all the files that changed in a commit.
+
+394
+00:38:19,340 --> 00:38:25,559
+And if the last commit industry happened to be like you pushing the engine, that's like hundreds and thousands of files.
+
+395
+00:38:26,219 --> 00:38:27,619
+And it was using gigabytes of memory.
+
+396
+00:38:28,219 --> 00:38:33,099
+Yeah, I would probably recommend maybe at least four gigabytes of RAM and a bit of swap.
+
+397
+00:38:33,860 --> 00:38:36,739
+But epic servers, I think are 16 gigabytes.
+
+398
+00:38:37,320 --> 00:38:38,199
+According to the documentation.
+
+399
+00:38:43,400 --> 00:38:59,679
+Yeah, so I have a question regarding extending Horde's with plugins. Like you mentioned, I'm interested in that. What would you say would be the best entry point to learning more about this and whether like Horde does Horde just have documentation for it as well.
+
+400
+00:39:00,199 --> 00:39:04,659
+I think the documentation goes as far as saying there is a plugin system, but that's about it.
+
+401
+00:39:04,659 --> 00:39:15,659
+But I would recommend like most of the features in Horde already built out as plugins. I think there's about six or seven already there. So you can reference those and see what's involved.
+
+402
+00:39:16,340 --> 00:39:17,480
+Cool. Thank you.
+
+403
+00:39:19,340 --> 00:39:20,639
+Cheers for the talk.
+
+404
+00:39:21,679 --> 00:39:25,920
+Is there any requirement for the cloud-based services to sit behind VPS?
+
+405
+00:39:28,059 --> 00:39:29,420
+Sorry, I'm not familiar with VPS.
+
+406
+00:39:29,420 --> 00:39:34,860
+The virtual private system. Do they have to sit on any kind of localization or can it just be public on the internet?
+
+407
+00:39:34,900 --> 00:39:36,559
+They can just be public. Yeah. Awesome. Cheers.
+
+408
+00:39:43,839 --> 00:39:55,920
+I was just wondering if you had found any studies into the sort of network bandwidths involved and you're going some on site, off site, and then with multiple agents and the recombination of what you're trying to build.
+
+409
+00:39:55,920 --> 00:39:58,179
+Did you encourage any network issues?
+
+410
+00:39:59,019 --> 00:40:00,300
+No, we didn't have any issues.
+
+411
+00:40:01,760 --> 00:40:12,699
+Again, using the presign URLs means that even the agents can upload and download data directly from two and from S3 rather than that being like piped through our whole server.
+
+412
+00:40:13,579 --> 00:40:19,539
+And I think that's the main limitation for like bandwidth because like artifact files can be like many gigabytes and size, right?
+
+413
+00:40:19,539 --> 00:40:25,780
+Yeah, sorry, not technically working just with build speeds like so if you've got like oh, okay.
+
+414
+00:40:26,239 --> 00:40:30,159
+Build much faster locally than it is over the cloud.
+
+415
+00:40:30,260 --> 00:40:30,900
+Right.
+
+416
+00:40:33,240 --> 00:40:38,719
+It works fine locally. One issue is hydrating workspaces.
+
+417
+00:40:39,199 --> 00:40:47,679
+If you're running a job across multiple agents and it needs to move files across to another agent, it's kind of piped those through forward.
+
+418
+00:40:47,679 --> 00:40:53,639
+So it's going to upload everything to S3 and then it's going to download it back on the other agent and that can be quite slow.
+
+419
+00:40:54,599 --> 00:40:56,599
+So for us, we don't really use that piece of that reason.
+
+420
+00:41:04,480 --> 00:41:06,619
+So thank you to quick question.
+
+421
+00:41:07,500 --> 00:41:12,380
+Can the proxy can be replaced by commit or edge suffer?
+
+422
+00:41:13,219 --> 00:41:21,639
+Yep, the main reason you're using a proxy is to run it on the local network alongside the agents that you can do that too.
+
+423
+00:41:22,260 --> 00:41:28,980
+And the second one, can we like is there any CI CD that's if we work with local Zen.
+
+424
+00:41:30,300 --> 00:41:38,400
+So when the cache has been built in other rock station, then it can be deployed or copy to another rock station using Harp.
+
+425
+00:41:39,660 --> 00:41:44,380
+Yeah, you can use some sheds and so forth for the agents. I definitely recommend doing that.
+
+426
+00:41:45,139 --> 00:41:48,199
+Yeah, it's a significant improvement to the cook times for us.
+
+427
+00:41:48,699 --> 00:41:49,380
+Thanks.
+
+428
+00:41:55,400 --> 00:41:55,559
+Yep.
+
+429
+00:41:56,579 --> 00:41:58,519
+I think where.
+
+430
+00:42:00,400 --> 00:42:05,699
+One question. Can we use AWS spot instance to save course?
+
+431
+00:42:05,699 --> 00:42:08,260
+Yes, I believe you can.
+
+432
+00:42:10,159 --> 00:42:11,699
+I think that's what Epic does maybe.
+
+433
+00:42:12,760 --> 00:42:15,639
+I think this references to that in the documentation. So I would have to look at that.
+
+434
+00:42:18,859 --> 00:42:23,039
+But I think then you would you would need to worry about hydrating those workspaces as well.
+
+435
+00:42:24,380 --> 00:42:28,920
+I think one more question and Ash I'll drag him to the dev lounge because it's very popular.
+
+436
+00:42:35,699 --> 00:42:45,320
+Thank you. My maybe it's for devlon, but we are interesting on the on premise configuration.
+
+437
+00:42:46,699 --> 00:42:51,780
+Symposium can an agent enrollment be conditional.
+
+438
+00:42:52,500 --> 00:42:55,739
+Something like the agent is down.
+
+439
+00:42:56,360 --> 00:43:04,139
+Can we replace with other or the agent is used by other purposes.
+
+440
+00:43:04,139 --> 00:43:07,400
+So we include the agent.
+
+441
+00:43:09,659 --> 00:43:11,000
+So you're asking if.
+
+442
+00:43:12,400 --> 00:43:13,460
+When agents are down.
+
+443
+00:43:13,860 --> 00:43:13,980
+Yes.
+
+444
+00:43:14,920 --> 00:43:18,500
+Yeah, so it will it will look through the pools to find available agents.
+
+445
+00:43:19,440 --> 00:43:22,400
+And if it can't find an agent, then it's just going to sit there and wait.
+
+446
+00:43:23,320 --> 00:43:24,840
+I think there might be a timeout as well.
+
+447
+00:43:26,239 --> 00:43:26,639
+Yeah.
+
+448
+00:43:27,519 --> 00:43:29,099
+Sorry, does that ask your answer question?
+
+449
+00:43:31,460 --> 00:43:31,860
+Yeah.
+
+450
+00:43:34,819 --> 00:43:35,699
+Cool. You got something.
+
+451
+00:43:36,900 --> 00:43:37,559
+Thanks for listening.
+

@@ -241,7 +241,7 @@ class AudioTranscriber:
             self.logger.info(f"正在加载Whisper模型: {model_name} (精度: {precision_mode})")
             self.logger.info("正在初始化模型，请稍候...")
             
-            self.model = whisper.load_model(model_name, fp16=use_fp16)
+            self.model = whisper.load_model(model_name)
             
             self.logger.success(f"Whisper模型加载成功: {model_name} (精度: {precision_mode})")
             self.logger.info(f"模型已就绪，准备开始转录")
