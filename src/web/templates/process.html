@@ -135,18 +135,14 @@
                         </div>
                         <div class="step" id="step3">
                             <div class="step-number">3</div>
-                            <small>翻译字幕</small>
+                            <small>提取截图</small>
                         </div>
                         <div class="step" id="step4">
                             <div class="step-number">4</div>
-                            <small>提取截图</small>
+                            <small>生成文章</small>
                         </div>
                         <div class="step" id="step5">
                             <div class="step-number">5</div>
-                            <small>生成文章</small>
-                        </div>
-                        <div class="step" id="step6">
-                            <div class="step-number">6</div>
                             <small>生成Prompt</small>
                         </div>
                     </div>
@@ -167,6 +163,84 @@
                     </h5>
                 </div>
                 <div class="card-body">
+                    <!-- 下载进度详情（仅步骤1显示） -->
+                    <div id="downloadProgressContainer" style="display: none;" class="mb-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title mb-3">
+                                    <i class="fas fa-download me-2"></i>
+                                    下载进度
+                                </h6>
+                                
+                                <!-- 进度条 -->
+                                <div class="progress mb-3" style="height: 25px;">
+                                    <div id="downloadProgressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                         role="progressbar" style="width: 0%;" 
+                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                        <span id="downloadPercent">0%</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 详细信息 -->
+                                <div class="row text-center">
+                                    <div class="col-md-3">
+                                        <small class="text-muted">下载速度</small>
+                                        <div id="downloadSpeed" class="fw-bold">-- MB/s</div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">已下载</small>
+                                        <div id="downloadDownloaded" class="fw-bold">-- MB</div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">总大小</small>
+                                        <div id="downloadTotal" class="fw-bold">-- MB</div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">预计剩余</small>
+                                        <div id="downloadETA" class="fw-bold">--</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 超时警告 -->
+                                <div id="timeoutWarning" class="alert alert-warning mt-3" style="display: none;">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <span id="timeoutWarningText"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 日志控制工具栏 -->
+                    <div class="log-controls mb-2 d-flex gap-2 align-items-center">
+                        <!-- 左侧：筛选和搜索 -->
+                        <select class="form-select form-select-sm" id="logLevelFilter" style="width: auto;">
+                            <option value="all">全部日志</option>
+                            <option value="info">信息</option>
+                            <option value="success">成功</option>
+                            <option value="warning">警告</option>
+                            <option value="error">错误</option>
+                        </select>
+                        
+                        <input type="text" class="form-control form-control-sm" 
+                               id="logSearch" placeholder="搜索日志..." style="max-width: 200px;">
+                        
+                        <!-- 右侧：操作按钮 -->
+                        <div class="ms-auto d-flex gap-1">
+                            <button class="btn btn-sm btn-outline-secondary" id="copyLogsBtn" title="复制日志">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" id="exportLogsBtn" title="导出日志">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" id="clearLogsBtn" title="清空显示">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary active" id="toggleAutoScrollBtn" title="自动滚动">
+                                <i class="fas fa-arrows-alt-v"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
                     <!-- 实时日志输出 -->
                     <div class="log-output" id="logOutput">
                         <div class="log-entry info">正在初始化处理流程...</div>
@@ -199,6 +273,36 @@
                         <button class="btn btn-secondary" id="skipBtn" disabled>
                             <i class="fas fa-forward me-2"></i>跳过当前步骤
                         </button>
+                    </div>
+                    
+                    <!-- 步骤控制器 -->
+                    <div class="mt-3 pt-3 border-top" id="stepControlPanel">
+                        <h6 class="mb-2">
+                            <i class="fas fa-cogs me-1"></i>步骤控制
+                        </h6>
+                        
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">从指定步骤重新开始</label>
+                            <select class="form-select form-select-sm mb-2" id="retryFromStep">
+                                <option value="1">步骤1: 下载视频</option>
+                                <option value="2">步骤2: 语音转录</option>
+                                <option value="3">步骤3: 提取截图</option>
+                                <option value="4">步骤4: 生成文章</option>
+                                <option value="5">步骤5: 生成Prompt</option>
+                            </select>
+                            <button class="btn btn-sm btn-primary w-100" id="retryFromStepBtn" disabled>
+                                <i class="fas fa-redo me-1"></i>从此步骤开始
+                            </button>
+                        </div>
+                        
+                        <div class="mt-3 p-2 bg-light rounded" id="stepTiming">
+                            <small class="text-muted d-block">
+                                <i class="fas fa-clock me-1"></i>已用时间: <strong id="elapsedTime">00:00</strong>
+                            </small>
+                            <small class="text-muted d-block mt-1">
+                                <i class="fas fa-hourglass-half me-1"></i>预计剩余: <strong id="estimatedTime">计算中...</strong>
+                            </small>
+                        </div>
                     </div>
                     
                     <!-- 人工确认对话框 -->
@@ -234,6 +338,43 @@
         </div>
     </div>
 </div>
+
+<!-- 文件预览模态框 -->
+<div class="modal fade" id="filePreviewModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-alt me-2"></i>
+                    文件预览: <span id="previewFileName" class="text-primary"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <pre id="previewContent" class="file-preview" style="max-height: 600px; overflow-y: auto;"></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="copyPreviewContent()">
+                    <i class="fas fa-copy me-1"></i>复制内容
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 复制预览内容
+function copyPreviewContent() {
+    const content = document.getElementById('previewContent').textContent;
+    navigator.clipboard.writeText(content).then(() => {
+        showAlert('内容已复制到剪贴板', 'success');
+    }).catch(err => {
+        showAlert('复制失败: ' + err, 'danger');
+    });
+}
+</script>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -296,6 +437,66 @@ socket.on('step_complete', function(data) {
     }
 });
 
+// 处理下载进度更新
+socket.on('download_progress', function(data) {
+    console.log('📊 收到下载进度事件:', data);
+    if (data.project_name === projectName && data.step === 1) {
+        console.log('✅ 项目匹配，更新进度:', data.progress_data);
+        updateDownloadProgress(data.progress_data);
+    } else {
+        console.log('⚠️ 项目不匹配或步骤不是1:', {
+            receivedProject: data.project_name,
+            currentProject: projectName,
+            step: data.step
+        });
+    }
+});
+
+// 更新下载进度显示
+function updateDownloadProgress(progressData) {
+    console.log('🔄 更新下载进度显示:', progressData);
+    
+    const container = document.getElementById('downloadProgressContainer');
+    const progressBar = document.getElementById('downloadProgressBar');
+    const percent = document.getElementById('downloadPercent');
+    const speed = document.getElementById('downloadSpeed');
+    const downloaded = document.getElementById('downloadDownloaded');
+    const total = document.getElementById('downloadTotal');
+    const eta = document.getElementById('downloadETA');
+    
+    // 显示容器
+    if (container.style.display === 'none') {
+        console.log('👁️ 显示下载进度容器');
+        container.style.display = 'block';
+    }
+    
+    // 更新进度条
+    const percentValue = progressData.percent || 0;
+    progressBar.style.width = percentValue + '%';
+    progressBar.setAttribute('aria-valuenow', percentValue);
+    percent.textContent = percentValue.toFixed(1) + '%';
+    
+    // 更新详细信息
+    speed.textContent = progressData.speed || '-- MB/s';
+    downloaded.textContent = progressData.downloaded || '-- MB';
+    total.textContent = progressData.total || '-- MB';
+    eta.textContent = progressData.eta || '--';
+    
+    // 检查超时警告
+    if (progressData.timeout_warning) {
+        showTimeoutWarning(progressData.timeout_warning);
+    }
+}
+
+// 显示超时警告
+function showTimeoutWarning(message) {
+    const warning = document.getElementById('timeoutWarning');
+    const warningText = document.getElementById('timeoutWarningText');
+    
+    warningText.textContent = message;
+    warning.style.display = 'block';
+}
+
 // 添加日志条目
 function addLogEntry(message, type = 'info') {
     const logOutput = document.getElementById('logOutput');
@@ -327,6 +528,12 @@ function setActiveStep(step) {
         
         // 更新步骤标题
         updateStepTitle(step);
+        
+        // 控制下载进度显示
+        const downloadContainer = document.getElementById('downloadProgressContainer');
+        if (downloadContainer) {
+            downloadContainer.style.display = (step === 1) ? 'block' : 'none';
+        }
     }
 }
 
@@ -353,10 +560,9 @@ function updateStepTitle(step) {
     const titles = {
         1: '<i class="fas fa-download me-2"></i>步骤1：下载YouTube视频',
         2: '<i class="fas fa-microphone me-2"></i>步骤2：语音转录',
-        3: '<i class="fas fa-language me-2"></i>步骤3：翻译字幕',
-        4: '<i class="fas fa-camera me-2"></i>步骤4：提取截图',
-        5: '<i class="fas fa-file-alt me-2"></i>步骤5：生成文章',
-        6: '<i class="fas fa-robot me-2"></i>步骤6：生成Prompt'
+        3: '<i class="fas fa-camera me-2"></i>步骤3：提取截图',
+        4: '<i class="fas fa-file-alt me-2"></i>步骤4：生成文章',
+        5: '<i class="fas fa-robot me-2"></i>步骤5：生成Prompt'
     };
     
     const titleElement = document.getElementById('currentStepTitle');
@@ -403,19 +609,40 @@ function displayFiles(files) {
         files.forEach(file => {
             if (file.is_directory) {
                 html += `
-                    <div class="file-item">
-                        <i class="fas fa-folder me-2 text-warning"></i>
-                        <strong>${file.name}</strong>
-                        <small class="text-muted d-block">${file.file_count} 个文件</small>
+                    <div class="file-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-folder me-2 text-warning"></i>
+                            <strong>${file.name}</strong>
+                            <small class="text-muted d-block ms-4">${file.file_count} 个文件</small>
+                        </div>
                     </div>
                 `;
             } else {
                 const size = formatFileSize(file.size);
+                const fileExt = file.name.split('.').pop().toLowerCase();
+                const isPreviewable = ['md', 'txt', 'json', 'srt', 'log'].includes(fileExt);
+                
                 html += `
-                    <div class="file-item">
-                        <i class="fas fa-file me-2 text-info"></i>
-                        ${file.name}
-                        <small class="text-muted d-block">${size}</small>
+                    <div class="file-item d-flex justify-content-between align-items-center">
+                        <div class="flex-grow-1">
+                            <i class="fas fa-file me-2 text-info"></i>
+                            <span>${file.name}</span>
+                            <small class="text-muted d-block ms-4">${size}</small>
+                        </div>
+                        <div class="file-actions d-flex gap-1">
+                            ${isPreviewable ? `
+                                <button class="btn btn-sm btn-outline-primary" 
+                                        onclick="previewFile('${file.name}', '${file.path}')" 
+                                        title="预览">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            ` : ''}
+                            <button class="btn btn-sm btn-outline-success" 
+                                    onclick="downloadFile('${file.path}')" 
+                                    title="下载">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
             }
@@ -426,6 +653,41 @@ function displayFiles(files) {
     } else {
         outputFiles.innerHTML = '<p class="text-muted text-center">暂无输出文件</p>';
     }
+}
+
+// 预览文件
+function previewFile(fileName, filePath) {
+    showLoading();
+    
+    // 使用API预览文件
+    fetch(`/api/file_preview/${projectName}/${currentStep}/${fileName}`)
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            
+            if (data.success) {
+                showFilePreviewModal(fileName, data.content);
+            } else {
+                showAlert(`预览失败: ${data.error}`, 'danger');
+            }
+        })
+        .catch(error => {
+            hideLoading();
+            showAlert(`预览失败: ${error}`, 'danger');
+        });
+}
+
+// 显示文件预览模态框
+function showFilePreviewModal(fileName, content) {
+    const modal = new bootstrap.Modal(document.getElementById('filePreviewModal'));
+    document.getElementById('previewFileName').textContent = fileName;
+    document.getElementById('previewContent').textContent = content;
+    modal.show();
+}
+
+// 下载文件
+function downloadFile(filePath) {
+    window.location.href = filePath;
 }
 
 // 格式化文件大小
@@ -450,10 +712,164 @@ document.getElementById('confirmNo').addEventListener('click', function() {
     // 这里可以发送重新处理的信号
 });
 
+// 日志增强功能
+let autoScroll = true;
+let startTime = Date.now();
+let timerInterval = null;
+
+// 日志级别筛选
+document.getElementById('logLevelFilter').addEventListener('change', function() {
+    const level = this.value;
+    const logEntries = document.querySelectorAll('.log-entry');
+    
+    logEntries.forEach(entry => {
+        if (level === 'all') {
+            entry.style.display = '';
+        } else {
+            entry.style.display = entry.classList.contains(level) ? '' : 'none';
+        }
+    });
+});
+
+// 日志搜索
+document.getElementById('logSearch').addEventListener('input', function() {
+    const searchText = this.value.toLowerCase();
+    const logEntries = document.querySelectorAll('.log-entry');
+    
+    logEntries.forEach(entry => {
+        const text = entry.textContent.toLowerCase();
+        if (searchText === '' || text.includes(searchText)) {
+            entry.style.display = '';
+            // 高亮匹配的文本
+            if (searchText !== '') {
+                const originalText = entry.textContent;
+                const regex = new RegExp(`(${searchText})`, 'gi');
+                const highlightedText = originalText.replace(regex, '<mark>$1</mark>');
+                entry.innerHTML = highlightedText;
+            }
+        } else {
+            entry.style.display = 'none';
+        }
+    });
+});
+
+// 复制日志
+document.getElementById('copyLogsBtn').addEventListener('click', function() {
+    const logOutput = document.getElementById('logOutput');
+    const visibleLogs = Array.from(logOutput.querySelectorAll('.log-entry'))
+        .filter(entry => entry.style.display !== 'none')
+        .map(entry => entry.textContent)
+        .join('\n');
+    
+    navigator.clipboard.writeText(visibleLogs).then(() => {
+        showAlert('日志已复制到剪贴板', 'success');
+    }).catch(err => {
+        showAlert('复制失败: ' + err, 'danger');
+    });
+});
+
+// 导出日志
+document.getElementById('exportLogsBtn').addEventListener('click', function() {
+    window.location.href = `/api/logs/export/${projectName}`;
+});
+
+// 清空日志显示
+document.getElementById('clearLogsBtn').addEventListener('click', function() {
+    if (confirm('确定要清空日志显示吗？此操作不会删除服务器日志。')) {
+        const logOutput = document.getElementById('logOutput');
+        logOutput.innerHTML = '<div class="log-entry info">日志已清空</div>';
+    }
+});
+
+// 切换自动滚动
+document.getElementById('toggleAutoScrollBtn').addEventListener('click', function() {
+    autoScroll = !autoScroll;
+    this.classList.toggle('active', autoScroll);
+    
+    if (autoScroll) {
+        const logOutput = document.getElementById('logOutput');
+        logOutput.scrollTop = logOutput.scrollHeight;
+    }
+    
+    showAlert(`自动滚动已${autoScroll ? '开启' : '关闭'}`, 'info');
+});
+
+// 更新addLogEntry函数以支持自动滚动
+const originalAddLogEntry = addLogEntry;
+addLogEntry = function(message, type = 'info') {
+    const logOutput = document.getElementById('logOutput');
+    const timestamp = new Date().toLocaleTimeString();
+    const logEntry = document.createElement('div');
+    logEntry.className = `log-entry ${type}`;
+    logEntry.textContent = `[${timestamp}] ${message}`;
+    
+    logOutput.appendChild(logEntry);
+    
+    if (autoScroll) {
+        logOutput.scrollTop = logOutput.scrollHeight;
+    }
+};
+
+// 时间计时器
+function startTimer() {
+    timerInterval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        document.getElementById('elapsedTime').textContent = 
+            `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }, 1000);
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
+
+// 步骤控制相关
+document.getElementById('retryFromStepBtn').addEventListener('click', function() {
+    const step = document.getElementById('retryFromStep').value;
+    
+    if (confirm(`确定要从步骤${step}重新开始吗？`)) {
+        showLoading();
+        
+        fetch('/api/process/retry_step', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                project_name: projectName,
+                step: parseInt(step)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            
+            if (data.success) {
+                showAlert('已开始从指定步骤重新处理', 'success');
+                location.reload();
+            } else {
+                showAlert(`重试失败: ${data.error}`, 'danger');
+            }
+        })
+        .catch(error => {
+            hideLoading();
+            showAlert(`重试失败: ${error}`, 'danger');
+        });
+    }
+});
+
 // 页面加载完成后开始模拟处理
 document.addEventListener('DOMContentLoaded', function() {
     addLogEntry('页面加载完成', 'success');
     addLogEntry('注意：当前为演示模式，实际处理功能正在开发中', 'warning');
+    
+    // 启动计时器
+    startTimer();
     
     // 模拟处理进度（仅用于演示）
     setTimeout(() => {

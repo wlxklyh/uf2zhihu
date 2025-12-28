@@ -62,18 +62,10 @@
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">截图时间偏移</label>
                                             <input type="text" class="form-control" 
-                                                   value="-0.2,0.0,0.2" id="timeOffsets">
+                                                   value="0.0" id="timeOffsets">
                                             <div class="form-text">
                                                 每个字幕时间点的截图偏移（秒）
                                             </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">翻译服务</label>
-                                            <select class="form-select" id="translationService">
-                                                <option value="translatepy">TranslatePy (免费)</option>
-                                                <option value="google">Google Translate</option>
-                                                <option value="openai">OpenAI (需API Key)</option>
-                                            </select>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">视频质量</label>
@@ -106,6 +98,92 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 缓存管理 -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#cacheManagement">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-database me-2"></i>
+                        缓存管理
+                        <i class="fas fa-chevron-down ms-2" id="cacheToggleIcon"></i>
+                    </h5>
+                    <div id="cacheStatsSummary">
+                        <span class="badge bg-light text-dark me-2">
+                            <i class="fas fa-video me-1"></i>视频: <span id="videoCount">-</span>
+                        </span>
+                        <span class="badge bg-light text-dark me-2">
+                            <i class="fas fa-closed-captioning me-1"></i>字幕: <span id="subtitleCount">-</span>
+                        </span>
+                        <span class="badge bg-light text-dark">
+                            <i class="fas fa-hdd me-1"></i>总计: <span id="totalSize">-</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div id="cacheManagement" class="collapse">
+                <div class="card-body">
+                    <!-- 标签页 -->
+                    <ul class="nav nav-tabs mb-3" id="cacheTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="video-cache-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#video-cache" type="button">
+                                <i class="fas fa-video me-1"></i>
+                                视频缓存 (<span id="videoCacheCount">0</span>)
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="subtitle-cache-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#subtitle-cache" type="button">
+                                <i class="fas fa-closed-captioning me-1"></i>
+                                字幕缓存 (<span id="subtitleCacheCount">0</span>)
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <!-- 标签页内容 -->
+                    <div class="tab-content" id="cacheTabContent">
+                        <!-- 视频缓存列表 -->
+                        <div class="tab-pane fade show active" id="video-cache">
+                            <div id="videoCacheList" class="cache-list">
+                                <div class="text-center text-muted py-3">
+                                    <i class="fas fa-spinner fa-spin me-2"></i>加载中...
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 字幕缓存列表 -->
+                        <div class="tab-pane fade" id="subtitle-cache">
+                            <div id="subtitleCacheList" class="cache-list">
+                                <div class="text-center text-muted py-3">
+                                    <i class="fas fa-spinner fa-spin me-2"></i>加载中...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 操作按钮 -->
+                    <div class="mt-3 d-flex gap-2">
+                        <button class="btn btn-warning" id="clearVideoCacheBtn">
+                            <i class="fas fa-trash-alt me-2"></i>清理视频缓存
+                        </button>
+                        <button class="btn btn-warning" id="clearSubtitleCacheBtn">
+                            <i class="fas fa-trash-alt me-2"></i>清理字幕缓存
+                        </button>
+                        <button class="btn btn-danger" id="clearAllCacheBtn">
+                            <i class="fas fa-exclamation-triangle me-2"></i>清理所有缓存
+                        </button>
+                        <button class="btn btn-secondary ms-auto" id="refreshCacheBtn">
+                            <i class="fas fa-sync-alt me-2"></i>刷新
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -190,13 +268,6 @@
                     </div>
                     <div class="col-md-2">
                         <div class="feature-icon">
-                            <i class="fas fa-language fa-2x text-success mb-2"></i>
-                            <h6>智能翻译</h6>
-                            <small class="text-muted">准确翻译为中文字幕</small>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="feature-icon">
                             <i class="fas fa-camera fa-2x text-warning mb-2"></i>
                             <h6>精准截图</h6>
                             <small class="text-muted">按时间点提取关键截图</small>
@@ -225,6 +296,196 @@
 
 {% block extra_js %}
 <script>
+// 缓存管理功能
+let cacheStats = null;
+
+// 加载缓存统计信息
+function loadCacheStats() {
+    fetch('/api/cache/stats')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                cacheStats = data.stats;
+                updateCacheStatsSummary();
+            } else {
+                console.error('加载缓存统计失败:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('加载缓存统计失败:', error);
+        });
+}
+
+// 更新缓存统计摘要
+function updateCacheStatsSummary() {
+    if (!cacheStats) return;
+    
+    document.getElementById('videoCount').textContent = cacheStats.videos.count;
+    document.getElementById('subtitleCount').textContent = cacheStats.subtitles_en.count;
+    document.getElementById('totalSize').textContent = cacheStats.total_size_formatted;
+    document.getElementById('videoCacheCount').textContent = cacheStats.videos.count;
+    document.getElementById('subtitleCacheCount').textContent = cacheStats.subtitles_en.count;
+}
+
+// 加载缓存列表
+function loadCacheList(cacheType) {
+    const listElementId = cacheType === 'video' ? 'videoCacheList' : 'subtitleCacheList';
+    const listElement = document.getElementById(listElementId);
+    
+    listElement.innerHTML = '<div class="text-center text-muted py-3"><i class="fas fa-spinner fa-spin me-2"></i>加载中...</div>';
+    
+    fetch(`/api/cache/list/${cacheType}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                renderCacheList(data.items, listElement, cacheType);
+            } else {
+                listElement.innerHTML = `<div class="alert alert-danger">加载失败: ${data.error}</div>`;
+            }
+        })
+        .catch(error => {
+            listElement.innerHTML = `<div class="alert alert-danger">加载失败: ${error}</div>`;
+        });
+}
+
+// 渲染缓存列表
+function renderCacheList(items, listElement, cacheType) {
+    if (items.length === 0) {
+        listElement.innerHTML = '<div class="text-center text-muted py-3">暂无缓存</div>';
+        return;
+    }
+    
+    let html = '';
+    items.forEach(item => {
+        const title = item.title || item.cache_key || '未知';
+        const cachedTime = item.cached_time ? new Date(item.cached_time).toLocaleString('zh-CN') : '未知';
+        const url = item.youtube_url || '#';
+        
+        html += `
+            <div class="cache-item card mb-2">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">
+                                <i class="fas fa-${cacheType === 'video' ? 'video' : 'closed-captioning'} me-2 text-primary"></i>
+                                ${title}
+                            </h6>
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>缓存时间: ${cachedTime}
+                            </small>
+                            ${url !== '#' ? `<br><small class="text-muted"><a href="${url}" target="_blank" class="text-decoration-none"><i class="fab fa-youtube me-1"></i>查看原视频</a></small>` : ''}
+                        </div>
+                        <div>
+                            <span class="badge bg-secondary">${item.cache_key}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    listElement.innerHTML = html;
+}
+
+// 清理缓存
+function clearCache(cacheType) {
+    const cacheTypeNames = {
+        'video': '视频',
+        'subtitle_en': '字幕',
+        null: '所有'
+    };
+    
+    const cacheName = cacheTypeNames[cacheType] || '指定';
+    
+    if (!confirm(`确定要清理${cacheName}缓存吗？此操作不可撤销。`)) {
+        return;
+    }
+    
+    showLoading();
+    
+    fetch('/api/cache/clear', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            cache_type: cacheType
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        
+        if (data.success) {
+            showAlert(data.message, 'success');
+            // 刷新缓存统计和列表
+            loadCacheStats();
+            loadCacheList('video');
+            loadCacheList('subtitle_en');
+        } else {
+            showAlert(`清理失败: ${data.error}`, 'danger');
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        showAlert(`清理失败: ${error}`, 'danger');
+    });
+}
+
+// 缓存管理相关事件监听
+document.addEventListener('DOMContentLoaded', function() {
+    // 加载缓存统计
+    loadCacheStats();
+    
+    // 折叠面板展开时加载缓存列表
+    const cacheManagement = document.getElementById('cacheManagement');
+    cacheManagement.addEventListener('shown.bs.collapse', function() {
+        loadCacheList('video');
+        loadCacheList('subtitle_en');
+        
+        // 切换图标
+        const icon = document.getElementById('cacheToggleIcon');
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+    });
+    
+    cacheManagement.addEventListener('hidden.bs.collapse', function() {
+        // 切换图标
+        const icon = document.getElementById('cacheToggleIcon');
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+    });
+    
+    // 标签页切换时加载对应的缓存列表
+    document.getElementById('video-cache-tab').addEventListener('shown.bs.tab', function() {
+        loadCacheList('video');
+    });
+    
+    document.getElementById('subtitle-cache-tab').addEventListener('shown.bs.tab', function() {
+        loadCacheList('subtitle_en');
+    });
+    
+    // 清理按钮事件
+    document.getElementById('clearVideoCacheBtn').addEventListener('click', function() {
+        clearCache('video');
+    });
+    
+    document.getElementById('clearSubtitleCacheBtn').addEventListener('click', function() {
+        clearCache('subtitle_en');
+    });
+    
+    document.getElementById('clearAllCacheBtn').addEventListener('click', function() {
+        clearCache(null);
+    });
+    
+    document.getElementById('refreshCacheBtn').addEventListener('click', function() {
+        loadCacheStats();
+        loadCacheList('video');
+        loadCacheList('subtitle_en');
+        showAlert('缓存信息已刷新', 'info');
+    });
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('processForm');
     
@@ -254,7 +515,6 @@ document.addEventListener('DOMContentLoaded', function() {
             project_name: projectName,
             config: {
                 time_offsets: document.getElementById('timeOffsets').value,
-                translation_service: document.getElementById('translationService').value,
                 video_quality: document.getElementById('videoQuality').value,
                 whisper_model: document.getElementById('whisperModel').value
             }
@@ -292,3 +552,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endblock %}
+

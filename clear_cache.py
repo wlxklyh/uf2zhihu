@@ -15,7 +15,7 @@ from src.utils.cache_manager import CacheManager
 
 def main():
     parser = argparse.ArgumentParser(description='清理缓存文件')
-    parser.add_argument('--type', choices=['video', 'subtitle_en', 'subtitle_zh', 'all'], 
+    parser.add_argument('--type', choices=['video', 'subtitle_en', 'all'], 
                        default='all', help='缓存类型')
     parser.add_argument('--stats', action='store_true', help='显示缓存统计')
     
@@ -44,8 +44,7 @@ def main():
             
             type_name = {
                 'videos': '视频文件',
-                'subtitles_en': '英文字幕',
-                'subtitles_zh': '中文字幕'
+                'subtitles_en': '英文字幕'
             }.get(cache_type, cache_type)
             
             print(f"{type_name}: {data['count']} 个文件, {size_mb:.1f} MB")
@@ -56,13 +55,12 @@ def main():
         print("=" * 50)
         
         # 列出缓存项
-        for cache_type in ['video', 'subtitle_en', 'subtitle_zh']:
+        for cache_type in ['video', 'subtitle_en']:
             items = cache_manager.list_cached_items(cache_type)
             if items:
                 type_name = {
                     'video': '视频',
-                    'subtitle_en': '英文字幕', 
-                    'subtitle_zh': '中文字幕'
+                    'subtitle_en': '英文字幕'
                 }.get(cache_type, cache_type)
                 
                 print(f"\n{type_name}缓存项:")
@@ -85,8 +83,7 @@ def main():
         if cache_type:
             type_name = {
                 'video': '视频',
-                'subtitle_en': '英文字幕',
-                'subtitle_zh': '中文字幕'
+                'subtitle_en': '英文字幕'
             }.get(cache_type, cache_type)
             print(f"清理 {type_name} 缓存...")
         else:
@@ -99,3 +96,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

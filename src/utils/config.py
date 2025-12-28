@@ -64,8 +64,8 @@ class Config:
     def validate_config(self) -> bool:
         """验证配置文件完整性"""
         required_sections = ['basic', 'step1_download', 'step2_transcribe', 
-                           'step4_screenshots', 
-                           'step5_markdown', 'step6_prompt', 'web']
+                           'step3_screenshots', 
+                           'step4_markdown', 'step5_prompt', 'web']
         
         for section in required_sections:
             if not self.config.has_section(section):

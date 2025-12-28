@@ -1,5 +1,5 @@
 """
-步骤4：视频截图提取模块（优化版）
+步骤3：视频截图提取模块（优化版）
 根据字幕时间戳提取视频截图
 支持并行处理、断点续传、进度保存
 """
@@ -7,6 +7,7 @@ import subprocess
 import os
 import json
 import sys
+import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
@@ -25,8 +26,8 @@ class VideoScreenshot:
         self.config = config
         self.logger = logger
         self.time_offsets = self._parse_time_offsets()
-        self.max_workers = self.config.get_int('step4_screenshots', 'max_workers', 4)
-        self.batch_size = self.config.get_int('step4_screenshots', 'batch_size', 50)
+        self.max_workers = self.config.get_int('step3_screenshots', 'max_workers', 4)
+        self.batch_size = self.config.get_int('step3_screenshots', 'batch_size', 50)
         
     def check_ffmpeg(self) -> bool:
         """检查ffmpeg是否可用"""
@@ -77,7 +78,14 @@ class VideoScreenshot:
         Returns:
             Dict: 截图提取结果
         """
-        self.logger.info(f"开始提取截图: {os.path.basename(video_path)}")
+        self.logger.info("=" * 60)
+        self.logger.info(f"[步骤3开始] 视频截图提取（并行处理）")
+        self.logger.info(f"视频文件: {os.path.basename(video_path)}")
+        self.logger.info(f"字幕文件: {os.path.basename(srt_path)}")
+        self.logger.info(f"输出目录: {output_dir}")
+        self.logger.info("=" * 60)
+        
+        screenshot_start_time = time.time()
         
         try:
             # 标准化路径
@@ -93,29 +101,40 @@ class VideoScreenshot:
                 raise Exception(f"字幕文件不存在: {srt_path}")
             
             # 验证文件
+            self.logger.info("[验证] 验证输入文件...")
             video_valid, video_msg = Validator.validate_video_file(video_path)
             if not video_valid:
+                self.logger.error(f"[错误] 视频文件验证失败: {video_msg}")
                 raise Exception(f"视频文件验证失败: {video_msg}")
+            self.logger.success(f"[成功] 视频文件验证通过: {video_msg}")
             
             srt_valid, srt_msg, srt_stats = Validator.validate_srt_file(srt_path)
             if not srt_valid:
+                self.logger.error(f"[错误] 字幕文件验证失败: {srt_msg}")
                 raise Exception(f"字幕文件验证失败: {srt_msg}")
+            self.logger.success(f"[成功] 字幕文件验证通过")
+            self.logger.info(f"[统计] 字幕统计: {srt_stats}")
             
             # 检查ffmpeg
+            self.logger.info("[检查] 检查ffmpeg依赖...")
             if not self.check_ffmpeg():
+                self.logger.error("[错误] ffmpeg不可用")
                 raise Exception("ffmpeg不可用，无法提取截图")
             
             # 创建输出目录
             screenshots_dir = os.path.join(output_dir, 'screenshots')
             os.makedirs(screenshots_dir, exist_ok=True)
+            self.logger.info(f"[目录] 截图输出目录: {screenshots_dir}")
             
             # 读取字幕文件
-            self.logger.info("正在读取字幕文件...")
+            self.logger.info("[读取] 正在读取字幕文件...")
             subs = pysrt.open(srt_path, encoding='utf-8')
             
-            self.logger.info(f"字幕条数: {len(subs)}")
-            self.logger.info(f"时间偏移配置: {self.time_offsets}")
-            self.logger.info(f"并行工作线程: {self.max_workers}")
+            self.logger.info("[配置] 处理配置:")
+            self.logger.info(f"  - 字幕条数: {len(subs)}")
+            self.logger.info(f"  - 时间偏移: {self.time_offsets}")
+            self.logger.info(f"  - 并行线程: {self.max_workers}")
+            self.logger.info(f"  - 批次大小: {self.batch_size}")
             
             # 加载进度
             progress = self._load_progress(progress_file)
@@ -210,12 +229,20 @@ class VideoScreenshot:
             screenshot_count = len([f for f in os.listdir(screenshots_dir) 
                                   if f.lower().endswith('.png')])
             
-            self.logger.info(f"截图提取完成: {len(screenshot_info)}/{total_tasks} 成功")
-            self.logger.info(f"实际截图文件: {screenshot_count} 个")
+            elapsed_time = time.time() - screenshot_start_time
+            
+            self.logger.info("=" * 60)
+            self.logger.success(f"[完成] 截图提取完成:")
+            self.logger.info(f"  - 成功截图: {len(screenshot_info)}/{total_tasks}")
+            self.logger.info(f"  - 失败任务: {failed_tasks}")
+            self.logger.info(f"  - 实际文件: {screenshot_count} 个")
+            self.logger.info(f"  - 总耗时: {elapsed_time:.2f}秒")
+            self.logger.info(f"  - 平均速度: {len(screenshot_info)/elapsed_time:.2f} 截图/秒")
             
             # 删除进度文件（表示已完成）
             if os.path.exists(progress_file):
                 os.remove(progress_file)
+                self.logger.info("[清理] 已清理进度文件")
             
             # 统计信息
             extraction_stats = {
@@ -238,9 +265,19 @@ class VideoScreenshot:
             }
             
         except Exception as e:
+            elapsed_time = time.time() - screenshot_start_time
             error_msg = f"截图提取失败: {str(e)}"
-            self.logger.error(error_msg)
-            self.logger.error(f"详细错误: {traceback.format_exc()}")
+            
+            self.logger.error("=" * 60)
+            self.logger.error(f"[步骤3失败] {error_msg} (耗时: {elapsed_time:.2f}秒)")
+            self.logger.error(f"[错误] 错误详情:")
+            self.logger.error(f"  - 错误类型: {type(e).__name__}")
+            self.logger.error(f"  - 错误信息: {str(e)}")
+            self.logger.error(f"[堆栈] 堆栈追踪:")
+            for line in traceback.format_exc().split('\n'):
+                if line.strip():
+                    self.logger.error(f"  {line}")
+            self.logger.error("=" * 60)
             
             return {
                 'success': False,
@@ -256,8 +293,8 @@ class VideoScreenshot:
                 return True
             
             # 获取配置
-            image_quality = self.config.get_int('step4_screenshots', 'image_quality', 95)
-            resolution = self.config.get('step4_screenshots', 'resolution', '1280x720')
+            image_quality = self.config.get_int('step3_screenshots', 'image_quality', 95)
+            resolution = self.config.get('step3_screenshots', 'resolution', '1280x720')
             
             # 构建ffmpeg命令
             cmd = [
@@ -294,7 +331,7 @@ class VideoScreenshot:
     def _parse_time_offsets(self) -> List[float]:
         """解析时间偏移配置"""
         try:
-            offsets_str = self.config.get('step4_screenshots', 'time_offsets', '0.0')
+            offsets_str = self.config.get('step3_screenshots', 'time_offsets', '0.0')
             if ',' in offsets_str:
                 offsets = [float(x.strip()) for x in offsets_str.split(',')]
             else:
@@ -308,7 +345,7 @@ def main(video_path: str, srt_path: str, output_dir: str) -> bool:
     """步骤4主函数"""
     try:
         config = Config()
-        logger = Logger("step4_screenshots")
+        logger = Logger("step3_screenshots")
         screenshot = VideoScreenshot(config, logger)
         
         logger.step_start(4, "视频截图提取（并行处理）")
@@ -329,7 +366,7 @@ def main(video_path: str, srt_path: str, output_dir: str) -> bool:
             return False
             
     except Exception as e:
-        logger = Logger("step4_screenshots")
+        logger = Logger("step3_screenshots")
         logger.error(f"步骤4执行异常: {str(e)}")
         logger.error(f"详细错误: {traceback.format_exc()}")
         return False
@@ -337,7 +374,7 @@ def main(video_path: str, srt_path: str, output_dir: str) -> bool:
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        print("用法: python step4_screenshots.py <video_path> <srt_path> <output_dir>")
+        print("用法: python step3_screenshots.py <video_path> <srt_path> <output_dir>")
         sys.exit(1)
     
     success = main(sys.argv[1], sys.argv[2], sys.argv[3])
