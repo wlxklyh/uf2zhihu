@@ -1,5 +1,5 @@
 """
-步骤6：生成LLM优化Prompt模块（优化版）
+步骤5：生成LLM优化Prompt模块（优化版）
 生成中文Prompt，要求将英文文章转换为图文并茂的中文文章
 """
 import os
@@ -33,7 +33,13 @@ class PromptGenerator:
         Returns:
             Dict: 生成结果信息
         """
-        self.logger.info("开始生成中文Prompt文件")
+        self.logger.info("=" * 60)
+        self.logger.info(f"[步骤5开始] 生成中文优化Prompt")
+        self.logger.info(f"Markdown文件: {os.path.basename(markdown_path)}")
+        self.logger.info(f"输出文件: {output_path}")
+        self.logger.info("=" * 60)
+        
+        prompt_start_time = datetime.now().timestamp()
         
         try:
             # 检查输入文件
@@ -168,10 +174,10 @@ class PromptGenerator:
 
 
 def main(markdown_path: str, video_info_path: str, output_path: str) -> bool:
-    """步骤6主函数"""
+    """步骤5主函数"""
     try:
         config = Config()
-        logger = Logger("step6_prompt")
+        logger = Logger("step5_prompt")
         
         generator = PromptGenerator(config, logger)
         
@@ -182,18 +188,18 @@ def main(markdown_path: str, video_info_path: str, output_path: str) -> bool:
         if result['success']:
             logger.step_complete(6, "生成中文优化Prompt")
             logger.info("=" * 50)
-            logger.info("步骤6完成，输出文件：")
+            logger.info("步骤5完成，输出文件：")
             logger.info(f"- Prompt文件: {result['prompt_file']}")
             logger.info(f"- 文件大小: {result['prompt_stats']['prompt_length']} 字符")
             logger.info("=" * 50)
             return True
         else:
-            logger.error(f"步骤6失败: {result['error']}")
+            logger.error(f"步骤5失败: {result['error']}")
             return False
             
     except Exception as e:
-        logger = Logger("step6_prompt")
-        logger.error(f"步骤6执行异常: {str(e)}")
+        logger = Logger("step5_prompt")
+        logger.error(f"步骤5执行异常: {str(e)}")
         logger.error(f"详细错误: {traceback.format_exc()}")
         return False
 

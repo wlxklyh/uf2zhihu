@@ -46,16 +46,16 @@ python run_web.py
 
 - Windows 10/11
 - Python 3.8+
-- 网络连接（用于下载视频和翻译）
+- 网络连接（用于下载视频）
 - 约2GB可用磁盘空间
 
 ## 处理流程
 
 1. **步骤1**: 下载YouTube视频 → `projects/[项目名]/step1_download/`
 2. **步骤2**: 语音转录为英文字幕 → `projects/[项目名]/step2_transcribe/`
-3. **步骤3**: 提取视频截图 → `projects/[项目名]/step4_screenshots/`
-4. **步骤4**: 生成Markdown文章 → `projects/[项目名]/step5_markdown/`
-5. **步骤5**: 生成优化提示 → `projects/[项目名]/step6_prompt/`
+3. **步骤3**: 提取视频截图 → `projects/[项目名]/step3_screenshots/`
+4. **步骤4**: 生成Markdown文章 → `projects/[项目名]/step4_markdown/`
+5. **步骤5**: 生成优化提示 → `projects/[项目名]/step5_prompt/`
 
 ## 文件结构
 
@@ -78,8 +78,7 @@ youtube_to_article/
 
 编辑 `config/config.ini` 可以修改：
 
-- 截图时间偏移: `time_offsets = -0.2,0.0,0.2`
-- 翻译服务: `translation_service = translatepy`
+- 截图时间偏移: `time_offsets = 0.0`
 - Whisper模型: `model = base`
 - 输出目录: `output_dir = ./projects`
 
@@ -112,7 +111,7 @@ A:
 
 - **后端**: Python, Flask, SocketIO
 - **前端**: Bootstrap, JavaScript
-- **AI**: OpenAI Whisper, TranslatePy
+- **AI**: OpenAI Whisper
 - **视频处理**: yt-dlp, FFmpeg
 
 ## 注意事项

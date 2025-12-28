@@ -18,9 +18,9 @@ from src.utils.file_manager import FileManager
 from src.utils.cache_manager import CacheManager
 from src.core.steps.step1_download import YouTubeDownloader
 from src.core.steps.step2_transcribe import AudioTranscriber
-from src.core.steps.step4_screenshots import VideoScreenshot
-from src.core.steps.step5_generate_markdown import MarkdownGenerator
-from src.core.steps.step6_generate_prompt import PromptGenerator
+from src.core.steps.step3_screenshots import VideoScreenshot
+from src.core.steps.step4_generate_markdown import MarkdownGenerator
+from src.core.steps.step5_generate_prompt import PromptGenerator
 
 class YouTubeToArticleProcessor:
     def __init__(self, config_path: str = "config/config.ini"):
@@ -33,11 +33,13 @@ class YouTubeToArticleProcessor:
         self.is_processing = False
         self.progress_callback = None
         self.step_complete_callback = None
+        self.download_progress_callback = None
         
-    def set_callbacks(self, progress_callback: Callable = None, step_complete_callback: Callable = None):
+    def set_callbacks(self, progress_callback: Callable = None, step_complete_callback: Callable = None, download_progress_callback: Callable = None):
         """设置回调函数用于Web界面更新"""
         self.progress_callback = progress_callback
         self.step_complete_callback = step_complete_callback
+        self.download_progress_callback = download_progress_callback
     
     def start_async_process(self, youtube_url: str, project_name: str) -> Dict:
         """异步开始处理流程"""
@@ -75,7 +77,9 @@ class YouTubeToArticleProcessor:
             }
             
         except Exception as e:
+            import traceback
             self.logger.error(f"启动处理失败: {str(e)}")
+            self.logger.error(f"详细错误: {traceback.format_exc()}")
             return {
                 'success': False,
                 'error': str(e),
@@ -104,12 +108,16 @@ class YouTubeToArticleProcessor:
             
             # 获取视频文件路径
             step1_dir = self.file_manager.get_step_directory(project_path, 'step1_download')
+            self.logger.info(f"查找视频文件，目录: {step1_dir}")
+            
             video_files = [f for f in os.listdir(step1_dir) if f.endswith('.mp4')]
             if not video_files:
+                self.logger.error(f"未找到视频文件，目录内容: {os.listdir(step1_dir)}")
                 self._send_step_complete(2, False, "未找到视频文件")
                 return
             
             video_file = os.path.join(step1_dir, video_files[0])
+            self.logger.info(f"找到视频文件: {video_file}")
             
             # 步骤2: 语音转录
             success = self._execute_step2(video_file, project_path, youtube_url)
@@ -120,37 +128,32 @@ class YouTubeToArticleProcessor:
             self._send_step_complete(2, True, "步骤2完成: 语音转录")
             self._update_project_status(project_path, 3, "step2_completed")
             
-            # 步骤3: 跳过（不翻译）- 直接使用英文字幕
-            self.logger.info("步骤3已跳过: 使用英文字幕，无需翻译")
-            self._send_step_complete(3, True, "步骤3已跳过: 使用英文字幕")
-            self._update_project_status(project_path, 4, "step3_skipped")
-            
-            # 步骤4: 提取截图（优化版 - 并行处理，仅0s截图）
-            success = self._execute_step4(video_file, project_path)
+            # 步骤3: 提取截图（优化版 - 并行处理，仅0s截图）
+            success = self._execute_step3(video_file, project_path)
             if not success:
-                self._send_step_complete(4, False, "步骤4失败: 提取截图")
+                self._send_step_complete(3, False, "步骤3失败: 提取截图")
                 return
             
-            self._send_step_complete(4, True, "步骤4完成: 提取截图（并行处理）")
+            self._send_step_complete(3, True, "步骤3完成: 提取截图（并行处理）")
+            self._update_project_status(project_path, 4, "step3_completed")
+            
+            # 步骤4: 生成英文Markdown（图文并茂）
+            success = self._execute_step4(project_path)
+            if not success:
+                self._send_step_complete(4, False, "步骤4失败: 生成英文Markdown")
+                return
+            
+            self._send_step_complete(4, True, "步骤4完成: 生成英文Markdown")
             self._update_project_status(project_path, 5, "step4_completed")
             
-            # 步骤5: 生成英文Markdown（图文并茂）
+            # 步骤5: 生成中文优化Prompt
             success = self._execute_step5(project_path)
             if not success:
-                self._send_step_complete(5, False, "步骤5失败: 生成英文Markdown")
+                self._send_step_complete(5, False, "步骤5失败: 生成中文Prompt")
                 return
             
-            self._send_step_complete(5, True, "步骤5完成: 生成英文Markdown")
-            self._update_project_status(project_path, 6, "step5_completed")
-            
-            # 步骤6: 生成中文优化Prompt
-            success = self._execute_step6(project_path)
-            if not success:
-                self._send_step_complete(6, False, "步骤6失败: 生成中文Prompt")
-                return
-            
-            self._send_step_complete(6, True, "步骤6完成: 生成中文Prompt")
-            self._update_project_status(project_path, 6, "completed")
+            self._send_step_complete(5, True, "步骤5完成: 生成中文Prompt")
+            self._update_project_status(project_path, 5, "completed")
             
             self.logger.success("所有步骤完成！")
             
@@ -165,8 +168,13 @@ class YouTubeToArticleProcessor:
         try:
             self._send_progress_update(1, 10, "初始化下载器...")
             
-            # 创建下载器
-            downloader = YouTubeDownloader(self.config, self.logger)
+            # 定义下载进度回调函数
+            def download_progress_callback(progress_data: Dict):
+                """下载进度回调"""
+                self._send_download_progress(1, progress_data)
+            
+            # 创建下载器，传入进度回调
+            downloader = YouTubeDownloader(self.config, self.logger, download_progress_callback)
             
             # 获取步骤1输出目录
             step1_dir = self.file_manager.get_step_directory(project_path, 'step1_download')
@@ -213,6 +221,17 @@ class YouTubeToArticleProcessor:
             self.progress_callback(self.current_project, step, progress, message)
         self.logger.info(f"[步骤{step}] {progress}% - {message}")
     
+    def _send_download_progress(self, step: int, progress_data: Dict):
+        """
+        发送详细的下载进度更新
+        
+        Args:
+            step: 步骤号
+            progress_data: 进度数据字典
+        """
+        if self.download_progress_callback:
+            self.download_progress_callback(self.current_project, step, progress_data)
+    
     def _send_step_complete(self, step: int, success: bool, message: str):
         """发送步骤完成通知"""
         if self.step_complete_callback:
@@ -246,9 +265,9 @@ class YouTubeToArticleProcessor:
             step_names = {
                 1: 'step1_download',
                 2: 'step2_transcribe', 
-                4: 'step4_screenshots',
-                5: 'step5_markdown',
-                6: 'step6_prompt'
+                3: 'step3_screenshots',
+                4: 'step4_markdown',
+                5: 'step5_prompt'
             }
             
             step_name = step_names.get(step)
@@ -271,12 +290,15 @@ class YouTubeToArticleProcessor:
     def _execute_step2(self, video_file: str, project_path: str, youtube_url: str) -> bool:
         """执行步骤2: 语音转录"""
         try:
+            self.logger.info(f"步骤2开始，视频文件: {video_file}")
             self._send_progress_update(2, 10, "检查英文字幕缓存...")
             
             # 检查缓存
             if self.config.get_boolean('basic', 'enable_cache', True):
+                self.logger.info("缓存已启用，检查英文字幕缓存...")
                 cached_result = self.cache_manager.get_cached_english_subtitles(youtube_url)
                 if cached_result:
+                    self.logger.info("找到缓存的英文字幕，直接使用")
                     cached_srt_path, cached_info = cached_result
                     step2_dir = self.file_manager.get_step_directory(project_path, 'step2_transcribe')
                     output_srt = os.path.join(step2_dir, 'english_subtitles.srt')
@@ -286,30 +308,44 @@ class YouTubeToArticleProcessor:
                     
                     self._send_progress_update(2, 100, "使用缓存的英文字幕")
                     return True
+                else:
+                    self.logger.info("未找到缓存的英文字幕，需要进行转录")
             
             self._send_progress_update(2, 20, "初始化Whisper模型...")
             
             # 创建转录器
+            self.logger.info("创建AudioTranscriber实例...")
             transcriber = AudioTranscriber(self.config, self.logger)
+            
+            # 设置进度回调，使转录进度能实时更新到Web界面
+            transcriber.progress_callback = self._send_progress_update
+            self.logger.info("进度回调已设置")
             
             # 获取步骤2输出目录
             step2_dir = self.file_manager.get_step_directory(project_path, 'step2_transcribe')
+            self.logger.info(f"输出目录: {step2_dir}")
             
             self._send_progress_update(2, 30, "开始语音转录...")
             
             # 执行转录
+            self.logger.info("调用transcriber.transcribe_video()...")
             result = transcriber.transcribe_video(video_file, step2_dir)
+            
+            self.logger.info(f"转录结果: success={result.get('success', False)}")
             
             if result['success']:
                 self._send_progress_update(2, 90, "转录完成，保存信息...")
+                self.logger.info(f"转录成功，字幕文件: {result.get('srt_file')}")
                 
                 # 缓存英文字幕
                 if self.config.get_boolean('basic', 'enable_cache', True):
+                    self.logger.info("缓存英文字幕...")
                     self.cache_manager.cache_english_subtitles(youtube_url, result['srt_file'], result['transcribe_stats'])
                 
                 self._send_progress_update(2, 100, "步骤2完成")
                 return True
             else:
+                self.logger.error(f"转录失败: {result.get('error', 'Unknown error')}")
                 return False
                 
         except Exception as e:
@@ -317,28 +353,65 @@ class YouTubeToArticleProcessor:
             return False
     
     
-    def _execute_step4(self, video_file: str, project_path: str) -> bool:
-        """执行步骤4: 提取截图"""
+    def _execute_step3(self, video_file: str, project_path: str) -> bool:
+        """执行步骤3: 提取截图"""
         try:
-            self._send_progress_update(4, 10, "初始化截图提取器...")
+            self._send_progress_update(3, 10, "初始化截图提取器...")
             
             # 创建截图提取器
             screenshot = VideoScreenshot(self.config, self.logger)
             
-            # 获取英文字幕文件（步骤3已跳过，直接使用英文字幕）
+            # 获取英文字幕文件
             step2_dir = self.file_manager.get_step_directory(project_path, 'step2_transcribe')
             srt_file = os.path.join(step2_dir, 'english_subtitles.srt')
             
-            # 获取步骤4输出目录
-            step4_dir = self.file_manager.get_step_directory(project_path, 'step4_screenshots')
+            # 获取步骤3输出目录
+            step3_dir = self.file_manager.get_step_directory(project_path, 'step3_screenshots')
             
-            self._send_progress_update(4, 20, "开始提取截图...")
+            self._send_progress_update(3, 20, "开始提取截图...")
             
             # 执行截图提取
-            result = screenshot.extract_screenshots(video_file, srt_file, step4_dir)
+            result = screenshot.extract_screenshots(video_file, srt_file, step3_dir)
             
             if result['success']:
-                self._send_progress_update(4, 100, "步骤4完成")
+                self._send_progress_update(3, 100, "步骤3完成")
+                return True
+            else:
+                return False
+                
+        except Exception as e:
+            self.logger.error(f"步骤3执行异常: {str(e)}")
+            return False
+    
+    def _execute_step4(self, project_path: str) -> bool:
+        """执行步骤4: 生成英文Markdown文章（图文并茂）"""
+        try:
+            self._send_progress_update(4, 10, "初始化Markdown生成器...")
+            
+            # 创建Markdown生成器
+            generator = MarkdownGenerator(self.config, self.logger)
+            
+            # 获取输入文件路径（使用英文字幕，不使用中文）
+            step2_dir = self.file_manager.get_step_directory(project_path, 'step2_transcribe')
+            srt_file = os.path.join(step2_dir, 'english_subtitles.srt')
+            
+            step3_dir = self.file_manager.get_step_directory(project_path, 'step3_screenshots')
+            screenshots_dir = os.path.join(step3_dir, 'screenshots')
+            
+            step1_dir = self.file_manager.get_step_directory(project_path, 'step1_download')
+            video_info_file = os.path.join(step1_dir, 'video_info.json')
+            
+            # 获取步骤4输出目录
+            step4_dir = self.file_manager.get_step_directory(project_path, 'step4_markdown')
+            output_file = os.path.join(step4_dir, 'article.md')
+            
+            self._send_progress_update(4, 30, "开始生成英文Markdown文章（包含截图）...")
+            
+            # 执行生成
+            result = generator.generate_markdown(srt_file, screenshots_dir, video_info_file, output_file)
+            
+            if result['success']:
+                self._send_progress_update(4, 100, "步骤4完成: 生成英文Markdown")
                 return True
             else:
                 return False
@@ -348,72 +421,35 @@ class YouTubeToArticleProcessor:
             return False
     
     def _execute_step5(self, project_path: str) -> bool:
-        """执行步骤5: 生成英文Markdown文章（图文并茂）"""
+        """执行步骤5: 生成Prompt文件"""
         try:
-            self._send_progress_update(5, 10, "初始化Markdown生成器...")
+            self._send_progress_update(5, 10, "初始化Prompt生成器...")
             
-            # 创建Markdown生成器
-            generator = MarkdownGenerator(self.config, self.logger)
+            # 创建Prompt生成器
+            generator = PromptGenerator(self.config, self.logger)
             
-            # 获取输入文件路径（使用英文字幕，不使用中文）
-            step2_dir = self.file_manager.get_step_directory(project_path, 'step2_transcribe')
-            srt_file = os.path.join(step2_dir, 'english_subtitles.srt')
-            
-            step4_dir = self.file_manager.get_step_directory(project_path, 'step4_screenshots')
-            screenshots_dir = os.path.join(step4_dir, 'screenshots')
+            # 获取输入文件路径
+            step4_dir = self.file_manager.get_step_directory(project_path, 'step4_markdown')
+            markdown_file = os.path.join(step4_dir, 'article.md')
             
             step1_dir = self.file_manager.get_step_directory(project_path, 'step1_download')
             video_info_file = os.path.join(step1_dir, 'video_info.json')
             
             # 获取步骤5输出目录
-            step5_dir = self.file_manager.get_step_directory(project_path, 'step5_markdown')
-            output_file = os.path.join(step5_dir, 'article.md')
+            step5_dir = self.file_manager.get_step_directory(project_path, 'step5_prompt')
+            output_file = os.path.join(step5_dir, 'optimization_prompt.txt')
             
-            self._send_progress_update(5, 30, "开始生成英文Markdown文章（包含截图）...")
+            self._send_progress_update(5, 30, "开始生成Prompt文件...")
             
             # 执行生成
-            result = generator.generate_markdown(srt_file, screenshots_dir, video_info_file, output_file)
+            result = generator.generate_prompt(markdown_file, video_info_file, output_file)
             
             if result['success']:
-                self._send_progress_update(5, 100, "步骤5完成: 生成英文Markdown")
+                self._send_progress_update(5, 100, "步骤5完成")
                 return True
             else:
                 return False
                 
         except Exception as e:
             self.logger.error(f"步骤5执行异常: {str(e)}")
-            return False
-    
-    def _execute_step6(self, project_path: str) -> bool:
-        """执行步骤6: 生成Prompt文件"""
-        try:
-            self._send_progress_update(6, 10, "初始化Prompt生成器...")
-            
-            # 创建Prompt生成器
-            generator = PromptGenerator(self.config, self.logger)
-            
-            # 获取输入文件路径
-            step5_dir = self.file_manager.get_step_directory(project_path, 'step5_markdown')
-            markdown_file = os.path.join(step5_dir, 'article.md')
-            
-            step1_dir = self.file_manager.get_step_directory(project_path, 'step1_download')
-            video_info_file = os.path.join(step1_dir, 'video_info.json')
-            
-            # 获取步骤6输出目录
-            step6_dir = self.file_manager.get_step_directory(project_path, 'step6_prompt')
-            output_file = os.path.join(step6_dir, 'optimization_prompt.txt')
-            
-            self._send_progress_update(6, 30, "开始生成Prompt文件...")
-            
-            # 执行生成
-            result = generator.generate_prompt(markdown_file, video_info_file, output_file)
-            
-            if result['success']:
-                self._send_progress_update(6, 100, "步骤6完成")
-                return True
-            else:
-                return False
-                
-        except Exception as e:
-            self.logger.error(f"步骤6执行异常: {str(e)}")
             return False

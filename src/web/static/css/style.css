@@ -401,3 +401,186 @@ main {
     border-top: 1px solid #dee2e6;
     background-color: #f8f9fa;
 }
+
+/* 缓存管理样式 */
+.cache-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.cache-item {
+    transition: all 0.2s ease-in-out;
+}
+
+.cache-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.cache-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.cache-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.cache-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.cache-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 日志控制工具栏样式 */
+.log-controls {
+    background-color: #2d2d2d;
+    padding: 0.5rem;
+    border-radius: 0.375rem 0.375rem 0 0;
+}
+
+.log-controls .form-select,
+.log-controls .form-control {
+    background-color: #1e1e1e;
+    color: #f8f9fa;
+    border-color: #555;
+}
+
+.log-controls .form-select:focus,
+.log-controls .form-control:focus {
+    background-color: #1e1e1e;
+    color: #f8f9fa;
+    border-color: #007bff;
+}
+
+.log-controls .btn-outline-secondary {
+    color: #f8f9fa;
+    border-color: #555;
+}
+
+.log-controls .btn-outline-secondary:hover,
+.log-controls .btn-outline-secondary.active {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+/* 日志输出区域调整 */
+.log-output {
+    border-radius: 0 0 0.375rem 0.375rem;
+}
+
+/* 日志搜索高亮 */
+.log-entry mark {
+    background-color: #ffc107;
+    color: #000;
+    padding: 0.1rem 0.2rem;
+    border-radius: 0.2rem;
+}
+
+/* 文件列表增强样式 */
+.file-item {
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    margin-bottom: 0.5rem;
+    background: #f8f9fa;
+    transition: all 0.2s ease-in-out;
+}
+
+.file-item:hover {
+    background: #e9ecef;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.file-actions {
+    opacity: 0.7;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.file-item:hover .file-actions {
+    opacity: 1;
+}
+
+.file-actions .btn {
+    padding: 0.25rem 0.5rem;
+}
+
+/* 步骤控制面板样式 */
+#stepControlPanel {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-top: 1rem;
+}
+
+#stepTiming {
+    font-size: 0.875rem;
+}
+
+/* 可展开的错误日志样式 */
+.log-entry[data-expandable="true"] {
+    cursor: pointer;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.log-entry .expand-icon {
+    position: absolute;
+    left: 0.25rem;
+    transition: transform 0.2s ease-in-out;
+}
+
+.log-entry.expanded .expand-icon {
+    transform: rotate(90deg);
+}
+
+.log-entry-details {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 0.375rem;
+    border-left: 3px solid #dc3545;
+}
+
+.error-context pre {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.error-suggestions {
+    margin-top: 0.5rem;
+}
+
+.error-suggestions ul {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .log-controls {
+        flex-wrap: wrap;
+    }
+    
+    .log-controls .form-select,
+    .log-controls .form-control {
+        margin-bottom: 0.5rem;
+    }
+    
+    .file-actions {
+        opacity: 1;
+    }
+    
+    .cache-list {
+        max-height: 300px;
+    }
+}
+

@@ -12,6 +12,7 @@ from typing import Dict, Optional
 from ..utils.config import Config
 from ..utils.logger import Logger
 from ..utils.file_manager import FileManager
+from ..utils.cache_manager import CacheManager
 from ..core.processor import YouTubeToArticleProcessor
 
 # 全局变量存储应用实例
@@ -19,11 +20,12 @@ socketio = None
 config = None
 logger = None
 file_manager = None
+cache_manager = None
 processor = None
 
 def create_app() -> Flask:
     """创建Flask应用"""
-    global socketio, config, logger, file_manager, processor
+    global socketio, config, logger, file_manager, cache_manager, processor
     
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'youtube-to-article-secret-key-2024'
@@ -35,12 +37,14 @@ def create_app() -> Flask:
     config = Config()
     logger = Logger("web_app")
     file_manager = FileManager(config, logger)
+    cache_manager = CacheManager(config, logger)
     processor = YouTubeToArticleProcessor()
     
     # 设置处理器回调
     processor.set_callbacks(
         progress_callback=send_progress_update,
-        step_complete_callback=send_step_complete
+        step_complete_callback=send_step_complete,
+        download_progress_callback=send_download_progress
     )
     
     # 注册路由
@@ -84,7 +88,7 @@ def register_routes(app: Flask):
             # 获取各个步骤的文件
             steps_data = {}
             step_names = ['step1_download', 'step2_transcribe', 
-                         'step4_screenshots', 'step5_markdown', 'step6_prompt']
+                         'step3_screenshots', 'step4_markdown', 'step5_prompt']
             
             for step_name in step_names:
                 steps_data[step_name] = file_manager.get_step_files(project_path, step_name)
@@ -155,7 +159,9 @@ def register_routes(app: Flask):
             })
             
         except Exception as e:
+            import traceback
             logger.error(f"开始处理失败: {str(e)}")
+            logger.error(f"详细错误堆栈:\n{traceback.format_exc()}")
             return jsonify({
                 'success': False,
                 'error': str(e)
@@ -233,6 +239,158 @@ def register_routes(app: Flask):
             logger.error(f"文件下载失败: {str(e)}")
             abort(500, f"文件下载失败: {str(e)}")
     
+    @app.route('/api/cache/stats')
+    def api_cache_stats():
+        """获取缓存统计信息API"""
+        try:
+            stats = cache_manager.get_cache_stats()
+            
+            # 格式化大小为可读格式
+            def format_size(bytes_size):
+                for unit in ['B', 'KB', 'MB', 'GB']:
+                    if bytes_size < 1024.0:
+                        return f"{bytes_size:.2f} {unit}"
+                    bytes_size /= 1024.0
+                return f"{bytes_size:.2f} TB"
+            
+            return jsonify({
+                'success': True,
+                'stats': {
+                    'videos': {
+                        'count': stats['videos']['count'],
+                        'size': stats['videos']['size'],
+                        'size_formatted': format_size(stats['videos']['size'])
+                    },
+                    'subtitles_en': {
+                        'count': stats['subtitles_en']['count'],
+                        'size': stats['subtitles_en']['size'],
+                        'size_formatted': format_size(stats['subtitles_en']['size'])
+                    },
+                    'total_size': stats['videos']['size'] + stats['subtitles_en']['size'],
+                    'total_size_formatted': format_size(stats['videos']['size'] + stats['subtitles_en']['size'])
+                }
+            })
+        except Exception as e:
+            logger.error(f"获取缓存统计失败: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': str(e)
+            }), 500
+    
+    @app.route('/api/cache/list/<cache_type>')
+    def api_cache_list(cache_type: str):
+        """列出指定类型的缓存项API"""
+        try:
+            if cache_type not in ['video', 'subtitle_en']:
+                return jsonify({
+                    'success': False,
+                    'error': '无效的缓存类型'
+                }), 400
+            
+            items = cache_manager.list_cached_items(cache_type)
+            
+            return jsonify({
+                'success': True,
+                'cache_type': cache_type,
+                'items': items
+            })
+        except Exception as e:
+            logger.error(f"列出缓存失败: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': str(e)
+            }), 500
+    
+    @app.route('/api/cache/clear', methods=['POST'])
+    def api_cache_clear():
+        """清理缓存API"""
+        try:
+            data = request.json or {}
+            cache_type = data.get('cache_type')  # None表示清理全部
+            
+            if cache_type and cache_type not in ['video', 'subtitle_en']:
+                return jsonify({
+                    'success': False,
+                    'error': '无效的缓存类型'
+                }), 400
+            
+            cache_manager.clear_cache(cache_type)
+            
+            cache_name = {
+                'video': '视频',
+                'subtitle_en': '字幕',
+                None: '所有'
+            }.get(cache_type, cache_type)
+            
+            logger.info(f"已清理{cache_name}缓存")
+            
+            return jsonify({
+                'success': True,
+                'message': f'已成功清理{cache_name}缓存'
+            })
+        except Exception as e:
+            logger.error(f"清理缓存失败: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': str(e)
+            }), 500
+    
+    @app.route('/api/logs/export/<project_name>')
+    def api_logs_export(project_name: str):
+        """导出项目日志API"""
+        try:
+            # 获取日志文件路径
+            log_dir = config.get('basic', 'log_dir', './logs')
+            
+            # 尝试找到最新的日志文件
+            today = datetime.now().strftime('%Y%m%d')
+            log_file = os.path.join(log_dir, f'processor_{today}.log')
+            
+            if not os.path.exists(log_file):
+                return jsonify({
+                    'success': False,
+                    'error': '日志文件不存在'
+                }), 404
+            
+            return send_file(log_file, 
+                           as_attachment=True, 
+                           download_name=f'{project_name}_log_{today}.txt',
+                           mimetype='text/plain')
+        except Exception as e:
+            logger.error(f"导出日志失败: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': str(e)
+            }), 500
+    
+    @app.route('/api/process/retry_step', methods=['POST'])
+    def api_retry_step():
+        """重试指定步骤API"""
+        try:
+            data = request.json
+            project_name = data.get('project_name')
+            step = data.get('step')
+            
+            if not project_name or not step:
+                return jsonify({
+                    'success': False,
+                    'error': '缺少必要参数'
+                }), 400
+            
+            # TODO: 实现从指定步骤重新开始的逻辑
+            # 这需要在processor中添加相应的方法
+            
+            return jsonify({
+                'success': False,
+                'error': '此功能正在开发中'
+            }), 501
+        except Exception as e:
+            logger.error(f"重试步骤失败: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': str(e)
+            }), 500
+    
     @app.errorhandler(404)
     def not_found(error):
         """404错误处理"""
@@ -257,6 +415,26 @@ def send_progress_update(project_name: str, step: int, progress: int, message: s
             'message': message,
             'timestamp': datetime.now().isoformat()
         })
+
+def send_download_progress(project_name: str, step: int, progress_data: Dict):
+    """
+    发送详细的下载进度（供处理模块调用）
+    
+    Args:
+        project_name: 项目名称
+        step: 步骤号
+        progress_data: 详细进度数据
+    """
+    if socketio:
+        logger.info(f"[下载] 发送下载进度: 项目={project_name}, 步骤={step}, 进度={progress_data.get('percent', 0)}%")
+        socketio.emit('download_progress', {
+            'project_name': project_name,
+            'step': step,
+            'progress_data': progress_data,
+            'timestamp': datetime.now().isoformat()
+        })
+    else:
+        logger.warning("[警告] SocketIO未初始化，无法发送下载进度")
 
 def send_step_complete(project_name: str, step: int, success: bool, message: str):
     """发送步骤完成通知（供处理模块调用）"""

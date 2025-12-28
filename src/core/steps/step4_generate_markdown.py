@@ -1,5 +1,5 @@
 """
-步骤5：生成Markdown文章模块
+步骤4：生成Markdown文章模块
 根据中文字幕和截图生成Markdown文章
 """
 import os
@@ -28,7 +28,7 @@ class MarkdownGenerator:
     def load_template(self) -> bool:
         """加载Markdown模板"""
         try:
-            template_file = self.config.get('step5_markdown', 'template_file', 'templates/markdown_template.md')
+            template_file = self.config.get('step4_markdown', 'template_file', 'templates/markdown_template.md')
             template_path = os.path.join('config', template_file)
             
             if not os.path.exists(template_path):
@@ -59,7 +59,14 @@ class MarkdownGenerator:
         Returns:
             Dict: 生成结果信息
         """
-        self.logger.info(f"开始生成英文Markdown文章（包含截图）")
+        self.logger.info("=" * 60)
+        self.logger.info(f"[步骤4开始] 生成英文Markdown文章（图文并茂）")
+        self.logger.info(f"字幕文件: {os.path.basename(srt_path)}")
+        self.logger.info(f"截图目录: {screenshots_dir}")
+        self.logger.info(f"输出文件: {output_path}")
+        self.logger.info("=" * 60)
+        
+        markdown_start_time = datetime.now().timestamp()
         
         try:
             # 检查输入文件
@@ -104,7 +111,7 @@ class MarkdownGenerator:
                 'generation_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                 'duration': self._format_duration(video_info.get('duration', 0)),
                 'subtitle_count': len(subs),
-                'screenshot_count': len(content_items) * len(self.config.get_float_list('step4_screenshots', 'time_offsets')),
+                'screenshot_count': len(content_items) * len(self.config.get_float_list('step3_screenshots', 'time_offsets')),
                 'content_items': content_items
             }
             
@@ -230,10 +237,10 @@ class MarkdownGenerator:
         return Validator.validate_markdown_file(output_path)[0]
 
 def main(srt_path: str, screenshots_dir: str, video_info_path: str, output_path: str) -> bool:
-    """步骤5主函数"""
+    """步骤4主函数"""
     try:
         config = Config()
-        logger = Logger("step5_markdown")
+        logger = Logger("step4_markdown")
         generator = MarkdownGenerator(config, logger)
         
         logger.step_start(5, "Markdown文章生成")
@@ -243,19 +250,19 @@ def main(srt_path: str, screenshots_dir: str, video_info_path: str, output_path:
         if result['success']:
             logger.step_complete(5, "Markdown文章生成")
             logger.info("=" * 50)
-            logger.info("步骤5完成，输出文件：")
+            logger.info("步骤4完成，输出文件：")
             logger.info(f"- Markdown文件: {result['markdown_file']}")
             logger.info(f"- 内容块数: {result['generation_stats']['content_blocks']}")
             logger.info(f"- 文章长度: {result['generation_stats']['article_length']} 字符")
             logger.info("=" * 50)
             return True
         else:
-            logger.error(f"步骤5失败: {result['error']}")
+            logger.error(f"步骤4失败: {result['error']}")
             return False
             
     except Exception as e:
-        logger = Logger("step5_markdown")
-        logger.error(f"步骤5执行异常: {str(e)}")
+        logger = Logger("step4_markdown")
+        logger.error(f"步骤4执行异常: {str(e)}")
         logger.error(f"详细错误: {traceback.format_exc()}")
         return False
 

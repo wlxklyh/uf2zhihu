@@ -265,3 +265,38 @@ class Validator:
             return False, f"JSON格式错误: {str(e)}", None
         except Exception as e:
             return False, f"JSON文件验证失败: {str(e)}", None
+    
+    @staticmethod
+    def get_video_duration(file_path: str) -> float:
+        """
+        获取视频时长
+        
+        Args:
+            file_path: 视频文件路径
+            
+        Returns:
+            float: 视频时长（秒），失败返回0
+        """
+        if not os.path.exists(file_path):
+            print(f"[Validator] 视频文件不存在: {file_path}")
+            return 0.0
+        
+        try:
+            cmd = [
+                'ffprobe', '-v', 'quiet', '-print_format', 'json',
+                '-show_format', file_path
+            ]
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+            
+            if result.returncode != 0:
+                print(f"[Validator] ffprobe执行失败: {result.stderr}")
+                return 0.0
+            
+            info = json.loads(result.stdout)
+            duration = float(info.get('format', {}).get('duration', 0))
+            
+            return max(0.0, duration)
+            
+        except Exception as e:
+            print(f"[Validator] 获取视频时长异常: {str(e)}")
+            return 0.0

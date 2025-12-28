@@ -18,7 +18,6 @@ class CacheManager:
         self.cache_dir = config.get('basic', 'cache_dir', './cache')
         self.videos_cache = os.path.join(self.cache_dir, 'videos')
         self.subtitles_en_cache = os.path.join(self.cache_dir, 'subtitles_en')
-        self.subtitles_zh_cache = os.path.join(self.cache_dir, 'subtitles_zh')
         
         # 确保缓存目录存在
         self._ensure_cache_directories()
@@ -26,7 +25,7 @@ class CacheManager:
     def _ensure_cache_directories(self):
         """确保缓存目录存在"""
         for cache_dir in [self.cache_dir, self.videos_cache, 
-                         self.subtitles_en_cache, self.subtitles_zh_cache]:
+                         self.subtitles_en_cache]:
             if not os.path.exists(cache_dir):
                 os.makedirs(cache_dir)
                 self.logger.info(f"创建缓存目录: {cache_dir}")
@@ -48,8 +47,7 @@ class CacheManager:
         """获取缓存信息文件路径"""
         cache_base_dir = {
             'video': self.videos_cache,
-            'subtitle_en': self.subtitles_en_cache,
-            'subtitle_zh': self.subtitles_zh_cache
+            'subtitle_en': self.subtitles_en_cache
         }.get(cache_type, self.cache_dir)
         
         return os.path.join(cache_base_dir, f"{cache_key}_info.json")
@@ -86,7 +84,8 @@ class CacheManager:
         if not cache_info:
             return None
         
-        video_path = cache_info.get('file_path')
+        # 优先查找cache_path，然后查找file_path（向后兼容）
+        video_path = cache_info.get('cache_path') or cache_info.get('file_path')
         if not video_path or not os.path.exists(video_path):
             self.logger.info(f"缓存的视频文件不存在: {video_path}")
             return None
@@ -173,66 +172,17 @@ class CacheManager:
             self.logger.error(f"英文字幕缓存失败: {str(e)}")
             return srt_path
     
-    # 中文字幕缓存相关方法
-    def get_cached_chinese_subtitles(self, youtube_url: str) -> Optional[Tuple[str, Dict]]:
-        """获取缓存的中文字幕"""
-        cache_key = self._get_url_hash(youtube_url)
-        cache_info = self._load_cache_info('subtitle_zh', cache_key)
-        
-        if not cache_info:
-            return None
-        
-        # 优先查找cache_path，然后查找file_path（向后兼容）
-        srt_path = cache_info.get('cache_path') or cache_info.get('file_path')
-        if not srt_path or not os.path.exists(srt_path):
-            self.logger.info(f"缓存的中文字幕不存在: {srt_path}")
-            return None
-        
-        self.logger.success(f"找到缓存中文字幕: {os.path.basename(srt_path)}")
-        return srt_path, cache_info
-    
-    def cache_chinese_subtitles(self, youtube_url: str, srt_path: str, translate_info: Dict) -> str:
-        """缓存中文字幕"""
-        cache_key = self._get_url_hash(youtube_url)
-        
-        # 生成缓存文件名
-        cache_filename = f"{cache_key}_chinese.srt"
-        cache_path = os.path.join(self.subtitles_zh_cache, cache_filename)
-        
-        try:
-            # 复制文件到缓存目录
-            shutil.copy2(srt_path, cache_path)
-            self.logger.success(f"中文字幕已缓存: {cache_filename}")
-            
-            # 保存缓存信息
-            cache_info = translate_info.copy()
-            cache_info.update({
-                'original_path': srt_path,
-                'cache_path': cache_path,
-                'cache_filename': cache_filename,
-                'youtube_url': youtube_url
-            })
-            
-            self._save_cache_info('subtitle_zh', cache_key, cache_info)
-            
-            return cache_path
-            
-        except Exception as e:
-            self.logger.error(f"中文字幕缓存失败: {str(e)}")
-            return srt_path
-    
     # 缓存管理方法
     def clear_cache(self, cache_type: str = None):
         """清理缓存"""
         if cache_type is None:
             # 清理所有缓存
-            cache_dirs = [self.videos_cache, self.subtitles_en_cache, self.subtitles_zh_cache]
-            cache_names = ['视频', '英文字幕', '中文字幕']
+            cache_dirs = [self.videos_cache, self.subtitles_en_cache]
+            cache_names = ['视频', '英文字幕']
         else:
             cache_dirs = {
                 'video': [self.videos_cache],
-                'subtitle_en': [self.subtitles_en_cache],
-                'subtitle_zh': [self.subtitles_zh_cache]
+                'subtitle_en': [self.subtitles_en_cache]
             }.get(cache_type, [])
             cache_names = [cache_type]
         
@@ -251,14 +201,12 @@ class CacheManager:
         """获取缓存统计信息"""
         stats = {
             'videos': {'count': 0, 'size': 0},
-            'subtitles_en': {'count': 0, 'size': 0},
-            'subtitles_zh': {'count': 0, 'size': 0}
+            'subtitles_en': {'count': 0, 'size': 0}
         }
         
         cache_dirs = {
             'videos': self.videos_cache,
-            'subtitles_en': self.subtitles_en_cache,
-            'subtitles_zh': self.subtitles_zh_cache
+            'subtitles_en': self.subtitles_en_cache
         }
         
         for cache_type, cache_dir in cache_dirs.items():
@@ -275,8 +223,7 @@ class CacheManager:
         """列出指定类型的缓存项"""
         cache_dir = {
             'video': self.videos_cache,
-            'subtitle_en': self.subtitles_en_cache,
-            'subtitle_zh': self.subtitles_zh_cache
+            'subtitle_en': self.subtitles_en_cache
         }.get(cache_type)
         
         if not cache_dir or not os.path.exists(cache_dir):

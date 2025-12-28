@@ -45,9 +45,9 @@ class FileManager:
         step_dirs = [
             'step1_download',
             'step2_transcribe', 
-            'step4_screenshots',
-            'step5_markdown',
-            'step6_prompt'
+            'step3_screenshots',
+            'step4_markdown',
+            'step5_prompt'
         ]
         
         for step_dir in step_dirs:
@@ -56,7 +56,7 @@ class FileManager:
                 os.makedirs(step_path)
         
         # 创建截图子目录
-        screenshots_path = os.path.join(project_path, 'step4_screenshots', 'screenshots')
+        screenshots_path = os.path.join(project_path, 'step3_screenshots', 'screenshots')
         if not os.path.exists(screenshots_path):
             os.makedirs(screenshots_path)
         

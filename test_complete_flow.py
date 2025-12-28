@@ -30,14 +30,12 @@ def test_complete_flow():
     step3_dir = os.path.join(test_dir, "step3")
     step4_dir = os.path.join(test_dir, "step4")
     step5_dir = os.path.join(test_dir, "step5")
-    step6_dir = os.path.join(test_dir, "step6")
     
     os.makedirs(step1_dir, exist_ok=True)
     os.makedirs(step2_dir, exist_ok=True)
     os.makedirs(step3_dir, exist_ok=True)
     os.makedirs(step4_dir, exist_ok=True)
     os.makedirs(step5_dir, exist_ok=True)
-    os.makedirs(step6_dir, exist_ok=True)
     
     logger = Logger("complete_flow_test")
     
@@ -51,9 +49,9 @@ def test_complete_flow():
     # 导入步骤模块
     from src.core.steps.step1_download import main as step1_main
     from src.core.steps.step2_transcribe import main as step2_main
-    from src.core.steps.step4_screenshots import main as step4_main
-    from src.core.steps.step5_generate_markdown import main as step5_main
-    from src.core.steps.step6_generate_prompt import main as step6_main
+    from src.core.steps.step3_screenshots import main as step3_main
+    from src.core.steps.step4_generate_markdown import main as step4_main
+    from src.core.steps.step5_generate_prompt import main as step5_main
     
     # 步骤1: 下载视频
     print("\n[步骤1] 下载YouTube视频")
@@ -103,39 +101,35 @@ def test_complete_flow():
                 # 查找字幕文件
                 srt_file = os.path.join(step2_dir, "english_subtitles.srt")
                 if os.path.exists(srt_file):
-                    # 步骤3已跳过 - 直接使用英文字幕进行截图提取
-                    print("\n[步骤3] 已跳过翻译 (使用英文字幕)")
+                    # 步骤3: 提取截图
+                    print("\n[步骤3] 提取截图")
                     print("-" * 40)
                     
-                    # 步骤4: 提取截图
-                    print("\n[步骤4] 提取截图")
-                    print("-" * 40)
-                    
-                    success4 = step4_main(short_video_path, srt_file, step4_dir)
-                    if success4:
-                        print("[成功] 步骤4成功")
+                    success3 = step3_main(short_video_path, srt_file, step3_dir)
+                    if success3:
+                        print("[成功] 步骤3成功")
                         
-                        # 步骤5: 生成Markdown
-                        print("\n[步骤5] 生成Markdown文章")
+                        # 步骤4: 生成Markdown
+                        print("\n[步骤4] 生成Markdown文章")
                         print("-" * 40)
                         
                         video_info_file = os.path.join(step1_dir, "video_info.json")
-                        screenshots_dir = os.path.join(step4_dir, "screenshots")
-                        markdown_file = os.path.join(step5_dir, "article.md")
+                        screenshots_dir = os.path.join(step3_dir, "screenshots")
+                        markdown_file = os.path.join(step4_dir, "article.md")
                         
-                        success5 = step5_main(srt_file, screenshots_dir, video_info_file, markdown_file)
-                        if success5:
-                            print("[成功] 步骤5成功")
+                        success4 = step4_main(srt_file, screenshots_dir, video_info_file, markdown_file)
+                        if success4:
+                            print("[成功] 步骤4成功")
                             
-                            # 步骤6: 生成Prompt
-                            print("\n[步骤6] 生成Prompt文件")
+                            # 步骤5: 生成Prompt
+                            print("\n[步骤5] 生成Prompt文件")
                             print("-" * 40)
                             
-                            prompt_file = os.path.join(step6_dir, "optimization_prompt.txt")
+                            prompt_file = os.path.join(step5_dir, "optimization_prompt.txt")
                             
-                            success6 = step6_main(markdown_file, video_info_file, prompt_file)
-                            if success6:
-                                print("[成功] 步骤6成功")
+                            success5 = step5_main(markdown_file, video_info_file, prompt_file)
+                            if success5:
+                                print("[成功] 步骤5成功")
                                 print("\n[完成] 完整流程测试成功!")
                                 return True
     
