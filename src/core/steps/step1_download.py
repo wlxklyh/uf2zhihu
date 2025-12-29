@@ -387,10 +387,20 @@ class YouTubeDownloader:
             # 使用简单的输出模板，避免特殊字符
             output_template = os.path.join(output_dir, "%(id)s.%(ext)s")
             
+            # 构建格式选择器，支持DASH格式（分离的视频和音频流）
+            # 优先选择指定格式的视频+音频并合并，如果不可用则选择最佳格式
+            if quality == 'best':
+                # 最佳质量：优先mp4视频+m4a音频，回退到任意最佳视频+音频组合
+                format_selector = f'bestvideo[ext={format_pref}]+bestaudio[ext=m4a]/bestvideo+bestaudio/best'
+            else:
+                # 其他质量设置：直接使用配置的质量参数
+                format_selector = f'{quality}[ext={format_pref}]/{quality}'
+            
             # 配置 yt-dlp 选项
             ydl_opts = {
-                'format': f'best[ext={format_pref}]/best',
+                'format': format_selector,
                 'outtmpl': output_template,
+                'merge_output_format': format_pref,  # 确保合并后的输出格式
                 'no_warnings': True,
                 'noprogress': False,
                 'progress_hooks': [self._progress_hook],

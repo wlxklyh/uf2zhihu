@@ -47,7 +47,8 @@ class FileManager:
             'step2_transcribe', 
             'step3_screenshots',
             'step4_markdown',
-            'step5_prompt'
+            'step5_prompt',
+            'FinalOutput'
         ]
         
         for step_dir in step_dirs:
@@ -261,3 +262,36 @@ class FileManager:
                 
         except Exception as e:
             return f"无法读取文件: {str(e)}"
+    
+    def get_finaloutput_directory(self, project_path: str) -> str:
+        """获取 FinalOutput 目录路径"""
+        finaloutput_dir = os.path.join(project_path, 'FinalOutput')
+        if not os.path.exists(finaloutput_dir):
+            os.makedirs(finaloutput_dir)
+        return finaloutput_dir
+    
+    def list_finaloutput_markdown_files(self, project_path: str) -> List[Dict]:
+        """列出 FinalOutput 目录下的所有 .md 文件"""
+        finaloutput_dir = self.get_finaloutput_directory(project_path)
+        files = []
+        
+        if not os.path.exists(finaloutput_dir):
+            return files
+        
+        for item in os.listdir(finaloutput_dir):
+            item_path = os.path.join(finaloutput_dir, item)
+            if os.path.isfile(item_path) and item.lower().endswith('.md'):
+                file_info = {
+                    'name': item,
+                    'path': item_path,
+                    'size': os.path.getsize(item_path),
+                    'modified_time': datetime.fromtimestamp(
+                        os.path.getmtime(item_path)
+                    ).isoformat(),
+                    'extension': '.md'
+                }
+                files.append(file_info)
+        
+        # 按修改时间排序，最新的在前
+        files.sort(key=lambda x: x['modified_time'], reverse=True)
+        return files

@@ -1,0 +1,489 @@
+{% extends "base.html" %}
+
+{% block title %}发布到知乎 - Step6{% endblock %}
+
+{% block extra_css %}
+<style>
+.qrcode-container {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.qrcode-image {
+    max-width: 300px;
+    margin: 0 auto;
+    display: block;
+}
+
+.login-status {
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.login-status.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.login-status.waiting {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.login-status.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.publish-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.file-select-section {
+    margin-bottom: 20px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- 页面标题 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-0">
+                <i class="fas fa-paper-plane me-2"></i>
+                发布文章到知乎 - Step6
+            </h2>
+            <p class="text-muted">项目：{{ project_name }}</p>
+        </div>
+    </div>
+
+    <!-- 项目信息 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        项目信息
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if project_summary %}
+                    <p><strong>YouTube链接:</strong> 
+                        {% if project_summary.get('youtube_url') %}
+                        <a href="{{ project_summary.youtube_url }}" target="_blank">{{ project_summary.youtube_url }}</a>
+                        {% else %}
+                        <span class="text-muted">未提供</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>创建时间:</strong> {{ project_summary.get('created_time', '未知') }}</p>
+                    <p><strong>状态:</strong> 
+                        <span class="badge bg-{{ 'success' if project_summary.get('status') == 'completed' else 'warning' }}">
+                            {{ project_summary.get('status', 'unknown') }}
+                        </span>
+                    </p>
+                    {% else %}
+                    <p class="text-muted">暂无项目信息</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 文件选择 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-alt me-2"></i>
+                        选择要发布的 Markdown 文件
+                    </h5>
+                </div>
+                <div class="card-body file-select-section">
+                    <div class="mb-3">
+                        <label for="markdownFileSelect" class="form-label">FinalOutput 目录下的文件</label>
+                        <select class="form-select" id="markdownFileSelect">
+                            <option value="">请选择文件...</option>
+                            {% for file in finaloutput_files %}
+                            <option value="{{ file.name }}" data-size="{{ file.size }}" data-modified="{{ file.modified_time }}">
+                                {{ file.name }} ({{ (file.size / 1024) | round(2) }} KB)
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">
+                            {% if finaloutput_files %}
+                            找到 {{ finaloutput_files|length }} 个 Markdown 文件
+                            {% else %}
+                            <span class="text-warning">FinalOutput 目录下没有找到 .md 文件</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary" id="refreshFilesBtn">
+                        <i class="fas fa-sync-alt me-1"></i>刷新文件列表
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 登录区域 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        知乎登录
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="loginStatus" class="login-status" style="display: none;"></div>
+                    
+                    <div id="qrcodeContainer" class="qrcode-container" style="display: none;">
+                        <h6>请使用知乎 App 扫描二维码登录</h6>
+                        <img id="qrcodeImage" class="qrcode-image" alt="二维码">
+                        <p class="text-muted mt-3">
+                            <small>二维码有效期 5 分钟，请尽快扫描</small>
+                        </p>
+                        <button class="btn btn-sm btn-outline-secondary mt-2" id="refreshQrcodeBtn">
+                            <i class="fas fa-sync-alt me-1"></i>刷新二维码
+                        </button>
+                    </div>
+                    
+                    <div id="loginActions" class="text-center">
+                        <button class="btn btn-primary" id="getQrcodeBtn">
+                            <i class="fas fa-qrcode me-2"></i>获取登录二维码
+                        </button>
+                        <button class="btn btn-outline-info ms-2" id="checkLoginStatusBtn">
+                            <i class="fas fa-check-circle me-2"></i>检查登录状态
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 发布配置 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card publish-section">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cog me-2"></i>
+                        发布配置
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="articleTitle" class="form-label">文章标题 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="articleTitle" placeholder="请输入文章标题">
+                        <div class="form-text">标题将作为知乎文章的标题</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="articleTopics" class="form-label">话题标签（可选）</label>
+                        <input type="text" class="form-control" id="articleTopics" placeholder="用逗号分隔，例如：技术,编程,Python">
+                        <div class="form-text">多个话题用逗号分隔</div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button class="btn btn-success btn-lg" id="publishBtn" disabled>
+                            <i class="fas fa-paper-plane me-2"></i>发布到知乎
+                        </button>
+                    </div>
+                    
+                    <div id="publishProgress" class="mt-3" style="display: none;">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 role="progressbar" style="width: 100%">
+                                发布中...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="publishResult" class="mt-3" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const projectName = '{{ project_name }}';
+let qrcodeToken = '';
+let loginCheckInterval = null;
+
+// 获取二维码
+document.getElementById('getQrcodeBtn').addEventListener('click', function() {
+    showLoading();
+    
+    fetch('/api/step6/qrcode', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            project_name: projectName
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        
+        if (data.success) {
+            qrcodeToken = data.qrcode_token;
+            document.getElementById('qrcodeImage').src = data.qrcode_image_base64;
+            document.getElementById('qrcodeContainer').style.display = 'block';
+            document.getElementById('loginStatus').style.display = 'none';
+            
+            // 开始轮询检查登录状态
+            startLoginCheck();
+            
+            showAlert('二维码获取成功，请使用知乎 App 扫描', 'success');
+        } else {
+            showAlert('获取二维码失败: ' + data.error, 'danger');
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        showAlert('获取二维码失败: ' + error, 'danger');
+    });
+});
+
+// 刷新二维码
+document.getElementById('refreshQrcodeBtn').addEventListener('click', function() {
+    document.getElementById('getQrcodeBtn').click();
+});
+
+// 检查登录状态
+function checkLoginStatus() {
+    if (!qrcodeToken) {
+        return;
+    }
+    
+    fetch('/api/step6/check_login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            project_name: projectName,
+            qrcode_token: qrcodeToken
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const statusDiv = document.getElementById('loginStatus');
+        statusDiv.style.display = 'block';
+        
+        if (data.status === 'login') {
+            statusDiv.className = 'login-status success';
+            statusDiv.innerHTML = '<i class="fas fa-check-circle me-2"></i>登录成功！';
+            stopLoginCheck();
+            document.getElementById('qrcodeContainer').style.display = 'none';
+            document.getElementById('publishBtn').disabled = false;
+            showAlert('登录成功！', 'success');
+        } else if (data.status === 'scan') {
+            statusDiv.className = 'login-status waiting';
+            statusDiv.innerHTML = '<i class="fas fa-clock me-2"></i>等待扫码...';
+        } else if (data.status === 'cancel') {
+            statusDiv.className = 'login-status error';
+            statusDiv.innerHTML = '<i class="fas fa-times-circle me-2"></i>登录已取消';
+            stopLoginCheck();
+        } else if (data.status === 'error') {
+            statusDiv.className = 'login-status error';
+            statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>' + data.message;
+            stopLoginCheck();
+        }
+    })
+    .catch(error => {
+        console.error('检查登录状态失败:', error);
+    });
+}
+
+// 开始轮询检查登录状态
+function startLoginCheck() {
+    if (loginCheckInterval) {
+        clearInterval(loginCheckInterval);
+    }
+    loginCheckInterval = setInterval(checkLoginStatus, 2000); // 每2秒检查一次
+}
+
+// 停止轮询
+function stopLoginCheck() {
+    if (loginCheckInterval) {
+        clearInterval(loginCheckInterval);
+        loginCheckInterval = null;
+    }
+}
+
+// 检查当前登录状态
+document.getElementById('checkLoginStatusBtn').addEventListener('click', function() {
+    showLoading();
+    
+    fetch('/api/step6/check_login_status', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            project_name: projectName
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        
+        if (data.success && data.is_logged_in) {
+            document.getElementById('publishBtn').disabled = false;
+            showAlert('已登录状态', 'success');
+        } else {
+            showAlert('未登录，请先获取二维码登录', 'warning');
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        showAlert('检查登录状态失败: ' + error, 'danger');
+    });
+});
+
+// 刷新文件列表
+document.getElementById('refreshFilesBtn').addEventListener('click', function() {
+    showLoading();
+    
+    fetch(`/api/step6/list_files/${projectName}`)
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        
+        if (data.success) {
+            const select = document.getElementById('markdownFileSelect');
+            select.innerHTML = '<option value="">请选择文件...</option>';
+            
+            data.files.forEach(file => {
+                const option = document.createElement('option');
+                option.value = file.name;
+                option.textContent = `${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+                option.setAttribute('data-size', file.size);
+                option.setAttribute('data-modified', file.modified_time);
+                select.appendChild(option);
+            });
+            
+            showAlert(`已刷新，找到 ${data.count} 个文件`, 'success');
+        } else {
+            showAlert('刷新文件列表失败: ' + data.error, 'danger');
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        showAlert('刷新文件列表失败: ' + error, 'danger');
+    });
+});
+
+// 发布文章
+document.getElementById('publishBtn').addEventListener('click', function() {
+    const markdownFile = document.getElementById('markdownFileSelect').value;
+    const title = document.getElementById('articleTitle').value.trim();
+    const topicsStr = document.getElementById('articleTopics').value.trim();
+    
+    if (!markdownFile) {
+        showAlert('请选择要发布的 Markdown 文件', 'warning');
+        return;
+    }
+    
+    if (!title) {
+        showAlert('请输入文章标题', 'warning');
+        return;
+    }
+    
+    if (!confirm(`确定要发布文章 "${title}" 到知乎吗？`)) {
+        return;
+    }
+    
+    // 解析话题
+    const topics = topicsStr ? topicsStr.split(',').map(t => t.trim()).filter(t => t) : [];
+    
+    // 显示进度
+    document.getElementById('publishProgress').style.display = 'block';
+    document.getElementById('publishResult').style.display = 'none';
+    document.getElementById('publishBtn').disabled = true;
+    
+    fetch('/api/step6/publish', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            project_name: projectName,
+            markdown_file: markdownFile,
+            title: title,
+            topics: topics
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('publishProgress').style.display = 'none';
+        document.getElementById('publishBtn').disabled = false;
+        
+        const resultDiv = document.getElementById('publishResult');
+        resultDiv.style.display = 'block';
+        
+        if (data.success) {
+            resultDiv.className = 'alert alert-success';
+            resultDiv.innerHTML = `
+                <h5><i class="fas fa-check-circle me-2"></i>发布成功！</h5>
+                <p>文章已成功发布到知乎</p>
+                <p><strong>文章链接:</strong> <a href="${data.article_url}" target="_blank">${data.article_url}</a></p>
+                <button class="btn btn-primary" onclick="window.open('${data.article_url}', '_blank')">
+                    <i class="fas fa-external-link-alt me-2"></i>查看文章
+                </button>
+            `;
+            showAlert('文章发布成功！', 'success');
+        } else {
+            resultDiv.className = 'alert alert-danger';
+            resultDiv.innerHTML = `
+                <h5><i class="fas fa-times-circle me-2"></i>发布失败</h5>
+                <p>${data.error || data.message || '未知错误'}</p>
+            `;
+            showAlert('发布失败: ' + (data.error || data.message), 'danger');
+        }
+    })
+    .catch(error => {
+        document.getElementById('publishProgress').style.display = 'none';
+        document.getElementById('publishBtn').disabled = false;
+        
+        const resultDiv = document.getElementById('publishResult');
+        resultDiv.style.display = 'block';
+        resultDiv.className = 'alert alert-danger';
+        resultDiv.innerHTML = `
+            <h5><i class="fas fa-times-circle me-2"></i>发布失败</h5>
+            <p>网络错误: ${error}</p>
+        `;
+        showAlert('发布失败: ' + error, 'danger');
+    });
+});
+
+// 页面加载时检查登录状态
+document.addEventListener('DOMContentLoaded', function() {
+    // 检查是否已登录
+    document.getElementById('checkLoginStatusBtn').click();
+});
+</script>
+{% endblock %}
+
+
+

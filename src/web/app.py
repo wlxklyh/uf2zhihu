@@ -392,6 +392,157 @@ def register_routes(app: Flask):
                 'error': str(e)
             }), 500
     
+    @app.route('/step6/<project_name>')
+    def step6_page(project_name: str):
+        """Step6 操作页面"""
+        try:
+            project_path = os.path.join(config.get('basic', 'output_dir'), project_name)
+            if not os.path.exists(project_path):
+                abort(404, "项目不存在")
+            
+            # 获取项目信息
+            project_summary = file_manager.get_project_summary(project_path)
+            
+            # 获取 FinalOutput 文件列表
+            finaloutput_files = file_manager.list_finaloutput_markdown_files(project_path)
+            
+            return render_template('step6.html', 
+                                 project_name=project_name,
+                                 project_summary=project_summary,
+                                 finaloutput_files=finaloutput_files)
+        except Exception as e:
+            logger.error(f"加载 Step6 页面失败: {str(e)}")
+            abort(500, f"加载 Step6 页面失败: {str(e)}")
+    
+    @app.route('/api/step6/list_files/<project_name>')
+    def api_step6_list_files(project_name: str):
+        """获取 FinalOutput 文件列表API"""
+        try:
+            result = processor.execute_step6_manual(project_name, 'list_files')
+            return jsonify(result)
+        except Exception as e:
+            logger.error(f"获取文件列表失败: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': str(e)
+            }), 500
+    
+    @app.route('/api/step6/qrcode', methods=['POST'])
+    def api_step6_qrcode():
+        """获取二维码API"""
+        try:
+            data = request.json or {}
+            project_name = data.get('project_name', '')
+            
+            if not project_name:
+                return jsonify({
+                    'success': False,
+                    'error': '缺少 project_name 参数'
+                }), 400
+            
+            result = processor.execute_step6_manual(project_name, 'get_qrcode')
+            return jsonify(result)
+        except Exception as e:
+            logger.error(f"获取二维码失败: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': str(e)
+            }), 500
+    
+    @app.route('/api/step6/check_login', methods=['POST'])
+    def api_step6_check_login():
+        """检查登录状态API"""
+        try:
+            data = request.json or {}
+            project_name = data.get('project_name', '')
+            qrcode_token = data.get('qrcode_token', '')
+            
+            if not project_name:
+                return jsonify({
+                    'success': False,
+                    'error': '缺少 project_name 参数'
+                }), 400
+            
+            if not qrcode_token:
+                return jsonify({
+                    'success': False,
+                    'error': '缺少 qrcode_token 参数'
+                }), 400
+            
+            result = processor.execute_step6_manual(project_name, 'check_login', qrcode_token=qrcode_token)
+            return jsonify(result)
+        except Exception as e:
+            logger.error(f"检查登录状态失败: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': str(e)
+            }), 500
+    
+    @app.route('/api/step6/check_login_status', methods=['POST'])
+    def api_step6_check_login_status():
+        """检查当前登录状态API"""
+        try:
+            data = request.json or {}
+            project_name = data.get('project_name', '')
+            
+            if not project_name:
+                return jsonify({
+                    'success': False,
+                    'error': '缺少 project_name 参数'
+                }), 400
+            
+            result = processor.execute_step6_manual(project_name, 'check_login_status')
+            return jsonify(result)
+        except Exception as e:
+            logger.error(f"检查登录状态失败: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': str(e)
+            }), 500
+    
+    @app.route('/api/step6/publish', methods=['POST'])
+    def api_step6_publish():
+        """发布文章API"""
+        try:
+            data = request.json or {}
+            project_name = data.get('project_name', '')
+            markdown_file = data.get('markdown_file', '')
+            title = data.get('title', '')
+            topics = data.get('topics', [])
+            
+            if not project_name:
+                return jsonify({
+                    'success': False,
+                    'error': '缺少 project_name 参数'
+                }), 400
+            
+            if not markdown_file:
+                return jsonify({
+                    'success': False,
+                    'error': '缺少 markdown_file 参数'
+                }), 400
+            
+            if not title:
+                return jsonify({
+                    'success': False,
+                    'error': '缺少 title 参数'
+                }), 400
+            
+            result = processor.execute_step6_manual(
+                project_name, 
+                'publish',
+                markdown_file=markdown_file,
+                title=title,
+                topics=topics if isinstance(topics, list) else []
+            )
+            return jsonify(result)
+        except Exception as e:
+            logger.error(f"发布文章失败: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': str(e)
+            }), 500
+    
     @app.errorhandler(404)
     def not_found(error):
         """404错误处理"""

@@ -5,6 +5,7 @@ import os
 import json
 import threading
 import time
+import traceback
 from datetime import datetime
 from typing import Dict, Optional, Callable
 import sys
@@ -21,6 +22,7 @@ from src.core.steps.step2_transcribe import AudioTranscriber
 from src.core.steps.step3_screenshots import VideoScreenshot
 from src.core.steps.step4_generate_markdown import MarkdownGenerator
 from src.core.steps.step5_generate_prompt import PromptGenerator
+from src.core.steps.step6_publish_zhihu import ZhihuPublisher
 
 class YouTubeToArticleProcessor:
     def __init__(self, config_path: str = "config/config.ini"):
@@ -35,6 +37,7 @@ class YouTubeToArticleProcessor:
         self.step_complete_callback = None
         self.download_progress_callback = None
         self.transcribe_progress_callback = None
+        self.zhihu_publisher = None  # 延迟初始化
         
     def set_callbacks(self, progress_callback: Callable = None, step_complete_callback: Callable = None, download_progress_callback: Callable = None, transcribe_progress_callback: Callable = None):
         """设置回调函数用于Web界面更新"""
@@ -471,3 +474,123 @@ class YouTubeToArticleProcessor:
         except Exception as e:
             self.logger.error(f"步骤5执行异常: {str(e)}")
             return False
+    
+    def _get_zhihu_publisher(self) -> ZhihuPublisher:
+        """获取知乎发布器实例（延迟初始化）"""
+        if self.zhihu_publisher is None:
+            self.zhihu_publisher = ZhihuPublisher(self.config, self.logger)
+        return self.zhihu_publisher
+    
+    def execute_step6_manual(self, project_name: str, action: str, **kwargs) -> Dict:
+        """
+        手动执行步骤6操作
+        
+        Args:
+            project_name: 项目名称
+            action: 操作类型 ('get_qrcode', 'check_login', 'publish', 'list_files')
+            **kwargs: 其他参数
+            
+        Returns:
+            Dict: 操作结果
+        """
+        try:
+            # 获取项目路径
+            project_path = os.path.join(self.config.get('basic', 'output_dir'), project_name)
+            if not os.path.exists(project_path):
+                return {
+                    'success': False,
+                    'error': '项目不存在',
+                    'message': f'项目不存在: {project_name}'
+                }
+            
+            publisher = self._get_zhihu_publisher()
+            
+            if action == 'get_qrcode':
+                # 获取二维码
+                result = publisher.get_qrcode()
+                return result
+                
+            elif action == 'check_login':
+                # 检查登录状态
+                qrcode_token = kwargs.get('qrcode_token', '')
+                if not qrcode_token:
+                    return {
+                        'success': False,
+                        'error': '缺少 qrcode_token 参数'
+                    }
+                result = publisher.check_login_status(qrcode_token)
+                return result
+                
+            elif action == 'publish':
+                # 发布文章
+                markdown_file = kwargs.get('markdown_file', '')
+                title = kwargs.get('title', '')
+                topics = kwargs.get('topics', [])
+                
+                if not markdown_file:
+                    return {
+                        'success': False,
+                        'error': '缺少 markdown_file 参数'
+                    }
+                
+                if not title:
+                    return {
+                        'success': False,
+                        'error': '缺少 title 参数'
+                    }
+                
+                # 检查文件是否存在
+                markdown_path = os.path.join(project_path, 'FinalOutput', markdown_file)
+                if not os.path.exists(markdown_path):
+                    return {
+                        'success': False,
+                        'error': f'Markdown 文件不存在: {markdown_file}'
+                    }
+                
+                # 转换 Markdown
+                convert_result = publisher.convert_markdown_to_zhihu(markdown_path, project_path)
+                if not convert_result['success']:
+                    return convert_result
+                
+                # 发布文章
+                publish_result = publisher.publish_article(
+                    title=title,
+                    content=convert_result['content'],
+                    topics=topics if topics else []
+                )
+                
+                return publish_result
+                
+            elif action == 'list_files':
+                # 列出 FinalOutput 下的文件
+                files = publisher.list_finaloutput_files(project_path)
+                return {
+                    'success': True,
+                    'files': files,
+                    'count': len(files)
+                }
+                
+            elif action == 'check_login_status':
+                # 检查当前登录状态
+                is_logged_in = publisher.is_logged_in()
+                return {
+                    'success': True,
+                    'is_logged_in': is_logged_in,
+                    'message': '已登录' if is_logged_in else '未登录'
+                }
+                
+            else:
+                return {
+                    'success': False,
+                    'error': f'未知的操作类型: {action}'
+                }
+                
+        except Exception as e:
+            error_msg = f"步骤6操作失败: {str(e)}"
+            self.logger.error(error_msg)
+            self.logger.error(f"详细错误: {traceback.format_exc()}")
+            return {
+                'success': False,
+                'error': error_msg,
+                'message': error_msg
+            }

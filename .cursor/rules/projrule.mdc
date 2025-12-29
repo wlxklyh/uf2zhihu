@@ -54,25 +54,17 @@ alwaysApply: true
 - 建议格式：`类型: 简短描述`
 - 常用类型：`feat`(新功能)、`fix`(修复)、`docs`(文档)、`refactor`(重构)
 
-## 集成测试规范
+## 启动测试规范
 
 ### 测试前准备（必须执行）
-1. **清理缓存**：删除 `cache/` 目录下所有文件
-   ```powershell
-   Remove-Item -Path "cache\*" -Recurse -Force
-   ```
 
-2. **清理日志**：删除 `logs/` 目录下的日志文件（如果被占用则忽略）
+
+1. **清理日志**：删除 `logs/` 目录下的日志文件（如果被占用则忽略）
    ```powershell
    Remove-Item -Path "logs\*.log" -Force -ErrorAction SilentlyContinue
    ```
 
-3. **清理项目**：删除 `projects/` 目录下的所有测试项目
-   ```powershell
-   Remove-Item -Path "projects\*" -Recurse -Force
-   ```
-
-4. **清理进程**：停止所有相关Python进程
+2. **清理进程**：停止所有相关Python进程
    ```powershell
    Stop-Process -Name "python","py" -Force -ErrorAction SilentlyContinue
    ```
