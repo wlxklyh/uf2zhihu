@@ -1,5 +1,5 @@
 # 核心处理库
-yt-dlp>=2023.12.30
+yt-dlp>=2025.12.8
 openai-whisper>=20231117
 pysrt>=1.1.2
 python-ffmpeg>=2.0.12
