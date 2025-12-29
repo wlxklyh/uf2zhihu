@@ -118,6 +118,25 @@ class PromptGenerator:
         
         return text
 
+    def _remove_all_blank_lines(self, text: str) -> str:
+        """
+        去除文本中的所有空行
+        
+        Args:
+            text: 原始文本
+            
+        Returns:
+            str: 处理后的文本（无空行）
+        """
+        # 按行分割文本
+        lines = text.split('\n')
+        # 过滤掉所有空行（去除首尾空白后为空的行）
+        non_empty_lines = [line for line in lines if line.strip()]
+        # 重新拼接为单行文本，行之间用单个换行符连接
+        result = '\n'.join(non_empty_lines)
+        # 去除开头和结尾的换行符
+        return result.strip()
+
     def _compress_markdown_content(self, markdown_content: str) -> str:
         """
         压缩 Markdown 内容格式，减少多余空行，保持所有 section
@@ -236,7 +255,7 @@ class PromptGenerator:
 
         # 拼接所有部分
         final_content = "\n".join(parts)
-        final_content = self._remove_consecutive_blank_lines(final_content)
+        final_content = self._remove_all_blank_lines(final_content)
         return final_content
 
     def generate_prompt(self, markdown_path: str, video_info_path: str, output_dir: str) -> Dict:
