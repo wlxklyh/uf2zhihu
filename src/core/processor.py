@@ -442,7 +442,7 @@ class YouTubeToArticleProcessor:
             return False
     
     def _execute_step5(self, project_path: str) -> bool:
-        """执行步骤5: 生成Prompt文件"""
+        """执行步骤5: 生成Prompt文件（支持多模板）"""
         try:
             self._send_progress_update(5, 10, "初始化Prompt生成器...")
             
@@ -456,17 +456,21 @@ class YouTubeToArticleProcessor:
             step1_dir = self.file_manager.get_step_directory(project_path, 'step1_download')
             video_info_file = os.path.join(step1_dir, 'video_info.json')
             
-            # 获取步骤5输出目录
+            # 获取步骤5输出目录（传递目录而不是文件路径）
             step5_dir = self.file_manager.get_step_directory(project_path, 'step5_prompt')
-            output_file = os.path.join(step5_dir, 'optimization_prompt.txt')
             
             self._send_progress_update(5, 30, "开始生成Prompt文件...")
             
-            # 执行生成
-            result = generator.generate_prompt(markdown_file, video_info_file, output_file)
+            # 执行生成（传递目录路径）
+            result = generator.generate_prompt(markdown_file, video_info_file, step5_dir)
             
             if result['success']:
-                self._send_progress_update(5, 100, "步骤5完成")
+                # 输出详细日志
+                self.logger.info(f"成功生成 {result['total_generated']} 个Prompt文件")
+                for prompt_file in result.get('prompt_files', []):
+                    self.logger.info(f"  - {prompt_file['template']}: {os.path.basename(prompt_file['output_file'])}")
+                
+                self._send_progress_update(5, 100, f"步骤5完成 - 生成了{result['total_generated']}个文件")
                 return True
             else:
                 return False

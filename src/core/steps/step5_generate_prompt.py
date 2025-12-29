@@ -1,13 +1,16 @@
 """
 步骤5：生成LLM优化Prompt模块（优化版）
 生成中文Prompt，要求将英文文章转换为图文并茂的中文文章
+支持多模板生成，自动扫描 prompt_template_*.txt 文件
 """
 import os
 import json
 from datetime import datetime
-from typing import Dict
+from typing import Dict, List
 import sys
 import traceback
+import glob
+import re
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
 
@@ -20,26 +23,148 @@ class PromptGenerator:
     def __init__(self, config: Config, logger: Logger):
         self.config = config
         self.logger = logger
-        
-    def generate_prompt(self, markdown_path: str, video_info_path: str, output_path: str) -> Dict:
+        self.templates_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../config/templates'))
+    
+    def _scan_template_files(self) -> List[Dict]:
         """
-        生成LLM优化Prompt（中文版本）
+        扫描所有prompt模板文件
+        
+        Returns:
+            list: 模板文件信息列表 [{'identifier': 'v1', 'path': '/path/to/file'}, ...]
+        """
+        templates = []
+        pattern = os.path.join(self.templates_dir, 'prompt_template_*.txt')
+        
+        self.logger.info(f"扫描模板文件: {pattern}")
+        
+        for file_path in glob.glob(pattern):
+            filename = os.path.basename(file_path)
+            # 使用正则提取标识符: prompt_template_xxx.txt -> xxx
+            match = re.match(r'prompt_template_(.+?)\.txt$', filename)
+            if match:
+                identifier = match.group(1)
+                templates.append({
+                    'identifier': identifier,
+                    'path': file_path,
+                    'filename': filename
+                })
+                self.logger.info(f"  发现模板: {identifier} ({filename})")
+        
+        if not templates:
+            self.logger.warning("未找到任何 prompt_template_*.txt 模板文件")
+        else:
+            self.logger.info(f"共找到 {len(templates)} 个模板文件")
+        
+        return templates
+    
+    def _read_common_prompt(self) -> str:
+        """
+        读取公共prompt内容
+        
+        Returns:
+            str: 公共prompt内容，如果文件不存在返回空字符串
+        """
+        common_file = os.path.join(self.templates_dir, 'common_prompt.txt')
+        
+        if not os.path.exists(common_file):
+            self.logger.warning(f"公共prompt文件不存在: {common_file}")
+            return ""
+        
+        try:
+            with open(common_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+            self.logger.info(f"已读取公共prompt内容 ({len(content)} 字符)")
+            return content
+        except Exception as e:
+            self.logger.error(f"读取公共prompt文件失败: {str(e)}")
+            return ""
+    
+    def _read_template_content(self, template_path: str) -> str:
+        """
+        读取模板文件内容
+        
+        Args:
+            template_path: 模板文件路径
+            
+        Returns:
+            str: 模板内容
+        """
+        try:
+            with open(template_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            return content
+        except Exception as e:
+            self.logger.error(f"读取模板文件失败 {template_path}: {str(e)}")
+            raise
+    
+    def _generate_prompt_from_template(self, common_content: str, template_content: str,
+                                      markdown_content: str, video_info: Dict) -> str:
+        """
+        根据模板生成prompt内容
+        
+        Args:
+            common_content: 公共prompt内容
+            template_content: 模板特定内容
+            markdown_content: Markdown文章内容
+            video_info: 视频信息
+            
+        Returns:
+            str: 完整的prompt内容
+        """
+        parts = []
+        
+        # 1. 公共部分（开头）
+        if common_content:
+            parts.append(common_content)
+        
+        # 2. 视频信息部分
+        title = video_info.get('title', '视频标题未知')
+        duration = video_info.get('duration', 0)
+        
+        video_info_section = f"""
+## 源视频信息
+- **标题**: {title}
+- **时长**: {duration} 秒
+- **内容**: 英文技术演讲/教程
+"""
+        parts.append(video_info_section)
+        
+        # 3. 模板特定部分
+        if template_content:
+            parts.append(template_content)
+        
+        # 4. Markdown内容部分
+        markdown_section = f"""
+## 源内容（英文Markdown）
+```markdown
+{markdown_content}
+```
+"""
+        parts.append(markdown_section)
+        
+        # 5. 结尾提示
+        parts.append("\n请开始生成中文文章：\n")
+        
+        # 拼接所有部分
+        return "\n".join(parts)
+        
+    def generate_prompt(self, markdown_path: str, video_info_path: str, output_dir: str) -> Dict:
+        """
+        生成LLM优化Prompt（支持多模板）
         
         Args:
             markdown_path: 英文Markdown文章路径
             video_info_path: 视频信息文件路径
-            output_path: 输出Prompt文件路径
+            output_dir: 输出目录路径
             
         Returns:
             Dict: 生成结果信息
         """
         self.logger.info("=" * 60)
-        self.logger.info(f"[步骤5开始] 生成中文优化Prompt")
+        self.logger.info(f"[步骤5开始] 生成中文优化Prompt（多模板支持）")
         self.logger.info(f"Markdown文件: {os.path.basename(markdown_path)}")
-        self.logger.info(f"输出文件: {output_path}")
+        self.logger.info(f"输出目录: {output_dir}")
         self.logger.info("=" * 60)
-        
-        prompt_start_time = datetime.now().timestamp()
         
         try:
             # 检查输入文件
@@ -67,30 +192,88 @@ class PromptGenerator:
             with open(markdown_path, 'r', encoding='utf-8') as f:
                 markdown_content = f.read()
             
-            # 生成中文Prompt
-            prompt_content = self._generate_chinese_prompt(markdown_content, video_info)
+            # 扫描模板文件
+            templates = self._scan_template_files()
             
-            # 写入Prompt文件
-            os.makedirs(os.path.dirname(output_path), exist_ok=True)
-            with open(output_path, 'w', encoding='utf-8') as f:
-                f.write(prompt_content)
+            if not templates:
+                # 如果没有找到模板，使用默认行为
+                self.logger.warning("未找到模板文件，使用默认prompt生成")
+                return self._generate_default_prompt(markdown_content, video_info, output_dir)
             
-            self.logger.file_created(output_path)
+            # 读取公共prompt内容
+            common_content = self._read_common_prompt()
             
-            # 统计信息
-            prompt_stats = {
-                'prompt_length': len(prompt_content),
-                'video_title': video_info.get('title', 'Unknown'),
-                'video_duration': video_info.get('duration', 0),
-                'generated_time': datetime.now().isoformat(),
-                'output_file': output_path
-            }
+            # 创建输出目录
+            os.makedirs(output_dir, exist_ok=True)
+            
+            # 遍历每个模板生成prompt
+            prompt_files = []
+            failed_templates = []
+            
+            for template in templates:
+                try:
+                    self.logger.info(f"处理模板: {template['identifier']}")
+                    
+                    # 读取模板内容
+                    template_content = self._read_template_content(template['path'])
+                    
+                    # 生成完整prompt
+                    prompt_content = self._generate_prompt_from_template(
+                        common_content, template_content, markdown_content, video_info
+                    )
+                    
+                    # 生成输出文件名
+                    output_filename = f"optimization_prompt_{template['identifier']}.txt"
+                    output_path = os.path.join(output_dir, output_filename)
+                    
+                    # 写入文件
+                    with open(output_path, 'w', encoding='utf-8') as f:
+                        f.write(prompt_content)
+                    
+                    self.logger.file_created(output_path)
+                    
+                    # 记录生成信息
+                    prompt_files.append({
+                        'template': template['identifier'],
+                        'output_file': output_path,
+                        'size': len(prompt_content)
+                    })
+                    
+                    self.logger.info(f"  生成成功: {output_filename} ({len(prompt_content)} 字符)")
+                    
+                except Exception as e:
+                    self.logger.error(f"  模板 {template['identifier']} 处理失败: {str(e)}")
+                    failed_templates.append({
+                        'template': template['identifier'],
+                        'error': str(e)
+                    })
+            
+            # 检查是否所有模板都失败了
+            if not prompt_files:
+                error_msg = "所有模板处理都失败了"
+                self.logger.error(error_msg)
+                return {
+                    'success': False,
+                    'error': error_msg,
+                    'failed_templates': failed_templates,
+                    'message': error_msg
+                }
+            
+            # 返回成功结果
+            self.logger.info("=" * 60)
+            self.logger.info(f"步骤5完成: 成功生成 {len(prompt_files)} 个Prompt文件")
+            for pf in prompt_files:
+                self.logger.info(f"  - {pf['template']}: {os.path.basename(pf['output_file'])}")
+            if failed_templates:
+                self.logger.warning(f"失败的模板数: {len(failed_templates)}")
+            self.logger.info("=" * 60)
             
             return {
                 'success': True,
-                'prompt_file': output_path,
-                'prompt_stats': prompt_stats,
-                'message': '中文Prompt生成成功'
+                'prompt_files': prompt_files,
+                'total_generated': len(prompt_files),
+                'failed_templates': failed_templates,
+                'message': f'成功生成{len(prompt_files)}个Prompt文件'
             }
             
         except Exception as e:
@@ -104,9 +287,17 @@ class PromptGenerator:
                 'message': error_msg
             }
     
-    def _generate_chinese_prompt(self, markdown_content: str, video_info: Dict) -> str:
+    def _generate_default_prompt(self, markdown_content: str, video_info: Dict, output_dir: str) -> Dict:
         """
-        生成中文Prompt文本（考虑截图去重）
+        生成默认prompt（当没有找到模板文件时使用）
+        
+        Args:
+            markdown_content: Markdown内容
+            video_info: 视频信息
+            output_dir: 输出目录
+            
+        Returns:
+            Dict: 生成结果
         """
         title = video_info.get('title', '视频标题未知')
         duration = video_info.get('duration', 0)
@@ -121,40 +312,23 @@ class PromptGenerator:
 - **时长**: {duration} 秒
 - **内容**: 英文技术演讲/教程
 
-## 重要说明：截图智能去重处理
-源内容中的截图已经过智能去重处理（基于感知哈希算法）：
-- **去重原理**: 使用pHash算法计算图片相似度，汉明距离≤10的截图被视为重复
-- **去重策略**: 相邻时间段如果画面相似，会自动复用第一张截图（根节点）
-- **累积检测**: 防止连续小变化累积成大变化，确保引用的截图与当前内容确实相似
-- **实际情况**: 演讲类视频通常有80-90%的截图是重复的（演讲者静止讲话）
-
-### 对您的影响
-1. **多个段落共享截图**: 连续的多个文本段落可能引用同一张截图
-2. **内容合并机会**: 这些共享截图的段落通常属于同一个主题或场景
-3. **优化建议**: 
-   - 将使用相同截图的段落合并为一个逻辑章节
-   - 在章节开头放置截图，后面跟随所有相关内容
-   - 避免重复引用同一张截图
-
 ## 要求
 1. **语言**: 生成中文文章（简体中文）
 2. **格式**: Markdown格式，包含以下结构：
    - 文章标题
    - 摘要/导言
-   - 多个章节（**按截图分组，合并相同截图的内容**）
+   - 多个章节（按逻辑分组）
    - 每个关键点配有对应的截图
    - 总结和要点
 3. **图文搭配**: 
    - 在适当位置插入截图（使用Markdown语法）
    - 在截图前后添加解释文字
    - 确保图文结合，提高可读性
-   - **智能处理重复截图**: 如果源内容中多个段落使用同一截图，将这些段落整合为一个章节
 4. **内容优化**:
    - 简化复杂的英文技术术语
    - 添加上下文和背景信息
    - 保持原视频的核心观点
    - 改进逻辑流程和过渡
-   - **合并冗余内容**: 将引用相同截图的相关内容合并，避免重复
 5. **质量标准**:
    - 清晰的段落结构
    - 适当的标题层级
@@ -164,7 +338,6 @@ class PromptGenerator:
    - 从提供的截图库中选择最相关的截图
    - 每张截图应该与周围文本相关联
    - 添加截图说明（中文）
-   - **避免截图冗余**: 同一张截图在文章中只出现一次
 
 ## 源内容（英文Markdown）
 ```markdown
@@ -175,9 +348,8 @@ class PromptGenerator:
 1. **标题**: 用中文重新表述视频主题
 2. **内容**: 完整的中文文章，包含章节标题、段落和截图
 3. **截图引用**: 使用Markdown图片语法引用截图文件
-4. **长度**: 根据内容确定，保证完整性，但要避免因截图重复导致的内容冗余
+4. **长度**: 根据内容确定，保证完整性
 5. **风格**: 专业、学术、易懂的表达方式
-6. **结构优化**: 将使用相同截图的内容段落合理组织，形成连贯的章节
 
 ## 注意事项
 - 保持原视频的专业性和准确性
@@ -185,15 +357,32 @@ class PromptGenerator:
 - 图片应该清晰且与内容匹配
 - 避免过度翻译，确保内容自然
 - 提高可读性和用户体验
-- **特别注意**: 源内容中的截图重复是正常的技术处理，请在生成文章时智能合并相关内容，创建更精炼、结构更清晰的文章
 
 请开始生成中文文章：
 """
         
-        return prompt
+        # 写入默认文件
+        os.makedirs(output_dir, exist_ok=True)
+        output_path = os.path.join(output_dir, 'optimization_prompt_default.txt')
+        
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(prompt)
+        
+        self.logger.file_created(output_path)
+        
+        return {
+            'success': True,
+            'prompt_files': [{
+                'template': 'default',
+                'output_file': output_path,
+                'size': len(prompt)
+            }],
+            'total_generated': 1,
+            'message': '使用默认prompt生成成功'
+        }
 
 
-def main(markdown_path: str, video_info_path: str, output_path: str) -> bool:
+def main(markdown_path: str, video_info_path: str, output_dir: str) -> bool:
     """步骤5主函数"""
     try:
         config = Config()
@@ -201,20 +390,20 @@ def main(markdown_path: str, video_info_path: str, output_path: str) -> bool:
         
         generator = PromptGenerator(config, logger)
         
-        logger.step_start(6, "生成中文优化Prompt")
+        logger.step_start(5, "生成中文优化Prompt（多模板）")
         
-        result = generator.generate_prompt(markdown_path, video_info_path, output_path)
+        result = generator.generate_prompt(markdown_path, video_info_path, output_dir)
         
         if result['success']:
-            logger.step_complete(6, "生成中文优化Prompt")
+            logger.step_complete(5, "生成中文优化Prompt")
             logger.info("=" * 50)
-            logger.info("步骤5完成，输出文件：")
-            logger.info(f"- Prompt文件: {result['prompt_file']}")
-            logger.info(f"- 文件大小: {result['prompt_stats']['prompt_length']} 字符")
+            logger.info(f"步骤5完成，生成了 {result['total_generated']} 个Prompt文件：")
+            for pf in result['prompt_files']:
+                logger.info(f"  - {pf['template']}: {os.path.basename(pf['output_file'])} ({pf['size']} 字符)")
             logger.info("=" * 50)
             return True
         else:
-            logger.error(f"步骤5失败: {result['error']}")
+            logger.error(f"步骤5失败: {result.get('error', '未知错误')}")
             return False
             
     except Exception as e:
@@ -226,7 +415,7 @@ def main(markdown_path: str, video_info_path: str, output_path: str) -> bool:
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        print("用法: python step6_generate_prompt.py <markdown_path> <video_info_path> <output_path>")
+        print("用法: python step5_generate_prompt.py <markdown_path> <video_info_path> <output_dir>")
         sys.exit(1)
     
     success = main(sys.argv[1], sys.argv[2], sys.argv[3])
