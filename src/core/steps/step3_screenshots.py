@@ -35,9 +35,9 @@ class VideoScreenshot:
         self.time_offsets = self._parse_time_offsets()
         self.max_workers = self.config.get_int('step3_screenshots', 'max_workers', 4)
         self.batch_size = self.config.get_int('step3_screenshots', 'batch_size', 50)
-        self.enable_deduplication = self.config.get_bool('step3_screenshots', 'enable_deduplication', True)
+        self.enable_deduplication = self.config.get_boolean('step3_screenshots', 'enable_deduplication', True)
         self.phash_threshold = self.config.get_int('step3_screenshots', 'phash_threshold', 10)
-        self.delete_duplicate_files = self.config.get_bool('step3_screenshots', 'delete_duplicate_files', False)
+        self.delete_duplicate_files = self.config.get_boolean('step3_screenshots', 'delete_duplicate_files', False)
         
     def check_ffmpeg(self) -> bool:
         """检查ffmpeg是否可用"""
