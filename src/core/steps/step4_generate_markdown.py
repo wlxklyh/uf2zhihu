@@ -166,35 +166,67 @@ class MarkdownGenerator:
             }
         
     def _prepare_content_data(self, subs: pysrt.SubRipFile, screenshots_dir: str) -> List[Dict]:
-        """准备内容数据"""
+        """准备内容数据（支持去重）"""
         content_items = []
+        
+        # 读取截图索引文件以获取去重信息
+        index_file = os.path.join(os.path.dirname(screenshots_dir), 'screenshot_index.json')
+        screenshot_index = {}
+        
+        if os.path.exists(index_file):
+            try:
+                with open(index_file, 'r', encoding='utf-8') as f:
+                    index_data = json.load(f)
+                    # 建立subtitle_index到截图信息的映射
+                    for item in index_data:
+                        screenshot_index[item['subtitle_index']] = item
+            except Exception as e:
+                self.logger.warning(f"读取截图索引失败: {str(e)}")
         
         for i, sub in enumerate(subs, 1):
             # 计算时间
             start_time = self._format_srt_time(sub.start)
             end_time = self._format_srt_time(sub.end)
             
-            # 查找对应的截图（使用0s偏移的截图）
-            # 尝试多种可能的文件名格式
-            possible_names = [
-                f"{i:03d}_0.0s.png",
-                f"{i:03d}_plus0.0s.png",
-                f"{i:03d}_0s.png"
-            ]
+            # 从索引中获取截图信息
+            screenshot_info = screenshot_index.get(i, {})
+            is_duplicate = screenshot_info.get('is_duplicate', False)
             
-            screenshot_filename = None
-            screenshot_path = None
-            
-            for name in possible_names:
-                path = os.path.join(screenshots_dir, name)
-                if os.path.exists(path):
-                    screenshot_filename = name
-                    screenshot_path = path
-                    break
-            
-            # 如果找不到，使用默认名称
-            if not screenshot_filename:
-                screenshot_filename = f"{i:03d}_0.0s.png"
+            if is_duplicate:
+                # 使用引用的截图
+                reference_filename = screenshot_info.get('reference_screenshot')
+                duplicate_of_index = screenshot_info.get('duplicate_of_index')
+                hamming_distance = screenshot_info.get('hamming_distance', 0)
+                
+                if reference_filename:
+                    screenshot_filename = reference_filename
+                    screenshot_path = os.path.join(screenshots_dir, reference_filename)
+                else:
+                    # 降级处理
+                    screenshot_filename = f"{i:03d}_plus0.0s.png"
+                    screenshot_path = os.path.join(screenshots_dir, screenshot_filename)
+            else:
+                # 查找对应的截图（使用0s偏移的截图）
+                possible_names = [
+                    f"{i:03d}_0.0s.png",
+                    f"{i:03d}_plus0.0s.png",
+                    f"{i:03d}_0s.png"
+                ]
+                
+                screenshot_filename = None
+                screenshot_path = None
+                
+                for name in possible_names:
+                    path = os.path.join(screenshots_dir, name)
+                    if os.path.exists(path):
+                        screenshot_filename = name
+                        screenshot_path = path
+                        break
+                
+                # 如果找不到，使用默认名称
+                if not screenshot_filename:
+                    screenshot_filename = f"{i:03d}_plus0.0s.png"
+                    screenshot_path = os.path.join(screenshots_dir, screenshot_filename)
             
             # 使用相对路径
             relative_screenshot_path = f"screenshots/{screenshot_filename}"
@@ -205,7 +237,10 @@ class MarkdownGenerator:
                 'end_time': end_time,
                 'text': sub.text.strip(),
                 'screenshot_path': relative_screenshot_path,
-                'screenshot_exists': screenshot_path is not None and os.path.exists(screenshot_path)
+                'screenshot_exists': screenshot_path is not None and os.path.exists(screenshot_path),
+                'is_duplicate': is_duplicate,
+                'duplicate_of_index': screenshot_info.get('duplicate_of_index') if is_duplicate else None,
+                'hamming_distance': screenshot_info.get('hamming_distance') if is_duplicate else None
             }
             
             content_items.append(content_item)

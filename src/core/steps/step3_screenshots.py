@@ -1,7 +1,7 @@
 """
 步骤3：视频截图提取模块（优化版）
 根据字幕时间戳提取视频截图
-支持并行处理、断点续传、进度保存
+支持并行处理、断点续传、进度保存、智能去重
 """
 import subprocess
 import os
@@ -13,6 +13,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import List, Dict, Tuple, Optional
 import pysrt
+
+try:
+    import imagehash
+    from PIL import Image
+    IMAGEHASH_AVAILABLE = True
+except ImportError:
+    IMAGEHASH_AVAILABLE = False
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
 
@@ -28,6 +35,9 @@ class VideoScreenshot:
         self.time_offsets = self._parse_time_offsets()
         self.max_workers = self.config.get_int('step3_screenshots', 'max_workers', 4)
         self.batch_size = self.config.get_int('step3_screenshots', 'batch_size', 50)
+        self.enable_deduplication = self.config.get_bool('step3_screenshots', 'enable_deduplication', True)
+        self.phash_threshold = self.config.get_int('step3_screenshots', 'phash_threshold', 10)
+        self.delete_duplicate_files = self.config.get_bool('step3_screenshots', 'delete_duplicate_files', False)
         
     def check_ffmpeg(self) -> bool:
         """检查ffmpeg是否可用"""
@@ -218,6 +228,16 @@ class VideoScreenshot:
                         failed_tasks += 1
                         completed_tasks += 1
             
+            # 去重处理（在保存索引文件之前）
+            dedup_stats = None
+            if self.enable_deduplication:
+                if IMAGEHASH_AVAILABLE:
+                    self.logger.info("[去重] 开始截图去重处理...")
+                    dedup_stats = self._deduplicate_screenshots(screenshots_dir, screenshot_info)
+                    self.logger.info(f"[去重] 去重完成")
+                else:
+                    self.logger.warning("[去重] imagehash库未安装，跳过去重")
+            
             # 保存最终截图索引文件
             index_file = os.path.join(output_dir, 'screenshot_index.json')
             with open(index_file, 'w', encoding='utf-8') as f:
@@ -253,7 +273,9 @@ class VideoScreenshot:
                 'success_rate': (len(screenshot_info) / len(tasks) * 100) if len(tasks) > 0 else 0,
                 'time_offsets': self.time_offsets,
                 'max_workers': self.max_workers,
-                'batch_size': self.batch_size
+                'batch_size': self.batch_size,
+                'deduplication_enabled': self.enable_deduplication,
+                'deduplication_stats': dedup_stats if dedup_stats else None
             }
             
             return {
@@ -339,6 +361,160 @@ class VideoScreenshot:
             return offsets
         except Exception:
             return [0.0]
+    
+    def _deduplicate_screenshots(self, screenshots_dir: str, screenshot_info: List[Dict]) -> Dict:
+        """
+        对提取的截图进行去重处理（相似度累积检测）
+        
+        Args:
+            screenshots_dir: 截图目录
+            screenshot_info: 截图信息列表
+            
+        Returns:
+            Dict: 去重统计信息
+        """
+        dedup_start_time = time.time()
+        
+        # 统计信息
+        total_count = len(screenshot_info)
+        duplicate_count = 0
+        deleted_files = 0
+        
+        self.logger.info(f"[去重] 开始计算pHash，共 {total_count} 个截图条目")
+        
+        # 1. 计算所有截图的pHash
+        hashes = []
+        for i, info in enumerate(screenshot_info):
+            try:
+                img_path = info['path']
+                if os.path.exists(img_path):
+                    img = Image.open(img_path)
+                    hash_val = imagehash.phash(img)
+                    info['phash'] = str(hash_val)
+                    hashes.append(hash_val)
+                    img.close()
+                else:
+                    self.logger.warning(f"[去重] 截图文件不存在: {img_path}")
+                    hashes.append(None)
+            except Exception as e:
+                self.logger.warning(f"[去重] 计算pHash失败 {info['filename']}: {str(e)}")
+                hashes.append(None)
+            
+            if (i + 1) % self.batch_size == 0:
+                self.logger.info(f"[去重] pHash计算进度: {i + 1}/{total_count}")
+        
+        self.logger.info(f"[去重] pHash计算完成，开始去重检测（阈值={self.phash_threshold}）")
+        
+        # 2. 标记第一张为原始
+        if len(screenshot_info) > 0:
+            screenshot_info[0]['is_duplicate'] = False
+            screenshot_info[0]['duplicate_of_index'] = None
+            screenshot_info[0]['reference_screenshot'] = None
+        
+        # 3. 遍历其余截图，进行相似度累积检测
+        for i in range(1, len(screenshot_info)):
+            if hashes[i] is None:
+                screenshot_info[i]['is_duplicate'] = False
+                continue
+            
+            current_hash = hashes[i]
+            prev_idx = i - 1
+            
+            # 跳过前一张如果它的hash无效
+            while prev_idx >= 0 and hashes[prev_idx] is None:
+                prev_idx -= 1
+            
+            if prev_idx < 0:
+                screenshot_info[i]['is_duplicate'] = False
+                continue
+            
+            prev_hash = hashes[prev_idx]
+            distance_to_prev = current_hash - prev_hash
+            
+            if distance_to_prev <= self.phash_threshold:
+                # 找到前一张的根节点
+                root_idx = self._find_root_index(screenshot_info, prev_idx)
+                root_hash = hashes[root_idx]
+                
+                # 检查与根节点的距离
+                distance_to_root = current_hash - root_hash
+                
+                if distance_to_root <= self.phash_threshold:
+                    # 标记为重复，引用根节点
+                    screenshot_info[i]['is_duplicate'] = True
+                    screenshot_info[i]['duplicate_of_index'] = root_idx
+                    screenshot_info[i]['hamming_distance'] = int(distance_to_prev)
+                    screenshot_info[i]['hamming_distance_to_root'] = int(distance_to_root)
+                    screenshot_info[i]['reference_screenshot'] = screenshot_info[root_idx]['filename']
+                    duplicate_count += 1
+                    
+                    # 可选：删除重复的截图文件
+                    if self.delete_duplicate_files:
+                        try:
+                            if os.path.exists(screenshot_info[i]['path']):
+                                os.remove(screenshot_info[i]['path'])
+                                deleted_files += 1
+                        except Exception as e:
+                            self.logger.warning(f"[去重] 删除重复文件失败: {str(e)}")
+                else:
+                    # 与根节点差异太大，作为新原始
+                    screenshot_info[i]['is_duplicate'] = False
+                    screenshot_info[i]['duplicate_of_index'] = None
+                    screenshot_info[i]['reference_screenshot'] = None
+            else:
+                # 与前一张不相似，作为新原始
+                screenshot_info[i]['is_duplicate'] = False
+                screenshot_info[i]['duplicate_of_index'] = None
+                screenshot_info[i]['reference_screenshot'] = None
+            
+            if (i + 1) % self.batch_size == 0:
+                self.logger.info(f"[去重] 去重进度: {i + 1}/{total_count}, 已发现重复: {duplicate_count}")
+        
+        dedup_elapsed = time.time() - dedup_start_time
+        
+        # 统计结果
+        dedup_stats = {
+            'total_screenshots': total_count,
+            'duplicate_count': duplicate_count,
+            'unique_count': total_count - duplicate_count,
+            'duplicate_rate': (duplicate_count / total_count * 100) if total_count > 0 else 0,
+            'deleted_files': deleted_files,
+            'threshold': self.phash_threshold,
+            'processing_time': dedup_elapsed
+        }
+        
+        self.logger.success(f"[去重] 去重完成:")
+        self.logger.info(f"  - 总截图数: {total_count}")
+        self.logger.info(f"  - 重复截图: {duplicate_count} ({dedup_stats['duplicate_rate']:.1f}%)")
+        self.logger.info(f"  - 唯一截图: {dedup_stats['unique_count']}")
+        if self.delete_duplicate_files:
+            self.logger.info(f"  - 删除文件: {deleted_files}")
+        self.logger.info(f"  - 处理耗时: {dedup_elapsed:.2f}秒")
+        
+        return dedup_stats
+    
+    def _find_root_index(self, screenshot_info: List[Dict], index: int) -> int:
+        """
+        查找引用链的根节点索引
+        
+        Args:
+            screenshot_info: 截图信息列表
+            index: 当前索引
+            
+        Returns:
+            int: 根节点索引
+        """
+        visited = set()
+        while screenshot_info[index].get('is_duplicate', False):
+            if index in visited:
+                self.logger.warning(f"[去重] 检测到循环引用: {index}")
+                break
+            visited.add(index)
+            next_idx = screenshot_info[index].get('duplicate_of_index')
+            if next_idx is None or next_idx >= len(screenshot_info):
+                break
+            index = next_idx
+        return index
 
 
 def main(video_path: str, srt_path: str, output_dir: str) -> bool:

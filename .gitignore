@@ -60,4 +60,11 @@ zhihu_obsidian-master/
 
 config/zhihu_cookies.json
 
+dedup_result.html
+dedup_result.json
+test*.py
+*.md
+
+
+
 
