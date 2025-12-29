@@ -69,6 +69,8 @@ alwaysApply: true
    Stop-Process -Name "python","py" -Force -ErrorAction SilentlyContinue
    ```
 
+3. **是否清理缓存**：如果要清理缓存则把cache 和project目录清理了先
+
 ### 测试环境要求
 - ✅ **必须使用**：Cursor IDE 内置浏览器进行测试
 - ❌ **禁止使用**：外部浏览器（Chrome、Firefox、Edge等）
@@ -83,7 +85,7 @@ alwaysApply: true
 6. 测试完成后停止服务器
 
 ### 测试验证要点
-- 下载进度UI显示（百分比、速度、ETA）
+- 项目名是horde 链接是：https://www.youtube.com/watch?v=sZIOVNQfKxI
 - WebSocket消息传输正常
 - 日志无GBK编码错误
 - 所有步骤顺序执行
