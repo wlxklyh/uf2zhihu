@@ -97,6 +97,27 @@ class PromptGenerator:
             self.logger.error(f"读取模板文件失败 {template_path}: {str(e)}")
             raise
 
+    def _remove_consecutive_blank_lines(self, text: str) -> str:
+        """
+        去除文本中的连续空行，保留单个空行
+        
+        Args:
+            text: 原始文本
+            
+        Returns:
+            str: 处理后的文本
+        """
+        # 将连续的多个空行替换为单个空行
+        # 匹配：换行符 + 可选空白字符 + 换行符（重复2次或以上）
+        text = re.sub(r'\n\s*\n\s*\n+', '\n\n', text)
+        
+        # 去除每行末尾的空白字符
+        lines = text.split('\n')
+        lines = [line.rstrip() for line in lines]
+        text = '\n'.join(lines)
+        
+        return text
+
     def _generate_prompt_from_template(self, common_content: str, template_content: str,
                                       markdown_content: str, video_info: Dict) -> str:
         """
@@ -147,7 +168,9 @@ class PromptGenerator:
         parts.append("\n请开始生成中文文章：\n")
 
         # 拼接所有部分
-        return "\n".join(parts)
+        final_content = "\n".join(parts)
+        final_content = self._remove_consecutive_blank_lines(final_content)
+        return final_content
 
     def generate_prompt(self, markdown_path: str, video_info_path: str, output_dir: str) -> Dict:
         """
