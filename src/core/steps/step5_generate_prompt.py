@@ -118,6 +118,67 @@ class PromptGenerator:
         
         return text
 
+    def _compress_markdown_content(self, markdown_content: str) -> str:
+        """
+        压缩 Markdown 内容格式，减少多余空行，保持所有 section
+        
+        Args:
+            markdown_content: 原始 Markdown 内容
+            
+        Returns:
+            str: 压缩后的 Markdown 内容
+        """
+        # 检查是否启用压缩
+        compress_enabled = self.config.get_boolean('step5_prompt', 'compress_enabled', True)
+        if not compress_enabled:
+            return markdown_content
+        
+        # 按行处理
+        lines = markdown_content.split('\n')
+        compressed_lines = []
+        prev_empty = False
+        
+        for i, line in enumerate(lines):
+            line_stripped = line.rstrip()
+            is_empty = not line_stripped
+            
+            # 跳过连续的空行，只保留一个
+            if is_empty:
+                if not prev_empty:
+                    compressed_lines.append('')
+                prev_empty = True
+            else:
+                # 对于非空行，检查是否需要保留空行
+                # Section 标题前保留一个空行
+                if re.match(r'^## Section \d+', line_stripped):
+                    # 确保前面有一个空行（如果前一行不是空行）
+                    if compressed_lines and compressed_lines[-1]:
+                        compressed_lines.append('')
+                # 其他情况直接添加
+                compressed_lines.append(line_stripped)
+                prev_empty = False
+        
+        # 去除开头和结尾的空行
+        while compressed_lines and not compressed_lines[0]:
+            compressed_lines.pop(0)
+        while compressed_lines and not compressed_lines[-1]:
+            compressed_lines.pop()
+        
+        compressed_content = '\n'.join(compressed_lines)
+        
+        original_length = len(markdown_content)
+        compressed_length = len(compressed_content)
+        reduction = ((original_length - compressed_length) / original_length) * 100 if original_length > 0 else 0
+        
+        # 统计 section 数量
+        section_count = len(re.findall(r'^## Section \d+', compressed_content, re.MULTILINE))
+        
+        self.logger.info(f"Markdown 内容压缩: {section_count} sections, "
+                        f"长度: {original_length} -> {compressed_length} 字符 "
+                        f"(减少 {reduction:.1f}%)")
+        
+        return compressed_content
+
     def _generate_prompt_from_template(self, common_content: str, template_content: str,
                                       markdown_content: str, video_info: Dict) -> str:
         """
@@ -155,17 +216,23 @@ class PromptGenerator:
 """
         parts.append(video_info_section)
 
-        # 4. Markdown内容部分
+        # 4. Markdown内容部分（应用压缩）
+        compressed_markdown = self._compress_markdown_content(markdown_content)
         markdown_section = f"""
 ## 源内容（英文Markdown）
 ```markdown
-{markdown_content}
+{compressed_markdown}
 ```
 """
         parts.append(markdown_section)
 
-        # 5. 结尾提示
-        parts.append("\n请开始生成中文文章：\n")
+        # 5. 结尾提示 - 直接生成指令
+        ending_instruction = (
+            "\n现在请直接生成完整的中文文章，按照上述要求一次性生成"
+            "全部内容，不要分段生成，不要使用代码块，直接输出完整的"
+            " Markdown 格式文章：\n"
+        )
+        parts.append(ending_instruction)
 
         # 拼接所有部分
         final_content = "\n".join(parts)
