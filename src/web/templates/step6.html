@@ -297,6 +297,36 @@ function checkLoginStatus() {
             document.getElementById('qrcodeContainer').style.display = 'none';
             document.getElementById('publishBtn').disabled = false;
             showAlert('登录成功！', 'success');
+        } else if (data.status === 'refresh' && data.new_token) {
+            // 二维码过期，需要刷新
+            qrcodeToken = data.new_token;
+            // 重新获取二维码
+            fetch('/api/step6/qrcode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    project_name: projectName
+                })
+            })
+            .then(response => response.json())
+            .then(qrData => {
+                if (qrData.success) {
+                    qrcodeToken = qrData.qrcode_token;
+                    document.getElementById('qrcodeImage').src = qrData.qrcode_image_base64;
+                    statusDiv.className = 'login-status waiting';
+                    statusDiv.innerHTML = '<i class="fas fa-sync-alt me-2"></i>二维码已刷新，请重新扫描';
+                    showAlert('二维码已刷新，请重新扫描', 'info');
+                } else {
+                    statusDiv.className = 'login-status error';
+                    statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>刷新二维码失败';
+                }
+            })
+            .catch(error => {
+                statusDiv.className = 'login-status error';
+                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>刷新二维码失败';
+            });
         } else if (data.status === 'scan') {
             statusDiv.className = 'login-status waiting';
             statusDiv.innerHTML = '<i class="fas fa-clock me-2"></i>等待扫码...';
@@ -484,6 +514,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endblock %}
+
+
+
 
 
 

@@ -7,6 +7,8 @@ import json
 import re
 import time
 import base64
+import hashlib
+import uuid
 import requests
 import qrcode
 from io import BytesIO
@@ -30,6 +32,8 @@ class ZhihuPublisher:
         self.login_poll_interval = config.get_int('step6_zhihu', 'login_poll_interval', 2)
         self.image_upload_timeout = config.get_int('step6_zhihu', 'image_upload_timeout', 30)
         self.publish_timeout = config.get_int('step6_zhihu', 'publish_timeout', 60)
+        self.user_agent = config.get('step6_zhihu', 'user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+        self.enable_draft_mode = config.get_boolean('step6_zhihu', 'enable_draft_mode', True)
         
         # 确保 cookie 文件目录存在
         cookie_dir = os.path.dirname(self.cookie_file)
@@ -39,11 +43,17 @@ class ZhihuPublisher:
         # 初始化 session
         self.session = requests.Session()
         self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Referer': 'https://www.zhihu.com/',
+            'User-Agent': self.user_agent,
             'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
+            'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+            'Accept-Encoding': 'gzip, deflate, br, zstd',
+            'DNT': '1',
+            'Sec-GPC': '1',
+            'Referer': 'https://www.zhihu.com/'
         })
+        
+        # 存储 cookies 字典
+        self.cookies_dict = {}
         
         # 加载已保存的 cookie
         self._load_cookies()
@@ -53,24 +63,30 @@ class ZhihuPublisher:
         try:
             if os.path.exists(self.cookie_file):
                 with open(self.cookie_file, 'r', encoding='utf-8') as f:
-                    cookies_dict = json.load(f)
-                    self.session.cookies.update(cookies_dict)
+                    self.cookies_dict = json.load(f)
+                    self.session.cookies.update(self.cookies_dict)
                     self.logger.info("已加载保存的 cookie")
                     return True
         except Exception as e:
             self.logger.warning(f"加载 cookie 失败: {str(e)}")
         return False
     
-    def save_cookies(self, cookies: Dict) -> bool:
+    def save_cookies(self, cookies: Dict = None) -> bool:
         """保存 cookie 到文件"""
         try:
-            cookies_dict = {}
-            if isinstance(cookies, dict):
-                cookies_dict = cookies
+            if cookies is None:
+                # 合并 session cookies 和存储的 cookies
+                session_cookies = self.session.cookies.get_dict()
+                self.cookies_dict.update(session_cookies)
+                cookies_dict = self.cookies_dict
+            elif isinstance(cookies, dict):
+                self.cookies_dict.update(cookies)
+                cookies_dict = self.cookies_dict
             elif hasattr(cookies, 'get_dict'):
-                cookies_dict = cookies.get_dict()
+                new_cookies = cookies.get_dict()
+                self.cookies_dict.update(new_cookies)
+                cookies_dict = self.cookies_dict
             else:
-                # 从 session 中获取
                 cookies_dict = self.session.cookies.get_dict()
             
             with open(self.cookie_file, 'w', encoding='utf-8') as f:
@@ -82,9 +98,222 @@ class ZhihuPublisher:
             self.logger.error(f"保存 cookie 失败: {str(e)}")
             return False
     
+    def _build_cookie_header(self, cookie_keys: List[str] = None) -> str:
+        """
+        构建 Cookie 请求头
+        
+        Args:
+            cookie_keys: 需要包含的 cookie 键列表，如果为 None 则包含所有
+            
+        Returns:
+            str: Cookie 请求头字符串
+        """
+        if cookie_keys is None or len(cookie_keys) == 0:
+            # 返回所有 cookies
+            all_cookies = {**self.cookies_dict, **self.session.cookies.get_dict()}
+            return '; '.join([f'{k}={v}' for k, v in all_cookies.items()])
+        else:
+            # 只返回指定的 cookies
+            all_cookies = {**self.cookies_dict, **self.session.cookies.get_dict()}
+            return '; '.join([f'{k}={v}' for k, v in all_cookies.items() if k in cookie_keys])
+    
+    def _get_cookies_from_response(self, response: requests.Response) -> Dict:
+        """从响应头中提取 cookies"""
+        cookies = {}
+        set_cookie_headers = response.headers.get('Set-Cookie', '')
+        if isinstance(set_cookie_headers, list):
+            cookie_strings = set_cookie_headers
+        elif isinstance(set_cookie_headers, str):
+            cookie_strings = [set_cookie_headers]
+        else:
+            cookie_strings = []
+        
+        for cookie_str in cookie_strings:
+            # 提取第一个分号之前的部分（key=value）
+            key_value = cookie_str.split(';')[0].strip()
+            if '=' in key_value:
+                key, value = key_value.split('=', 1)
+                cookies[key.strip()] = value.strip()
+        
+        # 同时从 session cookies 中获取
+        session_cookies = self.session.cookies.get_dict()
+        cookies.update(session_cookies)
+        
+        return cookies
+    
+    def _init_cookies(self) -> bool:
+        """初始化 cookies（访问首页获取基础 cookies）"""
+        try:
+            self.logger.info("正在初始化 cookies...")
+            response = self.session.get(
+                "https://www.zhihu.com",
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'DNT': '1',
+                    'Sec-GPC': '1',
+                    'Upgrade-Insecure-Requests': '1',
+                    'Sec-Fetch-Dest': 'document',
+                    'Sec-Fetch-Mode': 'navigate',
+                    'Sec-Fetch-Site': 'none',
+                    'Sec-Fetch-User': '?1',
+                    'Priority': 'u=0, i'
+                },
+                timeout=10
+            )
+            cookies = self._get_cookies_from_response(response)
+            self.cookies_dict.update(cookies)
+            self.save_cookies()
+            self.logger.info("初始化 cookies 成功")
+            return True
+        except Exception as e:
+            self.logger.warning(f"初始化 cookies 失败: {str(e)}")
+            return False
+    
+    def _signin_next(self) -> bool:
+        """访问登录页面"""
+        try:
+            self.logger.info("正在访问登录页面...")
+            cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC'])
+            response = self.session.get(
+                "https://www.zhihu.com/signin?next=%2F",
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'DNT': '1',
+                    'Sec-GPC': '1',
+                    'Upgrade-Insecure-Requests': '1',
+                    'Sec-Fetch-Dest': 'document',
+                    'Sec-Fetch-Mode': 'navigate',
+                    'Sec-Fetch-Site': 'none',
+                    'Sec-Fetch-User': '?1',
+                    'Priority': 'u=0, i',
+                    'Cookie': cookies_header
+                },
+                timeout=10
+            )
+            cookies = self._get_cookies_from_response(response)
+            self.cookies_dict.update(cookies)
+            self.save_cookies()
+            return True
+        except Exception as e:
+            self.logger.warning(f"访问登录页面失败: {str(e)}")
+            return False
+    
+    def _init_udid_cookies(self) -> bool:
+        """获取 UDID cookies"""
+        try:
+            self.logger.info("正在获取 UDID cookies...")
+            cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC'])
+            xsrftoken = self.cookies_dict.get('_xsrf', '')
+            
+            response = self.session.post(
+                "https://www.zhihu.com/udid",
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'Referer': 'https://www.zhihu.com/signin?next=%2F',
+                    'x-xsrftoken': xsrftoken,
+                    'x-zse-93': '101_3_3.0',
+                    'Origin': 'https://www.zhihu.com',
+                    'DNT': '1',
+                    'Sec-GPC': '1',
+                    'Sec-Fetch-Dest': 'empty',
+                    'Sec-Fetch-Mode': 'cors',
+                    'Sec-Fetch-Site': 'same-origin',
+                    'Priority': 'u=4',
+                    'Cookie': cookies_header
+                },
+                timeout=10
+            )
+            cookies = self._get_cookies_from_response(response)
+            self.cookies_dict.update(cookies)
+            self.save_cookies()
+            self.logger.info("获取 UDID cookies 成功")
+            return True
+        except Exception as e:
+            self.logger.warning(f"获取 UDID cookies 失败: {str(e)}")
+            return False
+    
+    def _sc_profiler(self) -> bool:
+        """调用 sc-profiler"""
+        try:
+            self.logger.info("正在调用 sc-profiler...")
+            cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC'])
+            
+            response = self.session.post(
+                "https://www.zhihu.com/sc-profiler",
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'Content-Type': 'application/json',
+                    'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'Referer': 'https://www.zhihu.com/signin?next=%2F',
+                    'Origin': 'https://www.zhihu.com',
+                    'DNT': '1',
+                    'Sec-GPC': '1',
+                    'Sec-Fetch-Dest': 'empty',
+                    'Sec-Fetch-Mode': 'cors',
+                    'Sec-Fetch-Site': 'same-origin',
+                    'Cookie': cookies_header
+                },
+                json=[[
+                    "i",
+                    "production.heifetz.desktop.v1.za_helper.init.count",
+                    1,
+                    1
+                ]],
+                timeout=10
+            )
+            return True
+        except Exception as e:
+            self.logger.warning(f"调用 sc-profiler 失败: {str(e)}")
+            return False
+    
+    def _captcha_signin(self) -> bool:
+        """获取验证码 session"""
+        try:
+            self.logger.info("正在获取验证码 session...")
+            cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC', 'd_c0'])
+            
+            response = self.session.get(
+                "https://www.zhihu.com/api/v3/oauth/captcha/v2?type=captcha_sign_in",
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'Referer': 'https://www.zhihu.com/signin?next=%2F',
+                    'x-requested-with': 'fetch',
+                    'DNT': '1',
+                    'Sec-GPC': '1',
+                    'Sec-Fetch-Dest': 'empty',
+                    'Sec-Fetch-Site': 'same-origin',
+                    'Priority': 'u=4',
+                    'Cookie': cookies_header
+                },
+                timeout=10
+            )
+            cookies = self._get_cookies_from_response(response)
+            self.cookies_dict.update(cookies)
+            self.save_cookies()
+            self.logger.info("获取验证码 session 成功")
+            return True
+        except Exception as e:
+            self.logger.warning(f"获取验证码 session 失败: {str(e)}")
+            return False
+    
+    def _login_link_builder(self, token: str) -> str:
+        """构建二维码登录链接"""
+        return f"https://www.zhihu.com/account/scan/login/{token}?/api/login/qrcode"
+    
     def get_qrcode(self) -> Dict:
         """
-        获取知乎登录二维码
+        获取知乎登录二维码（完整流程）
         
         Returns:
             Dict: 包含 qrcode_token, qrcode_url, qrcode_image_base64
@@ -92,29 +321,49 @@ class ZhihuPublisher:
         try:
             self.logger.info("正在获取知乎登录二维码...")
             
-            # 获取二维码 token
-            qrcode_url = "https://www.zhihu.com/api/v3/oauth/qr_code"
-            params = {
-                'client_id': 'c3cef7c66a1843f8b3a9e6a1e3160e20',
-                'response_type': 'code',
-                'scope': 'read,write'
-            }
+            # 执行初始化步骤
+            self._init_cookies()
+            self._signin_next()
+            self._init_udid_cookies()
+            self._sc_profiler()
+            self._captcha_signin()
             
-            response = self.session.get(qrcode_url, params=params, timeout=10)
+            # 获取二维码 token
+            cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC', 'd_c0'])
+            response = self.session.post(
+                "https://www.zhihu.com/api/v3/account/api/login/qrcode",
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'Referer': 'https://www.zhihu.com/signin?next=%2F',
+                    'Origin': 'https://www.zhihu.com',
+                    'DNT': '1',
+                    'Sec-GPC': '1',
+                    'Sec-Fetch-Dest': 'empty',
+                    'Sec-Fetch-Mode': 'cors',
+                    'Sec-Fetch-Site': 'same-origin',
+                    'Priority': 'u=4',
+                    'Cookie': cookies_header
+                },
+                timeout=10
+            )
             
             if response.status_code != 200:
                 raise Exception(f"获取二维码失败，状态码: {response.status_code}")
             
             data = response.json()
             qrcode_token = data.get('token', '')
-            qrcode_image_url = data.get('qrcode_url', '')
             
             if not qrcode_token:
                 raise Exception("未能获取二维码 token")
             
+            # 构建二维码链接
+            qrcode_link = self._login_link_builder(qrcode_token)
+            
             # 生成二维码图片
             qr = qrcode.QRCode(version=1, box_size=10, border=4)
-            qr.add_data(qrcode_image_url)
+            qr.add_data(qrcode_link)
             qr.make(fit=True)
             
             img = qr.make_image(fill_color="black", back_color="white")
@@ -127,7 +376,7 @@ class ZhihuPublisher:
             return {
                 'success': True,
                 'qrcode_token': qrcode_token,
-                'qrcode_url': qrcode_image_url,
+                'qrcode_url': qrcode_link,
                 'qrcode_image_base64': f"data:image/png;base64,{qrcode_image_base64}",
                 'message': '二维码获取成功'
             }
@@ -150,12 +399,28 @@ class ZhihuPublisher:
             qrcode_token: 二维码 token
             
         Returns:
-            Dict: 登录状态信息
+            Dict: 登录状态信息，可能包含 new_token（需要刷新二维码时）
         """
         try:
-            check_url = f"https://www.zhihu.com/api/v3/oauth/qr_code/{qrcode_token}/scan_info"
+            cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC', 'd_c0', 'captcha_session_v2'])
+            check_url = f"https://www.zhihu.com/api/v3/account/api/login/qrcode/{qrcode_token}/scan_info"
             
-            response = self.session.get(check_url, timeout=10)
+            response = self.session.get(
+                check_url,
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'Referer': 'https://www.zhihu.com/signin?next=%2F',
+                    'DNT': '1',
+                    'Sec-GPC': '1',
+                    'Sec-Fetch-Dest': 'empty',
+                    'Sec-Fetch-Site': 'same-origin',
+                    'Priority': 'u=4',
+                    'Cookie': cookies_header
+                },
+                timeout=10
+            )
             
             if response.status_code != 200:
                 return {
@@ -167,33 +432,57 @@ class ZhihuPublisher:
             data = response.json()
             status = data.get('status', '')
             
-            if status == 'login':
-                # 登录成功，保存 cookie
-                cookies = self.session.cookies.get_dict()
-                self.save_cookies(cookies)
+            # status=1 表示已扫码
+            if status == 1:
+                # 检查是否有新的 token（需要刷新二维码）
+                if 'new_token' in data and data['new_token']:
+                    new_token = data['new_token'].get('Token', '')
+                    if new_token:
+                        return {
+                            'success': True,
+                            'status': 'refresh',
+                            'message': '二维码已过期，需要刷新',
+                            'new_token': new_token
+                        }
+                
+                # 继续等待确认
+                return {
+                    'success': True,
+                    'status': 'scan',
+                    'message': '等待确认'
+                }
+            # status=5 表示二维码过期，需要刷新
+            elif status == 5:
+                new_token = data.get('new_token', {}).get('Token', '') if 'new_token' in data else ''
+                return {
+                    'success': True,
+                    'status': 'refresh',
+                    'message': '二维码已过期，需要刷新',
+                    'new_token': new_token
+                }
+            # 登录成功（没有 status 字段，直接返回数据）
+            elif 'status' not in data or status == '':
+                # 登录成功，获取 cookies
+                cookies = self._get_cookies_from_response(response)
+                self.cookies_dict.update(cookies)
+                self.save_cookies()
+                
+                # 执行登录后的步骤
+                self._signin_zhihu()
+                self._prod_token_refresh()
+                user_info = self._get_user_info()
                 
                 return {
                     'success': True,
                     'status': 'login',
                     'message': '登录成功',
-                    'cookies': cookies
-                }
-            elif status == 'scan':
-                return {
-                    'success': True,
-                    'status': 'scan',
-                    'message': '等待扫码'
-                }
-            elif status == 'cancel':
-                return {
-                    'success': False,
-                    'status': 'cancel',
-                    'message': '用户取消登录'
+                    'cookies': cookies,
+                    'user_info': user_info
                 }
             else:
                 return {
                     'success': True,
-                    'status': status,
+                    'status': str(status),
                     'message': f'状态: {status}'
                 }
                 
@@ -205,6 +494,101 @@ class ZhihuPublisher:
                 'status': 'error',
                 'message': error_msg
             }
+    
+    def _signin_zhihu(self) -> bool:
+        """登录后访问首页获取新 cookies"""
+        try:
+            self.logger.info("正在完成登录流程...")
+            cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC', 'd_c0', 'captcha_session_v2', 'z_c0'])
+            
+            response = self.session.get(
+                "https://www.zhihu.com",
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'accept-language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'referer': 'https://www.zhihu.com/signin?next=%2F',
+                    'dnt': '1',
+                    'sec-gpc': '1',
+                    'upgrade-insecure-requests': '1',
+                    'sec-fetch-dest': 'document',
+                    'sec-fetch-mode': 'navigate',
+                    'sec-fetch-site': 'same-origin',
+                    'priority': 'u=0, i',
+                    'Cookie': cookies_header
+                },
+                timeout=10
+            )
+            cookies = self._get_cookies_from_response(response)
+            self.cookies_dict.update(cookies)
+            self.save_cookies()
+            return True
+        except Exception as e:
+            self.logger.warning(f"完成登录流程失败: {str(e)}")
+            return False
+    
+    def _prod_token_refresh(self) -> bool:
+        """刷新生产 token"""
+        try:
+            self.logger.info("正在刷新生产 token...")
+            cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC', 'd_c0', 'captcha_session_v2', 'z_c0', 'q_c1'])
+            
+            response = self.session.post(
+                "https://www.zhihu.com/api/account/prod/token/refresh",
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'accept-language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'referer': 'https://www.zhihu.com/',
+                    'x-requested-with': 'fetch',
+                    'origin': 'https://www.zhihu.com',
+                    'dnt': '1',
+                    'sec-gpc': '1',
+                    'sec-fetch-dest': 'empty',
+                    'sec-fetch-mode': 'cors',
+                    'sec-fetch-site': 'same-origin',
+                    'priority': 'u=4',
+                    'Cookie': cookies_header
+                },
+                timeout=10
+            )
+            return True
+        except Exception as e:
+            self.logger.warning(f"刷新生产 token 失败: {str(e)}")
+            return False
+    
+    def _get_user_info(self) -> Optional[Dict]:
+        """获取用户信息"""
+        try:
+            self.logger.info("正在获取用户信息...")
+            cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC', 'd_c0', 'z_c0', 'q_c1'])
+            
+            response = self.session.get(
+                "https://www.zhihu.com/api/v4/me?include=is_realname",
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'accept-language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'referer': 'https://www.zhihu.com/',
+                    'x-requested-with': 'fetch',
+                    'x-zse-93': '101_3_3.0',
+                    'Cookie': cookies_header
+                },
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                user_info = response.json()
+                cookies = self._get_cookies_from_response(response)
+                self.cookies_dict.update(cookies)
+                self.save_cookies()
+                self.logger.success(f"获取用户信息成功: {user_info.get('name', '未知用户')}")
+                return user_info
+            return None
+        except Exception as e:
+            self.logger.warning(f"获取用户信息失败: {str(e)}")
+            return None
     
     def is_logged_in(self) -> bool:
         """检查是否已登录"""
@@ -224,9 +608,93 @@ class ZhihuPublisher:
             self.logger.warning(f"检查登录状态失败: {str(e)}")
             return False
     
+    def _calculate_image_hash(self, image_buffer: bytes) -> str:
+        """计算图片的 MD5 hash"""
+        return hashlib.md5(image_buffer).hexdigest()
+    
+    def _get_image_upload_token(self, img_hash: str) -> Optional[Dict]:
+        """获取图片上传 token"""
+        try:
+            cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC', 'd_c0', 'captcha_session_v2', 'z_c0'])
+            
+            response = self.session.post(
+                "https://api.zhihu.com/images",
+                headers={
+                    'Content-Type': 'application/json',
+                    'accept-language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'Cookie': cookies_header
+                },
+                json={
+                    'image_hash': img_hash,
+                    'source': 'article'
+                },
+                timeout=self.image_upload_timeout
+            )
+            
+            if response.status_code == 200:
+                return response.json()
+            return None
+        except Exception as e:
+            self.logger.error(f"获取图片上传 token 失败: {str(e)}")
+            return None
+    
+    def _upload_image_to_oss(self, image_buffer: bytes, upload_token: Dict, img_hash: str, mime_type: str) -> bool:
+        """上传图片到 OSS"""
+        try:
+            import hmac
+            from datetime import datetime
+            
+            # upload_token 是直接从响应中获取的对象
+            # 根据参考代码，字段名是 access_id, access_key, access_token
+            access_id = upload_token.get('access_id', '')
+            access_key = upload_token.get('access_key', '')
+            security_token = upload_token.get('access_token', '')
+            
+            if not all([access_id, access_key, security_token]):
+                self.logger.error(f"上传 token 信息不完整: access_id={bool(access_id)}, access_key={bool(access_key)}, security_token={bool(security_token)}")
+                self.logger.error(f"Token 结构: {list(upload_token.keys())}")
+                self.logger.error(f"Token 内容: {json.dumps(upload_token, ensure_ascii=False, indent=2)}")
+                return False
+            
+            request_time = int(time.time() * 1000)
+            utc_date = datetime.utcfromtimestamp(request_time / 1000).strftime('%a, %d %b %Y %H:%M:%S GMT')
+            ua = "aliyun-sdk-js/6.8.0 Firefox 137.0 on OS X 10.15"
+            
+            # 构建签名字符串
+            string_to_sign = f"PUT\n\n{mime_type}\n{utc_date}\nx-oss-date:{utc_date}\nx-oss-security-token:{security_token}\nx-oss-user-agent:{ua}\n/zhihu-pics/v2-{img_hash}"
+            
+            # 计算签名 (使用 access_key 作为 secret)
+            signature = base64.b64encode(
+                hmac.new(access_key.encode(), string_to_sign.encode(), hashlib.sha1).digest()
+            ).decode()
+            
+            # 上传到 OSS (使用 access_id 在 authorization header)
+            response = self.session.put(
+                f"https://zhihu-pics-upload.zhimg.com/v2-{img_hash}",
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'Content-Type': mime_type,
+                    'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'x-oss-date': utc_date,
+                    'x-oss-user-agent': ua,
+                    'x-oss-security-token': security_token,
+                    'authorization': f'OSS {access_id}:{signature}'
+                },
+                data=image_buffer,
+                timeout=self.image_upload_timeout
+            )
+            
+            if response.status_code in [200, 204]:
+                return True
+            return False
+        except Exception as e:
+            self.logger.error(f"上传图片到 OSS 失败: {str(e)}")
+            return False
+    
     def upload_image(self, image_path: str) -> Optional[str]:
         """
-        上传图片到知乎图床
+        上传图片到知乎图床（使用新的 API）
         
         Args:
             image_path: 本地图片路径
@@ -241,32 +709,51 @@ class ZhihuPublisher:
             
             self.logger.info(f"正在上传图片: {os.path.basename(image_path)}")
             
-            # 知乎图片上传 API
-            upload_url = "https://www.zhihu.com/api/v4/uploaded_images"
-            
+            # 读取图片文件
             with open(image_path, 'rb') as f:
-                files = {
-                    'image': (os.path.basename(image_path), f, 'image/png')
-                }
-                
-                response = self.session.post(
-                    upload_url,
-                    files=files,
-                    timeout=self.image_upload_timeout
-                )
+                image_buffer = f.read()
             
-            if response.status_code == 200:
-                data = response.json()
-                image_url = data.get('url', '')
-                if image_url:
-                    self.logger.success(f"图片上传成功: {image_url}")
-                    return image_url
-                else:
-                    self.logger.error(f"上传成功但未获取到图片 URL: {data}")
-                    return None
-            else:
-                self.logger.error(f"图片上传失败，状态码: {response.status_code}, 响应: {response.text}")
+            # 计算 hash
+            img_hash = self._calculate_image_hash(image_buffer)
+            
+            # 获取文件扩展名和 MIME 类型
+            ext = os.path.splitext(image_path)[1].lower().lstrip('.')
+            mime_types = {
+                'png': 'image/png',
+                'jpg': 'image/jpeg',
+                'jpeg': 'image/jpeg',
+                'gif': 'image/gif',
+                'webp': 'image/webp'
+            }
+            mime_type = mime_types.get(ext, 'image/png')
+            
+            # 获取上传 token
+            upload_token_data = self._get_image_upload_token(img_hash)
+            if not upload_token_data:
+                self.logger.error("获取上传 token 失败")
                 return None
+            
+            # 添加调试日志
+            self.logger.info(f"上传token响应结构: {json.dumps(upload_token_data, ensure_ascii=False, indent=2)}")
+            
+            # 检查图片状态
+            img_state = upload_token_data.get('upload_file', {}).get('state', 0)
+            
+            # state=2 表示需要上传
+            if img_state == 2:
+                upload_token = upload_token_data.get('upload_token')
+                if not upload_token:
+                    self.logger.error("未获取到上传 token")
+                    self.logger.error(f"响应数据: {json.dumps(upload_token_data, ensure_ascii=False, indent=2)}")
+                    return None
+                if not self._upload_image_to_oss(image_buffer, upload_token, img_hash, mime_type):
+                    self.logger.error("上传图片到 OSS 失败")
+                    return None
+            
+            # 构建图片 URL
+            image_url = f"https://picx.zhimg.com/v2-{img_hash}.{ext}"
+            self.logger.success(f"图片上传成功: {image_url}")
+            return image_url
                 
         except Exception as e:
             self.logger.error(f"上传图片异常: {str(e)}")
@@ -385,14 +872,112 @@ class ZhihuPublisher:
                 'message': error_msg
             }
     
-    def publish_article(self, title: str, content: str, topics: List[str] = None) -> Dict:
+    def create_draft(self, title: str) -> Optional[str]:
         """
-        发布文章到知乎
+        创建知乎草稿
+        
+        Args:
+            title: 文章标题
+            
+        Returns:
+            str: 草稿 ID，失败返回 None
+        """
+        try:
+            if not self.is_logged_in():
+                self.logger.error("未登录，请先登录")
+                return None
+            
+            self.logger.info(f"正在创建草稿: {title}")
+            cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC', 'd_c0', 'captcha_session_v2', 'z_c0'])
+            xsrftoken = self.cookies_dict.get('_xsrf', '')
+            
+            response = self.session.post(
+                "https://zhuanlan.zhihu.com/api/articles/drafts",
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'Content-Type': 'application/json',
+                    'accept-language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'referer': 'https://zhuanlan.zhihu.com/write',
+                    'x-requested-with': 'fetch',
+                    'x-xsrftoken': xsrftoken,
+                    'origin': 'https://zhuanlan.zhihu.com',
+                    'Cookie': cookies_header
+                },
+                json={
+                    'title': title,
+                    'delta_time': 0,
+                    'can_reward': False
+                },
+                timeout=self.publish_timeout
+            )
+            
+            if response.status_code in [200, 201]:
+                data = response.json()
+                article_id = data.get('id', '')
+                if article_id:
+                    self.logger.success(f"草稿创建成功: {article_id}")
+                    return str(article_id)
+            
+            self.logger.error(f"创建草稿失败，状态码: {response.status_code}, 响应: {response.text}")
+            return None
+        except Exception as e:
+            self.logger.error(f"创建草稿异常: {str(e)}")
+            self.logger.error(f"详细错误: {traceback.format_exc()}")
+            return None
+    
+    def update_draft(self, article_id: str, patch_body: Dict) -> bool:
+        """
+        更新草稿内容
+        
+        Args:
+            article_id: 草稿 ID
+            patch_body: 要更新的内容
+            
+        Returns:
+            bool: 是否成功
+        """
+        try:
+            cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC', 'd_c0', 'captcha_session_v2', 'z_c0'])
+            xsrftoken = self.cookies_dict.get('_xsrf', '')
+            
+            response = self.session.patch(
+                f"https://zhuanlan.zhihu.com/api/articles/{article_id}/draft",
+                headers={
+                    'User-Agent': self.user_agent,
+                    'Accept-Encoding': 'gzip, deflate, br, zstd',
+                    'Content-Type': 'application/json',
+                    'accept-language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                    'referer': f'https://zhuanlan.zhihu.com/p/{article_id}/edit',
+                    'x-requested-with': 'fetch',
+                    'x-xsrftoken': xsrftoken,
+                    'origin': 'https://zhuanlan.zhihu.com',
+                    'Cookie': cookies_header
+                },
+                json=patch_body,
+                timeout=self.publish_timeout
+            )
+            
+            if response.status_code in [200, 204]:
+                self.logger.success(f"草稿更新成功: {article_id}")
+                return True
+            
+            self.logger.error(f"更新草稿失败，状态码: {response.status_code}, 响应: {response.text}")
+            return False
+        except Exception as e:
+            self.logger.error(f"更新草稿异常: {str(e)}")
+            self.logger.error(f"详细错误: {traceback.format_exc()}")
+            return False
+    
+    def publish_article(self, title: str, content: str, topics: List[str] = None, toc: bool = False) -> Dict:
+        """
+        发布文章到知乎（使用草稿 API）
         
         Args:
             title: 文章标题
             content: 文章内容（HTML 格式）
             topics: 话题列表
+            toc: 是否启用目录
             
         Returns:
             Dict: 发布结果
@@ -407,50 +992,163 @@ class ZhihuPublisher:
             
             self.logger.info(f"正在发布文章: {title}")
             
-            # 知乎发布文章 API
-            publish_url = "https://zhuanlan.zhihu.com/api/articles"
-            
-            # 准备发布数据
-            publish_data = {
-                'title': title,
-                'content': content,
-                'summary': title[:100],  # 摘要
-                'can_comment': True,
-                'comment_permission': 'all',
-                'type': 'article'
-            }
-            
-            # 添加话题
-            if topics:
-                publish_data['topics'] = topics
-            
-            response = self.session.post(
-                publish_url,
-                json=publish_data,
-                timeout=self.publish_timeout
-            )
-            
-            if response.status_code in [200, 201]:
-                data = response.json()
-                article_id = data.get('id', '')
-                article_url = data.get('url', f"https://zhuanlan.zhihu.com/p/{article_id}")
+            # 使用草稿模式
+            if self.enable_draft_mode:
+                # 1. 创建草稿
+                article_id = self.create_draft(title)
+                if not article_id:
+                    return {
+                        'success': False,
+                        'error': '创建草稿失败',
+                        'message': '创建草稿失败'
+                    }
                 
-                self.logger.success(f"文章发布成功: {article_url}")
-                
-                return {
-                    'success': True,
-                    'article_id': article_id,
-                    'article_url': article_url,
-                    'message': '文章发布成功'
+                # 2. 更新草稿内容
+                patch_body = {
+                    'title': title,
+                    'content': content,
+                    'table_of_contents': toc,
+                    'delta_time': 30,
+                    'can_reward': False
                 }
+                
+                if not self.update_draft(article_id, patch_body):
+                    return {
+                        'success': False,
+                        'error': '更新草稿失败',
+                        'message': '更新草稿失败'
+                    }
+                
+                # 3. 发布草稿
+                cookies_header = self._build_cookie_header(['_zap', '_xsrf', 'BEC', 'd_c0', 'captcha_session_v2', 'z_c0', 'q_c1'])
+                xsrftoken = self.cookies_dict.get('_xsrf', '')
+                trace_id = f"{int(time.time() * 1000)},{uuid.uuid4()}"
+                
+                response = self.session.post(
+                    "https://www.zhihu.com/api/v4/content/publish",
+                    headers={
+                        'User-Agent': self.user_agent,
+                        'Accept-Encoding': 'gzip, deflate, br, zstd',
+                        'Content-Type': 'application/json',
+                        'accept-language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                        'x-requested-with': 'fetch',
+                        'x-xsrftoken': xsrftoken,
+                        'Cookie': cookies_header
+                    },
+                    json={
+                        'action': 'article',
+                        'data': {
+                            'publish': {'traceId': trace_id},
+                            'extra_info': {
+                                'publisher': 'pc',
+                                'pc_business_params': json.dumps({
+                                    'column': None,
+                                    'commentPermission': 'anyone',
+                                    'disclaimer_type': 0,
+                                    'disclaimer_status': 0,
+                                    'table_of_contents_enabled': toc,
+                                    'commercial_report_info': {'commercial_types': []},
+                                    'commercial_zhitask_bind_info': None,
+                                    'canReward': False
+                                }, ensure_ascii=False)
+                            },
+                            'draft': {
+                                'disabled': 1,
+                                'id': article_id,
+                                'isPublished': False
+                            },
+                            'commentsPermission': {'comment_permission': 'anyone'},
+                            'creationStatement': {
+                                'disclaimer_type': 0,
+                                'disclaimer_status': 0
+                            },
+                            'contentsTables': {'table_of_contents_enabled': toc},
+                            'commercialReportInfo': {'isReport': 0},
+                            'appreciate': {'can_reward': False, 'tagline': ''},
+                            'hybridInfo': {}
+                        }
+                    },
+                    timeout=self.publish_timeout
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    self.logger.info(f"发布API响应: {json.dumps(data, ensure_ascii=False, indent=2)}")
+                    
+                    if data.get('message') == 'success':
+                        result_data = json.loads(data.get('data', {}).get('result', '{}'))
+                        article_url = f"https://zhuanlan.zhihu.com/p/{article_id}"
+                        
+                        self.logger.success(f"文章发布成功: {article_url}")
+                        
+                        return {
+                            'success': True,
+                            'article_id': article_id,
+                            'article_url': article_url,
+                            'message': '文章发布成功'
+                        }
+                    else:
+                        error_msg = f"发布失败: {data.get('message', '未知错误')}"
+                        error_detail = data.get('error', {})
+                        if error_detail:
+                            error_msg += f", 详情: {json.dumps(error_detail, ensure_ascii=False)}"
+                        self.logger.error(error_msg)
+                        self.logger.error(f"完整响应: {json.dumps(data, ensure_ascii=False, indent=2)}")
+                        return {
+                            'success': False,
+                            'error': error_msg,
+                            'message': error_msg
+                        }
+                else:
+                    error_msg = f"发布失败，状态码: {response.status_code}, 响应: {response.text}"
+                    self.logger.error(error_msg)
+                    return {
+                        'success': False,
+                        'error': error_msg,
+                        'message': error_msg
+                    }
             else:
-                error_msg = f"发布失败，状态码: {response.status_code}, 响应: {response.text}"
-                self.logger.error(error_msg)
-                return {
-                    'success': False,
-                    'error': error_msg,
-                    'message': error_msg
+                # 使用旧的直接发布方式（向后兼容）
+                publish_url = "https://zhuanlan.zhihu.com/api/articles"
+                publish_data = {
+                    'title': title,
+                    'content': content,
+                    'summary': title[:100],
+                    'can_comment': True,
+                    'comment_permission': 'all',
+                    'type': 'article'
                 }
+                
+                if topics:
+                    publish_data['topics'] = topics
+                
+                response = self.session.post(
+                    publish_url,
+                    json=publish_data,
+                    timeout=self.publish_timeout
+                )
+                
+                if response.status_code in [200, 201]:
+                    data = response.json()
+                    article_id = data.get('id', '')
+                    article_url = data.get('url', f"https://zhuanlan.zhihu.com/p/{article_id}")
+                    
+                    self.logger.success(f"文章发布成功: {article_url}")
+                    
+                    return {
+                        'success': True,
+                        'article_id': article_id,
+                        'article_url': article_url,
+                        'message': '文章发布成功'
+                    }
+                else:
+                    error_msg = f"发布失败，状态码: {response.status_code}, 响应: {response.text}"
+                    self.logger.error(error_msg)
+                    return {
+                        'success': False,
+                        'error': error_msg,
+                        'message': error_msg
+                    }
                 
         except Exception as e:
             error_msg = f"发布文章异常: {str(e)}"
@@ -523,6 +1221,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
 
 
 
