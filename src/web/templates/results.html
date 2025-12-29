@@ -1,0 +1,448 @@
+{% extends "base.html" %}
+
+{% block title %}项目结果 - {{ project_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.step-card {
+    margin-bottom: 1.5rem;
+}
+
+.file-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.file-item {
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    margin-bottom: 0.5rem;
+    background: #f8f9fa;
+    transition: all 0.2s;
+}
+
+.file-item:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.file-item .file-name {
+    font-weight: 500;
+    color: #212529;
+}
+
+.file-item .file-meta {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.step-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.badge-step {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- 页面标题 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-0">
+                <i class="fas fa-folder-open me-2"></i>
+                项目结果
+            </h2>
+            <p class="text-muted">项目：{{ project_name }}</p>
+        </div>
+    </div>
+
+    <!-- 项目信息 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        项目信息
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if project_summary %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>YouTube链接:</strong> 
+                                {% if project_summary.get('youtube_url') %}
+                                <a href="{{ project_summary.youtube_url }}" target="_blank">{{ project_summary.youtube_url }}</a>
+                                {% else %}
+                                <span class="text-muted">未提供</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>创建时间:</strong> {{ project_summary.get('created_time', '未知') }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>状态:</strong> 
+                                <span class="badge bg-{{ 'success' if project_summary.get('status') == 'completed' else 'warning' }}">
+                                    {{ project_summary.get('status', 'unknown') }}
+                                </span>
+                            </p>
+                            <p><strong>当前步骤:</strong> {{ project_summary.get('current_step', 'N/A') }}</p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">暂无项目信息</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 步骤文件列表 -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>
+                        处理步骤及输出文件
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- 步骤1：下载 -->
+                    <div class="step-card">
+                        <div class="step-header mb-3">
+                            <h6 class="mb-0">
+                                <i class="fas fa-download me-2 text-primary"></i>
+                                步骤1：下载YouTube视频
+                            </h6>
+                            <span class="badge badge-step bg-primary">step1_download</span>
+                        </div>
+                        <div class="file-list">
+                            {% if steps_data.get('step1_download') %}
+                                {% for file in steps_data.step1_download %}
+                                    {% if not file.get('is_directory') %}
+                                    <div class="file-item">
+                                        <div class="file-name">
+                                            <i class="fas fa-file me-2"></i>{{ file.name }}
+                                        </div>
+                                        <div class="file-meta">
+                                            <span class="me-3">大小: {{ (file.size / 1024) | round(2) }} KB</span>
+                                            <span>修改时间: {{ file.modified_time[:19] }}</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <a href="/api/download/{{ project_name }}/step1_download/{{ file.name }}" 
+                                               class="btn btn-sm btn-outline-primary me-2" target="_blank">
+                                                <i class="fas fa-download me-1"></i>下载
+                                            </a>
+                                            <button class="btn btn-sm btn-outline-info" 
+                                                    onclick="previewFile('{{ project_name }}', 'step1_download', '{{ file.name }}')">
+                                                <i class="fas fa-eye me-1"></i>预览
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted">暂无文件</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- 步骤2：转录 -->
+                    <div class="step-card">
+                        <div class="step-header mb-3">
+                            <h6 class="mb-0">
+                                <i class="fas fa-microphone me-2 text-info"></i>
+                                步骤2：语音转录
+                            </h6>
+                            <span class="badge badge-step bg-info">step2_transcribe</span>
+                        </div>
+                        <div class="file-list">
+                            {% if steps_data.get('step2_transcribe') %}
+                                {% for file in steps_data.step2_transcribe %}
+                                    {% if not file.get('is_directory') %}
+                                    <div class="file-item">
+                                        <div class="file-name">
+                                            <i class="fas fa-file me-2"></i>{{ file.name }}
+                                        </div>
+                                        <div class="file-meta">
+                                            <span class="me-3">大小: {{ (file.size / 1024) | round(2) }} KB</span>
+                                            <span>修改时间: {{ file.modified_time[:19] }}</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <a href="/api/download/{{ project_name }}/step2_transcribe/{{ file.name }}" 
+                                               class="btn btn-sm btn-outline-primary me-2" target="_blank">
+                                                <i class="fas fa-download me-1"></i>下载
+                                            </a>
+                                            <button class="btn btn-sm btn-outline-info" 
+                                                    onclick="previewFile('{{ project_name }}', 'step2_transcribe', '{{ file.name }}')">
+                                                <i class="fas fa-eye me-1"></i>预览
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted">暂无文件</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- 步骤3：截图 -->
+                    <div class="step-card">
+                        <div class="step-header mb-3">
+                            <h6 class="mb-0">
+                                <i class="fas fa-camera me-2 text-warning"></i>
+                                步骤3：提取截图
+                            </h6>
+                            <span class="badge badge-step bg-warning">step3_screenshots</span>
+                        </div>
+                        <div class="file-list">
+                            {% if steps_data.get('step3_screenshots') %}
+                                {% for file in steps_data.step3_screenshots %}
+                                    {% if file.get('is_directory') %}
+                                        <div class="file-item">
+                                            <div class="file-name">
+                                                <i class="fas fa-folder me-2"></i>{{ file.name }}
+                                                <span class="badge bg-secondary ms-2">{{ file.file_count }} 个文件</span>
+                                            </div>
+                                            <div class="mt-2">
+                                                <button class="btn btn-sm btn-outline-primary" 
+                                                        onclick="toggleDirectory('{{ file.name }}')">
+                                                    <i class="fas fa-chevron-down me-1"></i>展开
+                                                </button>
+                                            </div>
+                                            <div id="dir-{{ file.name }}" class="mt-2" style="display: none;">
+                                                {% for subfile in file.files %}
+                                                <div class="file-item ms-4">
+                                                    <div class="file-name">
+                                                        <i class="fas fa-image me-2"></i>{{ subfile.name }}
+                                                    </div>
+                                                    <div class="file-meta">
+                                                        <span>大小: {{ (subfile.size / 1024) | round(2) }} KB</span>
+                                                    </div>
+                                                    <div class="mt-2">
+                                                        <a href="/api/download/{{ project_name }}/step3_screenshots/{{ file.name }}/{{ subfile.name }}" 
+                                                           class="btn btn-sm btn-outline-primary" target="_blank">
+                                                            <i class="fas fa-download me-1"></i>下载
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% elif not file.get('is_directory') %}
+                                    <div class="file-item">
+                                        <div class="file-name">
+                                            <i class="fas fa-file me-2"></i>{{ file.name }}
+                                        </div>
+                                        <div class="file-meta">
+                                            <span class="me-3">大小: {{ (file.size / 1024) | round(2) }} KB</span>
+                                            <span>修改时间: {{ file.modified_time[:19] }}</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <a href="/api/download/{{ project_name }}/step3_screenshots/{{ file.name }}" 
+                                               class="btn btn-sm btn-outline-primary me-2" target="_blank">
+                                                <i class="fas fa-download me-1"></i>下载
+                                            </a>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted">暂无文件</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- 步骤4：Markdown -->
+                    <div class="step-card">
+                        <div class="step-header mb-3">
+                            <h6 class="mb-0">
+                                <i class="fas fa-file-alt me-2 text-success"></i>
+                                步骤4：生成Markdown文章
+                            </h6>
+                            <span class="badge badge-step bg-success">step4_markdown</span>
+                        </div>
+                        <div class="file-list">
+                            {% if steps_data.get('step4_markdown') %}
+                                {% for file in steps_data.step4_markdown %}
+                                    {% if not file.get('is_directory') %}
+                                    <div class="file-item">
+                                        <div class="file-name">
+                                            <i class="fas fa-file-alt me-2"></i>{{ file.name }}
+                                        </div>
+                                        <div class="file-meta">
+                                            <span class="me-3">大小: {{ (file.size / 1024) | round(2) }} KB</span>
+                                            <span>修改时间: {{ file.modified_time[:19] }}</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <a href="/api/download/{{ project_name }}/step4_markdown/{{ file.name }}" 
+                                               class="btn btn-sm btn-outline-primary me-2" target="_blank">
+                                                <i class="fas fa-download me-1"></i>下载
+                                            </a>
+                                            <button class="btn btn-sm btn-outline-info" 
+                                                    onclick="previewFile('{{ project_name }}', 'step4_markdown', '{{ file.name }}')">
+                                                <i class="fas fa-eye me-1"></i>预览
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted">暂无文件</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- 步骤5：Prompt -->
+                    <div class="step-card">
+                        <div class="step-header mb-3">
+                            <h6 class="mb-0">
+                                <i class="fas fa-robot me-2 text-secondary"></i>
+                                步骤5：生成优化Prompt
+                            </h6>
+                            <span class="badge badge-step bg-secondary">step5_prompt</span>
+                        </div>
+                        <div class="file-list">
+                            {% if steps_data.get('step5_prompt') %}
+                                {% for file in steps_data.step5_prompt %}
+                                    {% if not file.get('is_directory') %}
+                                    <div class="file-item">
+                                        <div class="file-name">
+                                            <i class="fas fa-file me-2"></i>{{ file.name }}
+                                        </div>
+                                        <div class="file-meta">
+                                            <span class="me-3">大小: {{ (file.size / 1024) | round(2) }} KB</span>
+                                            <span>修改时间: {{ file.modified_time[:19] }}</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <a href="/api/download/{{ project_name }}/step5_prompt/{{ file.name }}" 
+                                               class="btn btn-sm btn-outline-primary me-2" target="_blank">
+                                                <i class="fas fa-download me-1"></i>下载
+                                            </a>
+                                            <button class="btn btn-sm btn-outline-info" 
+                                                    onclick="previewFile('{{ project_name }}', 'step5_prompt', '{{ file.name }}')">
+                                                <i class="fas fa-eye me-1"></i>预览
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted">暂无文件</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="row mt-4 mb-4">
+        <div class="col-12">
+            <div class="d-flex gap-2">
+                <a href="/" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>返回首页
+                </a>
+                <a href="/step6/{{ project_name }}" class="btn btn-primary">
+                    <i class="fas fa-paper-plane me-2"></i>发布到知乎
+                </a>
+                <a href="/api/logs/export/{{ project_name }}" class="btn btn-outline-info">
+                    <i class="fas fa-download me-2"></i>导出日志
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 文件预览模态框 -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-eye me-2"></i>文件预览
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="previewContent">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">加载中...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function previewFile(projectName, stepName, fileName) {
+    const modal = new bootstrap.Modal(document.getElementById('previewModal'));
+    const contentDiv = document.getElementById('previewContent');
+    
+    contentDiv.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">加载中...</span></div></div>';
+    modal.show();
+    
+    fetch(`/api/file_preview/${projectName}/${stepName}/${encodeURIComponent(fileName)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.file_type === '.md' || data.file_type === '.txt' || data.file_type === '.srt') {
+                    contentDiv.innerHTML = `<pre class="bg-light p-3 rounded">${escapeHtml(data.content)}</pre>`;
+                } else if (data.file_type === '.json') {
+                    try {
+                        const json = JSON.parse(data.content);
+                        contentDiv.innerHTML = `<pre class="bg-light p-3 rounded">${escapeHtml(JSON.stringify(json, null, 2))}</pre>`;
+                    } catch (e) {
+                        contentDiv.innerHTML = `<pre class="bg-light p-3 rounded">${escapeHtml(data.content)}</pre>`;
+                    }
+                } else {
+                    contentDiv.innerHTML = `<p class="text-muted">${data.content}</p>`;
+                }
+            } else {
+                contentDiv.innerHTML = `<div class="alert alert-danger">${data.error || '预览失败'}</div>`;
+            }
+        })
+        .catch(error => {
+            contentDiv.innerHTML = `<div class="alert alert-danger">预览失败: ${error}</div>`;
+        });
+}
+
+function toggleDirectory(dirName) {
+    const dirDiv = document.getElementById(`dir-${dirName}`);
+    const btn = event.target.closest('button');
+    
+    if (dirDiv.style.display === 'none') {
+        dirDiv.style.display = 'block';
+        btn.innerHTML = '<i class="fas fa-chevron-up me-1"></i>收起';
+    } else {
+        dirDiv.style.display = 'none';
+        btn.innerHTML = '<i class="fas fa-chevron-down me-1"></i>展开';
+    }
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+</script>
+{% endblock %}
+
