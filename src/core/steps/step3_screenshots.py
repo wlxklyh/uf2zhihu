@@ -9,6 +9,7 @@ import json
 import sys
 import time
 import traceback
+import math
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import List, Dict, Tuple, Optional
@@ -33,7 +34,12 @@ class VideoScreenshot:
         self.config = config
         self.logger = logger
         self.time_offsets = self._parse_time_offsets()
-        self.max_workers = self.config.get_int('step3_screenshots', 'max_workers', 4)
+        
+        # 动态计算默认max_workers
+        cpu_count = os.cpu_count() or 4
+        default_max_workers = max(4, math.ceil(cpu_count * 1.5))
+        self.max_workers = self.config.get_int('step3_screenshots', 'max_workers', default_max_workers)
+        
         self.batch_size = self.config.get_int('step3_screenshots', 'batch_size', 50)
         self.enable_deduplication = self.config.get_boolean('step3_screenshots', 'enable_deduplication', True)
         self.phash_threshold = self.config.get_int('step3_screenshots', 'phash_threshold', 10)
@@ -321,11 +327,14 @@ class VideoScreenshot:
             # 构建ffmpeg命令
             cmd = [
                 'ffmpeg',
+                '-loglevel', 'error',   # 只输出错误信息，减少日志开销
                 '-ss', str(timestamp),  # 跳转到指定时间
                 '-i', video_path,       # 输入视频
+                '-vsync', '0',          # 禁用帧同步，加速单帧提取
                 '-frames:v', '1',       # 只提取一帧
                 '-q:v', str(100 - image_quality),  # 图片质量
                 '-s', resolution,       # 分辨率
+                '-threads', '1',        # 单线程，避免多实例线程竞争
                 '-y',                   # 覆盖输出文件
                 output_path
             ]
@@ -362,6 +371,27 @@ class VideoScreenshot:
         except Exception:
             return [0.0]
     
+    def _compute_single_phash(self, img_path: str) -> Optional[str]:
+        """
+        计算单张图片的pHash
+        
+        Args:
+            img_path: 图片文件路径
+            
+        Returns:
+            Optional[str]: pHash字符串，失败返回None
+        """
+        try:
+            if os.path.exists(img_path):
+                img = Image.open(img_path)
+                hash_val = imagehash.phash(img)
+                img.close()
+                return str(hash_val)
+            else:
+                return None
+        except Exception as e:
+            return None
+    
     def _deduplicate_screenshots(self, screenshots_dir: str, screenshot_info: List[Dict]) -> Dict:
         """
         对提取的截图进行去重处理（相似度累积检测）
@@ -380,28 +410,39 @@ class VideoScreenshot:
         duplicate_count = 0
         deleted_files = 0
         
-        self.logger.info(f"[去重] 开始计算pHash，共 {total_count} 个截图条目")
+        self.logger.info(f"[去重] 开始计算pHash，共 {total_count} 个截图条目（并行处理）")
         
-        # 1. 计算所有截图的pHash
-        hashes = []
-        for i, info in enumerate(screenshot_info):
-            try:
-                img_path = info['path']
-                if os.path.exists(img_path):
-                    img = Image.open(img_path)
-                    hash_val = imagehash.phash(img)
-                    info['phash'] = str(hash_val)
-                    hashes.append(hash_val)
-                    img.close()
-                else:
-                    self.logger.warning(f"[去重] 截图文件不存在: {img_path}")
-                    hashes.append(None)
-            except Exception as e:
-                self.logger.warning(f"[去重] 计算pHash失败 {info['filename']}: {str(e)}")
-                hashes.append(None)
+        # 1. 并行计算所有截图的pHash
+        hashes = [None] * total_count
+        completed_hash_count = 0
+        
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            future_to_index = {
+                executor.submit(self._compute_single_phash, info['path']): i 
+                for i, info in enumerate(screenshot_info)
+            }
             
-            if (i + 1) % self.batch_size == 0:
-                self.logger.info(f"[去重] pHash计算进度: {i + 1}/{total_count}")
+            for future in as_completed(future_to_index):
+                idx = future_to_index[future]
+                try:
+                    hash_str = future.result()
+                    if hash_str:
+                        hash_val = imagehash.hex_to_hash(hash_str)
+                        screenshot_info[idx]['phash'] = hash_str
+                        hashes[idx] = hash_val
+                    else:
+                        if os.path.exists(screenshot_info[idx]['path']):
+                            self.logger.warning(f"[去重] 计算pHash失败 {screenshot_info[idx]['filename']}")
+                        else:
+                            self.logger.warning(f"[去重] 截图文件不存在: {screenshot_info[idx]['path']}")
+                        hashes[idx] = None
+                except Exception as e:
+                    self.logger.warning(f"[去重] 计算pHash异常 {screenshot_info[idx]['filename']}: {str(e)}")
+                    hashes[idx] = None
+                
+                completed_hash_count += 1
+                if completed_hash_count % self.batch_size == 0:
+                    self.logger.info(f"[去重] pHash计算进度: {completed_hash_count}/{total_count}")
         
         self.logger.info(f"[去重] pHash计算完成，开始去重检测（阈值={self.phash_threshold}）")
         
