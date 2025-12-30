@@ -30,15 +30,14 @@ from src.utils.logger import Logger
 from src.utils.validator import Validator
 from src.utils.file_manager import FileManager
 from src.utils.cache_manager import CacheManager
+from src.core.steps.base_downloader import BaseVideoDownloader
 
-class YouTubeDownloader:
+class YouTubeDownloader(BaseVideoDownloader):
     def __init__(self, config: Config, logger: Logger, progress_callback: Optional[Callable] = None):
-        self.config = config
-        self.logger = logger
+        super().__init__(config, logger, progress_callback)
         self.output_dir = None
         self.cache_manager = CacheManager(config, logger)
         self.enable_cache = config.get_boolean('basic', 'enable_cache', True)
-        self.progress_callback = progress_callback
         self.last_progress_time = None
         self.download_start_time = None
     

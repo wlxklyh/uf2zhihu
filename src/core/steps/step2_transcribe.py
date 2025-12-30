@@ -38,6 +38,7 @@ class AudioTranscriber:
         self.video_duration = None
         self.progress_callback = None
         self.timeout_occurred = False  # 超时标志
+        self.current_language = 'en'  # 新增：当前使用的语言
     
     def _calculate_estimated_progress(self) -> Dict:
         """
@@ -127,7 +128,7 @@ class AudioTranscriber:
             'processed': format_duration(processed_duration),
             'total': format_duration(self.video_duration),
             'model': self.config.get('step2_transcribe', 'model', 'base'),
-            'language': self.config.get('step2_transcribe', 'language', 'en')
+            'language': self.current_language
         }
     
     def _progress_monitor_loop(self) -> None:
@@ -231,6 +232,31 @@ class AudioTranscriber:
             self.monitor_thread = None
             self.stop_monitor = None
         
+    def _get_subtitle_filename(self, language: str) -> str:
+        """
+        根据语言获取字幕文件名
+        
+        Args:
+            language: 语言代码 ('zh', 'en' 等)
+            
+        Returns:
+            str: 字幕文件名
+        """
+        # 语言映射
+        language_map = {
+            'zh': 'chinese',
+            'en': 'english',
+            'ja': 'japanese',
+            'ko': 'korean',
+            'fr': 'french',
+            'de': 'german',
+            'es': 'spanish'
+        }
+        
+        # 获取语言名称，默认使用语言代码本身
+        lang_name = language_map.get(language, language)
+        return f'{lang_name}_subtitles.srt'
+    
     def load_model(self) -> bool:
         """加载Whisper模型"""
         try:
@@ -251,14 +277,15 @@ class AudioTranscriber:
             self.logger.error(f"Whisper模型加载失败: {str(e)}")
             return False
         
-    def transcribe_video(self, video_path: str, output_dir: str, youtube_url: Optional[str] = None) -> Dict:
+    def transcribe_video(self, video_path: str, output_dir: str, youtube_url: Optional[str] = None, language: str = 'en') -> Dict:
         """
-        转录视频音频为英文字幕
+        转录视频音频为字幕
         
         Args:
             video_path: 视频文件路径
             output_dir: 输出目录
-            youtube_url: YouTube视频URL（可选，用于缓存功能）
+            youtube_url: YouTube/Bilibili视频URL（可选，用于缓存功能）
+            language: 语音识别语言代码（默认: en）新增参数
             
         Returns:
             Dict: 转录结果信息
@@ -267,11 +294,14 @@ class AudioTranscriber:
         self.logger.info(f"[步骤2开始] 语音转录")
         self.logger.info(f"视频文件: {os.path.basename(video_path)}")
         self.logger.info(f"输出目录: {output_dir}")
+        self.logger.info(f"识别语言: {language}")
         self.logger.info("=" * 60)
         
         transcribe_start_time = time.time()
         
         try:
+            # 保存当前语言到实例变量
+            self.current_language = language
             # 标准化路径
             self.logger.info("[准备] 正在标准化文件路径...")
             video_path = os.path.abspath(video_path)
@@ -297,17 +327,19 @@ class AudioTranscriber:
             
             # 检查缓存（如果提供了youtube_url且启用了缓存）
             if youtube_url and self.enable_cache:
-                self.logger.info("检查英文字幕缓存...")
-                cached_result = self.cache_manager.get_cached_english_subtitles(youtube_url)
+                lang_name = {'zh': '中文', 'en': '英文', 'ja': '日文', 'ko': '韩文'}.get(self.current_language, self.current_language)
+                self.logger.info(f"检查{lang_name}字幕缓存...")
+                cached_result = self.cache_manager.get_cached_subtitles(youtube_url, self.current_language)
                 if cached_result:
                     cached_srt_path, cached_info = cached_result
-                    self.logger.success("找到缓存的英文字幕，直接使用")
+                    self.logger.success(f"找到缓存的{lang_name}字幕，直接使用")
                     
                     # 创建输出目录
                     os.makedirs(output_dir, exist_ok=True)
                     
-                    # 复制缓存文件到输出目录
-                    output_srt = os.path.join(output_dir, 'english_subtitles.srt')
+                    # 复制缓存文件到输出目录（使用动态文件名）
+                    subtitle_filename = self._get_subtitle_filename(self.current_language)
+                    output_srt = os.path.join(output_dir, subtitle_filename)
                     shutil.copy2(cached_srt_path, output_srt)
                     self.logger.info(f"从缓存复制字幕: {os.path.basename(output_srt)}")
                     
@@ -353,19 +385,23 @@ class AudioTranscriber:
                 self._start_progress_monitor(video_duration, self.progress_callback)
             
             try:
-                # 获取配置
-                language = self.config.get('step2_transcribe', 'language', 'en')
+                # 使用传入的language参数，不再从配置文件读取
                 use_fp16 = self.config.get_boolean('step2_transcribe', 'use_fp16', False)
                 precision_mode = 'FP16' if use_fp16 else 'FP32'
                 
-                # 执行转录
-                self.logger.info(f"开始执行 Whisper 转录，语言: {language}, 精度: {precision_mode}")
+                # 根据语言决定是否启用单词级时间戳
+                # 非英语语言禁用 word_timestamps 以避免兼容性问题
+                enable_word_timestamps = (language == 'en')
+                timestamp_mode = '单词级' if enable_word_timestamps else '句子级'
+                
+                # 执行转录（使用传入的language参数）
+                self.logger.info(f"开始执行 Whisper 转录，语言: {language}, 精度: {precision_mode}, 时间戳: {timestamp_mode}")
                 try:
                     result = self.model.transcribe(
                         video_path,
                         language=language,
                         verbose=False,  # 避免输出阻塞
-                        word_timestamps=True,  # 包含单词级时间戳
+                        word_timestamps=enable_word_timestamps,  # 根据语言条件启用
                         fp16=use_fp16
                     )
                     self.logger.info("Whisper 转录完成")
@@ -382,8 +418,9 @@ class AudioTranscriber:
                     self.timeout_occurred = False  # 重置标志
                     raise Exception("语音转录超时，请尝试使用更快的模型或更短的视频")
             
-            # 保存SRT格式字幕
-            srt_path = os.path.join(output_dir, 'english_subtitles.srt')
+            # 保存SRT格式字幕（使用动态文件名）
+            subtitle_filename = self._get_subtitle_filename(self.current_language)
+            srt_path = os.path.join(output_dir, subtitle_filename)
             self._save_srt(result, srt_path)
             
             # 保存原始转录结果
@@ -443,12 +480,13 @@ class AudioTranscriber:
             if youtube_url and self.enable_cache:
                 self.logger.info("保存转录结果到缓存...")
                 try:
-                    self.cache_manager.cache_english_subtitles(youtube_url, srt_path, transcribe_stats)
+                    self.cache_manager.cache_subtitles(youtube_url, srt_path, transcribe_stats, self.current_language)
                     
                     # 同时缓存原始转录结果
                     cache_key = self.cache_manager._get_url_hash(youtube_url)
+                    cache_dir = self.cache_manager._get_subtitle_cache_dir(self.current_language)
                     cache_raw_result_path = os.path.join(
-                        self.cache_manager.subtitles_en_cache,
+                        cache_dir,
                         f"{cache_key}_raw_result.json"
                     )
                     shutil.copy2(raw_result_path, cache_raw_result_path)

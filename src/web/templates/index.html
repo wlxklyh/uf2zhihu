@@ -85,6 +85,22 @@
                                                 <option value="large">Large (最准确)</option>
                                             </select>
                                         </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">语音识别语言</label>
+                                            <select class="form-select" id="transcribeLanguage">
+                                                <option value="en" selected>英语 (English)</option>
+                                                <option value="zh">中文 (Chinese)</option>
+                                                <option value="ja">日语 (Japanese)</option>
+                                                <option value="ko">韩语 (Korean)</option>
+                                                <option value="fr">法语 (French)</option>
+                                                <option value="de">德语 (German)</option>
+                                                <option value="es">西班牙语 (Spanish)</option>
+                                                <option value="ru">俄语 (Russian)</option>
+                                            </select>
+                                            <div class="form-text">
+                                                Whisper将使用此语言进行语音转录
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -501,8 +517,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        if (!youtubeUrl.includes('youtube.com') && !youtubeUrl.includes('youtu.be')) {
-            showAlert('请输入有效的YouTube链接', 'warning');
+        if (!youtubeUrl.includes('youtube.com') && !youtubeUrl.includes('youtu.be') && 
+            !youtubeUrl.includes('bilibili.com') && !youtubeUrl.includes('b23.tv')) {
+            showAlert('请输入有效的视频链接（支持YouTube和Bilibili）', 'warning');
             return;
         }
         
@@ -516,7 +533,8 @@ document.addEventListener('DOMContentLoaded', function() {
             config: {
                 time_offsets: document.getElementById('timeOffsets').value,
                 video_quality: document.getElementById('videoQuality').value,
-                whisper_model: document.getElementById('whisperModel').value
+                whisper_model: document.getElementById('whisperModel').value,
+                transcribe_language: document.getElementById('transcribeLanguage').value
             }
         };
         

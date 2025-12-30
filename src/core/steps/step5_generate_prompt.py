@@ -23,7 +23,18 @@ class PromptGenerator:
     def __init__(self, config: Config, logger: Logger):
         self.config = config
         self.logger = logger
+        self.language = 'en'  # 默认英文
         self.templates_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../config/templates'))
+    
+    def set_language(self, language: str):
+        """
+        设置语言
+        
+        Args:
+            language: 语言代码 ('zh', 'en' 等)
+        """
+        self.language = language
+        self.logger.info(f"Prompt生成器语言设置为: {language}")
 
     def _scan_template_files(self) -> List[Dict]:
         """

@@ -46,30 +46,45 @@ class YouTubeToArticleProcessor:
         self.download_progress_callback = download_progress_callback
         self.transcribe_progress_callback = transcribe_progress_callback
     
-    def start_async_process(self, youtube_url: str, project_name: str) -> Dict:
-        """异步开始处理流程"""
+    def start_async_process(self, youtube_url: str, project_name: str, process_config: Dict = None) -> Dict:
+        """
+        异步开始处理流程
+        
+        Args:
+            youtube_url: 视频URL（支持YouTube和Bilibili）
+            project_name: 项目名称
+            process_config: 处理配置 {
+                'transcribe_language': str,  # 语音识别语言
+                'whisper_model': str  # Whisper模型
+            }
+        """
         try:
+            # 默认配置
+            if process_config is None:
+                process_config = {}
+            
             # 创建项目目录
             project_path = self.file_manager.create_project_directory(project_name)
             actual_project_name = os.path.basename(project_path)
             
-            # 保存项目信息
+            # 保存项目信息（包含配置）
             project_info = {
                 'youtube_url': youtube_url,
                 'project_name': project_name,
                 'actual_project_name': actual_project_name,
                 'created_time': datetime.now().isoformat(),
                 'status': 'started',
-                'current_step': 1
+                'current_step': 1,
+                'config': process_config  # 新增：保存配置
             }
             
             self.file_manager.update_project_summary(project_path, project_info)
             self.current_project = actual_project_name
             
-            # 在后台线程中开始处理
+            # 在后台线程中开始处理（传入配置）
             processing_thread = threading.Thread(
                 target=self._process_video,
-                args=(youtube_url, project_path),
+                args=(youtube_url, project_path, process_config),
                 daemon=True
             )
             processing_thread.start()
@@ -91,16 +106,24 @@ class YouTubeToArticleProcessor:
                 'message': f'启动处理失败: {str(e)}'
             }
     
-    def _process_video(self, youtube_url: str, project_path: str):
-        """后台处理视频的主流程"""
+    def _process_video(self, youtube_url: str, project_path: str, process_config: Dict):
+        """
+        后台处理视频的主流程
+        
+        Args:
+            youtube_url: 视频URL
+            project_path: 项目路径
+            process_config: 处理配置
+        """
         try:
             self.is_processing = True
             project_name = os.path.basename(project_path)
             
             self.logger.info(f"开始处理项目: {project_name}")
+            self.logger.info(f"配置: {process_config}")
             self._send_progress_update(1, 0, "开始处理...")
             
-            # 步骤1: 下载YouTube视频
+            # 步骤1: 下载视频（使用工厂创建下载器）
             step1_result = self._execute_step1(youtube_url, project_path)
             if not step1_result:
                 self._send_step_complete(1, False, "步骤1失败: YouTube视频下载")
@@ -124,8 +147,9 @@ class YouTubeToArticleProcessor:
             video_file = os.path.join(step1_dir, video_files[0])
             self.logger.info(f"找到视频文件: {video_file}")
             
-            # 步骤2: 语音转录
-            success = self._execute_step2(video_file, project_path, youtube_url)
+            # 步骤2: 语音转录（传递语言配置）
+            transcribe_language = process_config.get('transcribe_language', 'en')
+            success = self._execute_step2(video_file, project_path, youtube_url, transcribe_language)
             if not success:
                 self._send_step_complete(2, False, "步骤2失败: 语音转录")
                 return
@@ -134,7 +158,7 @@ class YouTubeToArticleProcessor:
             self._update_project_status(project_path, 3, "step2_completed")
             
             # 步骤3: 提取截图（优化版 - 并行处理，仅0s截图）
-            success = self._execute_step3(video_file, project_path)
+            success = self._execute_step3(video_file, project_path, transcribe_language)
             if not success:
                 self._send_step_complete(3, False, "步骤3失败: 提取截图")
                 return
@@ -142,19 +166,21 @@ class YouTubeToArticleProcessor:
             self._send_step_complete(3, True, "步骤3完成: 提取截图（并行处理）")
             self._update_project_status(project_path, 4, "step3_completed")
             
-            # 步骤4: 生成英文Markdown（图文并茂）
-            success = self._execute_step4(project_path)
+            # 步骤4: 生成Markdown（图文并茂）- 根据语言选择模板
+            success = self._execute_step4(project_path, transcribe_language)
             if not success:
-                self._send_step_complete(4, False, "步骤4失败: 生成英文Markdown")
+                lang_name = {'zh': '中文', 'en': '英文'}.get(transcribe_language, transcribe_language)
+                self._send_step_complete(4, False, f"步骤4失败: 生成{lang_name}Markdown")
                 return
             
-            self._send_step_complete(4, True, "步骤4完成: 生成英文Markdown")
+            lang_name = {'zh': '中文', 'en': '英文'}.get(transcribe_language, transcribe_language)
+            self._send_step_complete(4, True, f"步骤4完成: 生成{lang_name}Markdown")
             self._update_project_status(project_path, 5, "step4_completed")
             
-            # 步骤5: 生成中文优化Prompt
-            success = self._execute_step5(project_path)
+            # 步骤5: 生成优化Prompt - 根据语言选择模板
+            success = self._execute_step5(project_path, transcribe_language)
             if not success:
-                self._send_step_complete(5, False, "步骤5失败: 生成中文Prompt")
+                self._send_step_complete(5, False, "步骤5失败: 生成Prompt")
                 return
             
             self._send_step_complete(5, True, "步骤5完成: 生成中文Prompt")
@@ -169,22 +195,29 @@ class YouTubeToArticleProcessor:
             self.is_processing = False
     
     def _execute_step1(self, youtube_url: str, project_path: str) -> bool:
-        """执行步骤1: YouTube视频下载"""
+        """执行步骤1: 视频下载（支持多平台）"""
         try:
-            self._send_progress_update(1, 10, "初始化下载器...")
+            self._send_progress_update(1, 10, "识别视频平台...")
             
-            # 定义下载进度回调函数
+            # 使用工厂创建下载器
+            from src.core.steps.downloader_factory import VideoDownloaderFactory
+            
             def download_progress_callback(progress_data: Dict):
                 """下载进度回调"""
                 self._send_download_progress(1, progress_data)
             
-            # 创建下载器，传入进度回调
-            downloader = YouTubeDownloader(self.config, self.logger, download_progress_callback)
+            # 创建对应平台的下载器
+            downloader = VideoDownloaderFactory.create_downloader(
+                youtube_url,
+                self.config,
+                self.logger,
+                download_progress_callback
+            )
             
             # 获取步骤1输出目录
             step1_dir = self.file_manager.get_step_directory(project_path, 'step1_download')
             
-            self._send_progress_update(1, 20, "开始下载YouTube视频...")
+            self._send_progress_update(1, 20, "开始下载视频...")
             
             # 执行下载
             result = downloader.download_video(youtube_url, step1_dir)
@@ -303,29 +336,44 @@ class YouTubeToArticleProcessor:
             self.logger.error(f"获取步骤状态失败: {str(e)}")
             return {'success': False, 'error': str(e)}
     
-    def _execute_step2(self, video_file: str, project_path: str, youtube_url: str) -> bool:
-        """执行步骤2: 语音转录"""
+    def _execute_step2(self, video_file: str, project_path: str, youtube_url: str, language: str = 'en') -> bool:
+        """
+        执行步骤2: 语音转录
+        
+        Args:
+            video_file: 视频文件路径
+            project_path: 项目路径
+            youtube_url: 视频URL
+            language: 语音识别语言代码（新增）
+        """
         try:
             self.logger.info(f"步骤2开始，视频文件: {video_file}")
-            self._send_progress_update(2, 10, "检查英文字幕缓存...")
+            self.logger.info(f"语音识别语言: {language}")
+            self._send_progress_update(2, 10, f"检查字幕缓存（语言: {language}）...")
             
             # 检查缓存
             if self.config.get_boolean('basic', 'enable_cache', True):
-                self.logger.info("缓存已启用，检查英文字幕缓存...")
-                cached_result = self.cache_manager.get_cached_english_subtitles(youtube_url)
+                lang_name = {'zh': '中文', 'en': '英文', 'ja': '日文', 'ko': '韩文'}.get(language, language)
+                self.logger.info(f"缓存已启用，检查{lang_name}字幕缓存...")
+                cached_result = self.cache_manager.get_cached_subtitles(youtube_url, language)
                 if cached_result:
-                    self.logger.info("找到缓存的英文字幕，直接使用")
+                    self.logger.info(f"找到缓存的{lang_name}字幕，直接使用")
                     cached_srt_path, cached_info = cached_result
                     step2_dir = self.file_manager.get_step_directory(project_path, 'step2_transcribe')
-                    output_srt = os.path.join(step2_dir, 'english_subtitles.srt')
+                    
+                    # 根据语言获取字幕文件名
+                    language_map = {'zh': 'chinese', 'en': 'english', 'ja': 'japanese', 'ko': 'korean'}
+                    lang_file_name = language_map.get(language, language)
+                    output_srt = os.path.join(step2_dir, f'{lang_file_name}_subtitles.srt')
                     
                     import shutil
+                    os.makedirs(step2_dir, exist_ok=True)
                     shutil.copy2(cached_srt_path, output_srt)
                     
-                    self._send_progress_update(2, 100, "使用缓存的英文字幕")
+                    self._send_progress_update(2, 100, f"使用缓存的{lang_name}字幕")
                     return True
                 else:
-                    self.logger.info("未找到缓存的英文字幕，需要进行转录")
+                    self.logger.info(f"未找到缓存的{lang_name}字幕，需要进行转录")
             
             self._send_progress_update(2, 20, "初始化Whisper模型...")
             
@@ -348,9 +396,9 @@ class YouTubeToArticleProcessor:
             
             self._send_progress_update(2, 30, "开始语音转录...")
             
-            # 执行转录
+            # 执行转录（传递语言参数）
             self.logger.info("调用transcriber.transcribe_video()...")
-            result = transcriber.transcribe_video(video_file, step2_dir, youtube_url)
+            result = transcriber.transcribe_video(video_file, step2_dir, youtube_url, language)
             
             self.logger.info(f"转录结果: success={result.get('success', False)}")
             
@@ -374,17 +422,28 @@ class YouTubeToArticleProcessor:
             return False
     
     
-    def _execute_step3(self, video_file: str, project_path: str) -> bool:
-        """执行步骤3: 提取截图"""
+    def _execute_step3(self, video_file: str, project_path: str, language: str = 'en') -> bool:
+        """
+        执行步骤3: 提取截图
+        
+        Args:
+            video_file: 视频文件路径
+            project_path: 项目路径
+            language: 语言代码 ('zh', 'en' 等)
+        """
         try:
             self._send_progress_update(3, 10, "初始化截图提取器...")
             
             # 创建截图提取器
             screenshot = VideoScreenshot(self.config, self.logger)
             
-            # 获取英文字幕文件
+            # 获取字幕文件（根据语言动态查找）
             step2_dir = self.file_manager.get_step_directory(project_path, 'step2_transcribe')
-            srt_file = os.path.join(step2_dir, 'english_subtitles.srt')
+            
+            # 根据语言获取字幕文件名
+            language_map = {'zh': 'chinese', 'en': 'english', 'ja': 'japanese', 'ko': 'korean'}
+            lang_name = language_map.get(language, language)
+            srt_file = os.path.join(step2_dir, f'{lang_name}_subtitles.srt')
             
             # 获取步骤3输出目录
             step3_dir = self.file_manager.get_step_directory(project_path, 'step3_screenshots')
@@ -404,17 +463,28 @@ class YouTubeToArticleProcessor:
             self.logger.error(f"步骤3执行异常: {str(e)}")
             return False
     
-    def _execute_step4(self, project_path: str) -> bool:
-        """执行步骤4: 生成英文Markdown文章（图文并茂）"""
+    def _execute_step4(self, project_path: str, language: str = 'en') -> bool:
+        """
+        执行步骤4: 生成Markdown文章（图文并茂）
+        
+        Args:
+            project_path: 项目路径
+            language: 语言代码 ('zh', 'en' 等)
+        """
         try:
             self._send_progress_update(4, 10, "初始化Markdown生成器...")
             
-            # 创建Markdown生成器
+            # 创建Markdown生成器（传入语言参数）
             generator = MarkdownGenerator(self.config, self.logger)
+            generator.set_language(language)
             
-            # 获取输入文件路径（使用英文字幕，不使用中文）
+            # 获取输入文件路径（使用动态字幕文件名）
             step2_dir = self.file_manager.get_step_directory(project_path, 'step2_transcribe')
-            srt_file = os.path.join(step2_dir, 'english_subtitles.srt')
+            
+            # 根据语言获取字幕文件名
+            language_map = {'zh': 'chinese', 'en': 'english', 'ja': 'japanese', 'ko': 'korean'}
+            lang_name = language_map.get(language, language)
+            srt_file = os.path.join(step2_dir, f'{lang_name}_subtitles.srt')
             
             step3_dir = self.file_manager.get_step_directory(project_path, 'step3_screenshots')
             screenshots_dir = os.path.join(step3_dir, 'screenshots')
@@ -441,13 +511,20 @@ class YouTubeToArticleProcessor:
             self.logger.error(f"步骤4执行异常: {str(e)}")
             return False
     
-    def _execute_step5(self, project_path: str) -> bool:
-        """执行步骤5: 生成Prompt文件（支持多模板）"""
+    def _execute_step5(self, project_path: str, language: str = 'en') -> bool:
+        """
+        执行步骤5: 生成Prompt文件（支持多模板）
+        
+        Args:
+            project_path: 项目路径
+            language: 语言代码 ('zh', 'en' 等)
+        """
         try:
             self._send_progress_update(5, 10, "初始化Prompt生成器...")
             
-            # 创建Prompt生成器
+            # 创建Prompt生成器（传入语言参数）
             generator = PromptGenerator(self.config, self.logger)
+            generator.set_language(language)
             
             # 获取输入文件路径
             step4_dir = self.file_manager.get_step_directory(project_path, 'step4_markdown')

@@ -24,11 +24,28 @@ class MarkdownGenerator:
         self.config = config
         self.logger = logger
         self.template = None
+        self.language = 'en'  # 默认英文
+        
+    def set_language(self, language: str):
+        """
+        设置语言
+        
+        Args:
+            language: 语言代码 ('zh', 'en' 等)
+        """
+        self.language = language
+        self.logger.info(f"Markdown生成器语言设置为: {language}")
         
     def load_template(self) -> bool:
-        """加载Markdown模板"""
+        """加载Markdown模板（根据语言自动选择）"""
         try:
-            template_file = self.config.get('step4_markdown', 'template_file', 'templates/markdown_template.md')
+            # 根据语言选择模板文件
+            if self.language == 'zh':
+                template_file = 'templates/markdown_template.md'  # 中文模板
+            else:
+                template_file = 'templates/markdown_template_en.md'  # 英文模板
+            
+            self.logger.info(f"根据语言({self.language})选择模板: {template_file}")
             template_path = os.path.join('config', template_file)
             
             if not os.path.exists(template_path):

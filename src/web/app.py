@@ -126,25 +126,40 @@ def register_routes(app: Flask):
             youtube_url = data.get('youtube_url', '').strip()
             project_name = data.get('project_name', '').strip()
             
+            # 新增：获取配置参数
+            config_data = data.get('config', {})
+            transcribe_language = config_data.get('transcribe_language', 'en')
+            whisper_model = config_data.get('whisper_model', 'base')
+            
             # 验证输入
             if not youtube_url:
                 return jsonify({
                     'success': False,
-                    'error': 'YouTube URL不能为空'
+                    'error': '视频URL不能为空'
                 }), 400
             
-            if not youtube_url.startswith(('https://www.youtube.com/', 'https://youtu.be/')):
+            # 修改：不限制为YouTube，支持多平台
+            if not (youtube_url.startswith('https://www.youtube.com/') or 
+                    youtube_url.startswith('https://youtu.be/') or
+                    youtube_url.startswith('https://www.bilibili.com/') or
+                    youtube_url.startswith('https://b23.tv/')):
                 return jsonify({
                     'success': False,
-                    'error': 'YouTube URL格式不正确'
+                    'error': '不支持的视频URL格式（仅支持YouTube和Bilibili）'
                 }), 400
             
             # 生成项目名称
             if not project_name:
-                project_name = f"youtube_video_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+                project_name = f"video_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             
-            # 使用处理器启动异步处理
-            result = processor.start_async_process(youtube_url, project_name)
+            # 新增：准备处理配置
+            process_config = {
+                'transcribe_language': transcribe_language,
+                'whisper_model': whisper_model
+            }
+            
+            # 使用处理器启动异步处理（传入配置）
+            result = processor.start_async_process(youtube_url, project_name, process_config)
             
             if not result['success']:
                 return jsonify(result), 500
