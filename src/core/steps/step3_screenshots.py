@@ -10,6 +10,8 @@ import sys
 import time
 import traceback
 import math
+import shutil
+import webbrowser
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import List, Dict, Tuple, Optional
@@ -44,6 +46,8 @@ class VideoScreenshot:
         self.enable_deduplication = self.config.get_boolean('step3_screenshots', 'enable_deduplication', True)
         self.phash_threshold = self.config.get_int('step3_screenshots', 'phash_threshold', 10)
         self.delete_duplicate_files = self.config.get_boolean('step3_screenshots', 'delete_duplicate_files', False)
+        self.generate_dedup_report = self.config.get_boolean('step3_screenshots', 'generate_dedup_report', True)
+        self.auto_open_dedup_report = self.config.get_boolean('step3_screenshots', 'auto_open_dedup_report', True)
         
     def check_ffmpeg(self) -> bool:
         """检查ffmpeg是否可用"""
@@ -488,15 +492,6 @@ class VideoScreenshot:
                     screenshot_info[i]['hamming_distance_to_root'] = int(distance_to_root)
                     screenshot_info[i]['reference_screenshot'] = screenshot_info[root_idx]['filename']
                     duplicate_count += 1
-                    
-                    # 可选：删除重复的截图文件
-                    if self.delete_duplicate_files:
-                        try:
-                            if os.path.exists(screenshot_info[i]['path']):
-                                os.remove(screenshot_info[i]['path'])
-                                deleted_files += 1
-                        except Exception as e:
-                            self.logger.warning(f"[去重] 删除重复文件失败: {str(e)}")
                 else:
                     # 与根节点差异太大，作为新原始
                     screenshot_info[i]['is_duplicate'] = False
@@ -524,15 +519,564 @@ class VideoScreenshot:
             'processing_time': dedup_elapsed
         }
         
-        self.logger.success(f"[去重] 去重完成:")
+        self.logger.success(f"[去重] 去重检测完成:")
         self.logger.info(f"  - 总截图数: {total_count}")
         self.logger.info(f"  - 重复截图: {duplicate_count} ({dedup_stats['duplicate_rate']:.1f}%)")
         self.logger.info(f"  - 唯一截图: {dedup_stats['unique_count']}")
-        if self.delete_duplicate_files:
-            self.logger.info(f"  - 删除文件: {deleted_files}")
         self.logger.info(f"  - 处理耗时: {dedup_elapsed:.2f}秒")
         
+        # 生成去重报告（如果启用）
+        if self.generate_dedup_report:
+            self.logger.info("[报告] 开始生成去重可视化报告...")
+            try:
+                report_dir = os.path.join(os.path.dirname(screenshots_dir), 'deduplication_report')
+                
+                # 拷贝截图文件
+                self.logger.info("[报告] 拷贝截图文件...")
+                images_dir, copied_count = self._copy_screenshots_for_report(screenshot_info, os.path.dirname(screenshots_dir))
+                self.logger.info(f"[报告] 已拷贝 {copied_count} 张截图")
+                
+                # 生成分组信息
+                groups = self._generate_dedup_groups(screenshot_info)
+                
+                # 生成HTML报告
+                html_path = self._generate_html_report(
+                    screenshot_info, 
+                    dedup_stats, 
+                    groups, 
+                    report_dir,
+                    './images'
+                )
+                
+                self.logger.success(f"[报告] HTML报告已生成: {html_path}")
+                
+                # 自动打开HTML（如果启用）
+                if self.auto_open_dedup_report:
+                    try:
+                        webbrowser.open('file://' + os.path.abspath(html_path))
+                        self.logger.info("[报告] 已在浏览器中打开报告")
+                    except Exception as e:
+                        self.logger.warning(f"[报告] 自动打开浏览器失败: {str(e)}")
+                
+                # 将报告信息添加到统计中
+                dedup_stats['report_generated'] = True
+                dedup_stats['report_path'] = html_path
+                dedup_stats['images_copied'] = copied_count
+                
+            except Exception as e:
+                self.logger.error(f"[报告] 生成报告失败: {str(e)}")
+                self.logger.error(f"[报告] 错误详情: {traceback.format_exc()}")
+                dedup_stats['report_generated'] = False
+                dedup_stats['report_error'] = str(e)
+        
+        # 删除重复文件（在生成报告之后）
+        if self.delete_duplicate_files:
+            self.logger.info("[清理] 开始删除重复截图文件...")
+            for info in screenshot_info:
+                if info.get('is_duplicate', False):
+                    try:
+                        if os.path.exists(info['path']):
+                            os.remove(info['path'])
+                            deleted_files += 1
+                    except Exception as e:
+                        self.logger.warning(f"[清理] 删除文件失败 {info['filename']}: {str(e)}")
+            
+            self.logger.info(f"[清理] 已删除 {deleted_files} 个重复文件")
+            dedup_stats['deleted_files'] = deleted_files
+        
         return dedup_stats
+    
+    def _copy_screenshots_for_report(self, screenshot_info: List[Dict], output_dir: str) -> Tuple[str, int]:
+        """
+        拷贝截图文件到报告目录
+        
+        Args:
+            screenshot_info: 截图信息列表
+            output_dir: step3输出目录
+            
+        Returns:
+            Tuple[str, int]: (图片目录路径, 成功拷贝的文件数)
+        """
+        # 创建报告目录结构
+        report_dir = os.path.join(output_dir, 'deduplication_report')
+        images_dir = os.path.join(report_dir, 'images')
+        os.makedirs(images_dir, exist_ok=True)
+        
+        # 准备拷贝任务
+        copy_tasks = []
+        for info in screenshot_info:
+            src_path = info['path']
+            if os.path.exists(src_path):
+                dst_path = os.path.join(images_dir, info['filename'])
+                copy_tasks.append((src_path, dst_path))
+        
+        # 并行拷贝文件
+        success_count = 0
+        failed_count = 0
+        
+        def copy_single_file(src: str, dst: str) -> bool:
+            try:
+                shutil.copy2(src, dst)
+                return True
+            except Exception as e:
+                return False
+        
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            futures = {executor.submit(copy_single_file, src, dst): (src, dst) for src, dst in copy_tasks}
+            
+            for future in as_completed(futures):
+                src, dst = futures[future]
+                try:
+                    if future.result():
+                        success_count += 1
+                    else:
+                        failed_count += 1
+                        self.logger.warning(f"[报告] 拷贝文件失败: {os.path.basename(src)}")
+                except Exception as e:
+                    failed_count += 1
+                    self.logger.warning(f"[报告] 拷贝文件异常: {os.path.basename(src)}, {str(e)}")
+        
+        if failed_count > 0:
+            self.logger.warning(f"[报告] 拷贝完成: 成功 {success_count}, 失败 {failed_count}")
+        
+        return images_dir, success_count
+    
+    def _generate_dedup_groups(self, screenshot_info: List[Dict]) -> Dict[int, List[int]]:
+        """
+        生成去重分组信息
+        
+        Args:
+            screenshot_info: 截图信息列表
+            
+        Returns:
+            Dict[int, List[int]]: 以根节点索引为key，成员索引列表为value
+        """
+        groups = {}
+        
+        for i, info in enumerate(screenshot_info):
+            if info.get('is_duplicate', False):
+                root_idx = info.get('duplicate_of_index')
+            else:
+                root_idx = i
+            
+            if root_idx not in groups:
+                groups[root_idx] = []
+            groups[root_idx].append(i)
+        
+        # 只保留有重复的组（成员数>1）
+        duplicate_groups = {k: v for k, v in groups.items() if len(v) > 1}
+        
+        return duplicate_groups
+    
+    def _generate_html_report(self, screenshot_info: List[Dict], dedup_stats: Dict, 
+                             groups: Dict[int, List[int]], report_dir: str, 
+                             images_rel_path: str) -> str:
+        """
+        生成HTML可视化报告
+        
+        Args:
+            screenshot_info: 截图信息列表
+            dedup_stats: 去重统计信息
+            groups: 重复组信息
+            report_dir: 报告目录路径
+            images_rel_path: 图片相对路径（相对于HTML文件）
+            
+        Returns:
+            str: HTML文件路径
+        """
+        html_content = f"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>截图去重分析报告</title>
+    <style>
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+        
+        body {{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }}
+        
+        .container {{
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }}
+        
+        header {{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }}
+        
+        header h1 {{
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }}
+        
+        header p {{
+            font-size: 1.1em;
+            opacity: 0.9;
+        }}
+        
+        .summary {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }}
+        
+        .stat-card {{
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }}
+        
+        .stat-card h3 {{
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }}
+        
+        .stat-card p {{
+            color: #666;
+            font-size: 0.9em;
+        }}
+        
+        .content {{
+            padding: 30px;
+        }}
+        
+        .section {{
+            margin-bottom: 40px;
+        }}
+        
+        .section h2 {{
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }}
+        
+        .screenshots-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }}
+        
+        .screenshot-card {{
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 3px solid transparent;
+        }}
+        
+        .screenshot-card:hover {{
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }}
+        
+        .screenshot-card.unique {{
+            border-color: #28a745;
+        }}
+        
+        .screenshot-card.duplicate {{
+            border-color: #ffc107;
+        }}
+        
+        .screenshot-card img {{
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }}
+        
+        .screenshot-info {{
+            padding: 15px;
+        }}
+        
+        .screenshot-info .index {{
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }}
+        
+        .screenshot-info .filename {{
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }}
+        
+        .screenshot-info .status {{
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }}
+        
+        .status.unique {{
+            background: #28a745;
+            color: white;
+        }}
+        
+        .status.duplicate {{
+            background: #ffc107;
+            color: #333;
+        }}
+        
+        .screenshot-info .detail {{
+            font-size: 0.85em;
+            color: #666;
+            margin: 3px 0;
+        }}
+        
+        .screenshot-info .reference {{
+            color: #667eea;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: underline;
+        }}
+        
+        .groups-section {{
+            margin-top: 30px;
+        }}
+        
+        .group-card {{
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }}
+        
+        .group-card h3 {{
+            color: #667eea;
+            margin-bottom: 10px;
+        }}
+        
+        .group-members {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }}
+        
+        .member-tag {{
+            background: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }}
+        
+        .member-tag.root {{
+            background: #28a745;
+            color: white;
+            font-weight: bold;
+        }}
+        
+        .legend {{
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }}
+        
+        .legend-item {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+        
+        .legend-color {{
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }}
+        
+        .legend-color.unique {{
+            background: #28a745;
+        }}
+        
+        .legend-color.duplicate {{
+            background: #ffc107;
+        }}
+        
+        footer {{
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>截图去重分析报告</h1>
+            <p>相似度累积检测算法（方案C）</p>
+            <p>生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+        </header>
+        
+        <div class="summary">
+            <div class="stat-card">
+                <h3>{dedup_stats['total_screenshots']}</h3>
+                <p>总截图数</p>
+            </div>
+            <div class="stat-card">
+                <h3>{dedup_stats['unique_count']}</h3>
+                <p>唯一截图 ({100 - dedup_stats['duplicate_rate']:.1f}%)</p>
+            </div>
+            <div class="stat-card">
+                <h3>{dedup_stats['duplicate_count']}</h3>
+                <p>重复截图 ({dedup_stats['duplicate_rate']:.1f}%)</p>
+            </div>
+            <div class="stat-card">
+                <h3>{dedup_stats['threshold']}</h3>
+                <p>汉明距离阈值</p>
+            </div>
+            <div class="stat-card">
+                <h3>{len(groups)}</h3>
+                <p>重复组数</p>
+            </div>
+            <div class="stat-card">
+                <h3>{max([len(v) for v in groups.values()]) if groups else 0}</h3>
+                <p>最大组大小</p>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>截图详情</h2>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color unique"></div>
+                        <span>唯一截图</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color duplicate"></div>
+                        <span>重复截图</span>
+                    </div>
+                </div>
+                
+                <div class="screenshots-grid">
+"""
+        
+        # 添加每张截图的卡片
+        for i, info in enumerate(screenshot_info):
+            card_class = "duplicate" if info.get('is_duplicate', False) else "unique"
+            status_class = "duplicate" if info.get('is_duplicate', False) else "unique"
+            status_text = "重复" if info.get('is_duplicate', False) else "唯一"
+            
+            # 使用相对路径
+            img_path = f"{images_rel_path}/{info['filename']}"
+            
+            html_content += f"""
+                    <div class="screenshot-card {card_class}" id="screenshot-{i}">
+                        <img src="{img_path}" alt="{info['filename']}" loading="lazy">
+                        <div class="screenshot-info">
+                            <div class="index">#{i:03d}</div>
+                            <div class="filename">{info['filename']}</div>
+                            <div class="status {status_class}">{status_text}</div>
+"""
+            
+            if info.get('is_duplicate', False):
+                ref_idx = info.get('duplicate_of_index')
+                html_content += f"""
+                            <div class="detail">引用: <span class="reference" onclick="location.hash='screenshot-{ref_idx}'">#{ref_idx:03d}</span></div>
+                            <div class="detail">汉明距离: {info.get('hamming_distance', 'N/A')}</div>
+                            <div class="detail">与根节点距离: {info.get('hamming_distance_to_root', 'N/A')}</div>
+"""
+            else:
+                phash_str = info.get('phash', 'N/A')
+                phash_display = phash_str[:16] + '...' if phash_str and phash_str != 'N/A' else 'N/A'
+                html_content += f"""
+                            <div class="detail">pHash: {phash_display}</div>
+"""
+            
+            html_content += """
+                        </div>
+                    </div>
+"""
+        
+        html_content += """
+                </div>
+            </div>
+            
+            <div class="section groups-section">
+                <h2>重复组分析</h2>
+"""
+        
+        # 添加重复组信息
+        if groups:
+            for root_idx, members in sorted(groups.items(), key=lambda x: len(x[1]), reverse=True):
+                root_info = screenshot_info[root_idx]
+                html_content += f"""
+                <div class="group-card">
+                    <h3>组 {root_idx + 1} - 根节点: #{root_idx:03d} ({root_info['filename']})</h3>
+                    <p>成员数量: {len(members)}</p>
+                    <div class="group-members">
+"""
+                for member_idx in members:
+                    is_root = member_idx == root_idx
+                    tag_class = "root" if is_root else ""
+                    tag_text = f"#{member_idx:03d}" + (" (根)" if is_root else "")
+                    html_content += f"""
+                        <div class="member-tag {tag_class}" onclick="location.hash='screenshot-{member_idx}'">{tag_text}</div>
+"""
+                html_content += """
+                    </div>
+                </div>
+"""
+        else:
+            html_content += """
+                <p>没有发现重复组（所有截图都是唯一的）</p>
+"""
+        
+        html_content += f"""
+            </div>
+        </div>
+        
+        <footer>
+            <p>截图去重测试工具 | 处理时间: {dedup_stats['processing_time']:.2f}秒</p>
+            <p>算法: 相似度累积检测（方案C）| 阈值: {dedup_stats['threshold']}</p>
+        </footer>
+    </div>
+</body>
+</html>
+"""
+        
+        # 写入文件
+        html_file = os.path.join(report_dir, 'report.html')
+        with open(html_file, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+        
+        return html_file
     
     def _find_root_index(self, screenshot_info: List[Dict], index: int) -> int:
         """
